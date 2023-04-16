@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "263010215406",
+    "project_id": "heal-health-6350d",
+    "storage_bucket": "heal-health-6350d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263010215406:android:133165381934a3322f5aff",
+        "android_client_info": {
+          "package_name": "com.heal_the_health_app.heal_the_health_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263010215406-pg86et13h8ld0kj9e16tv7pb1h35prpo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.heal_the_health_app.heal_the_health_app",
+            "certificate_hash": "354dec81cb6046d692f99b44f41f377ea18af184"
+          }
+        },
+        {
+          "client_id": "263010215406-cnke22fm02madn6cajrfcg8rg88hkorf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBexk2FJpZQWRdKQOMEyIV8J36ij505teE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263010215406-cnke22fm02madn6cajrfcg8rg88hkorf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
