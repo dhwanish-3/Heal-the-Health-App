@@ -1,6 +1,6 @@
-# "Heal the Health App"
+# Heal the Health App
 
-# "This is my HealthCare App"
+# This is my HealthCare App
 
 ## **Objective:-**
   To solve the issue of healthcare record management and outreach of these facilities.
