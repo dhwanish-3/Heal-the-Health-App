@@ -52,6 +52,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
           child: SingleChildScrollView(
         child: Column(
           children: [
+            20.heightBox,
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(children: [
@@ -62,7 +63,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                       Container(
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: const Color.fromARGB(255, 96, 244, 101),
+                              color: const Color.fromARGB(255, 255, 200, 0),
                             ),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(100))),
@@ -80,8 +81,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
                             child: Container(
                               decoration: BoxDecoration(
                                   gradient: const LinearGradient(colors: [
-                                    Colors.blue,
-                                    Color.fromARGB(255, 111, 236, 115)
+                                    Color.fromARGB(255, 255, 222, 32),
+                                    Color.fromARGB(255, 255, 121, 24)
                                   ]),
                                   borderRadius: BorderRadius.circular(20)),
                               height: 40,
@@ -92,9 +93,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     ]),
                   ),
                 ),
-                Container(
-                  color: Colors.blue,
-                )
               ]),
             ),
             Text(
@@ -112,6 +110,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                 horizontal: 100,
               ),
               child: RoundButton(
+                  authNotifier: authNotifier,
                   title: 'Edit Profile',
                   onTap: () {
                     // Navigator.push(
@@ -120,7 +119,6 @@ class _DoctorProfileState extends State<DoctorProfile> {
                     //         builder: (context) => const EditProfile()));
                   }),
             ),
-            10.heightBox,
             Padding(
               padding: const EdgeInsets.all(30),
               child: Column(
@@ -137,7 +135,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               color: Colors.grey[200]),
                           child: const Icon(
                             Icons.settings_outlined,
-                            color: Colors.blue,
+                            color: Colors.orange,
                           )),
                       title: const Text(
                         'Settings',
@@ -168,7 +166,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               color: Colors.grey[200]),
                           child: const Icon(
                             LineIcons.bookmarkAlt,
-                            color: Colors.blue,
+                            color: Colors.orange,
                           )),
                       title: const Text(
                         'Patients',
@@ -290,7 +288,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
       return const Center(
           child: Icon(
         LineIcons.user,
-        color: Colors.blue,
+        color: Colors.orange,
         size: 130,
       ));
     } else if (image != null) {

@@ -49,9 +49,13 @@ class _LoginScreenState extends State<LoginScreen> {
         await _authService.logInPatient(_user, authNotifier, context);
     if (authNotifier.user != null) {
       authNotifier.setLoading(false);
+      UserShared userShared = Provider.of<UserShared>(context, listen: false);
+      await userShared
+          .getDiaryFormFirebase(authNotifier.patientDetails!.uid ?? '');
       return true;
     }
     authNotifier.setLoading(false);
+
     return false;
   }
 

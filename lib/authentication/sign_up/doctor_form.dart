@@ -82,7 +82,8 @@ class _DoctorFormFillScreenState extends State<DoctorFormFillScreen> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
+        authNotifier: authNotifier,
         title: 'Doctor fill the form',
       ),
       body: Container(
@@ -226,6 +227,7 @@ class _DoctorFormFillScreenState extends State<DoctorFormFillScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.orange,
         onPressed: () async {
           bool success = await _submitForm();
           if (success == true) {

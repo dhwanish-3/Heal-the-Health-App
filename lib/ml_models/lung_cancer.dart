@@ -41,6 +41,7 @@ class _State extends State<LungCancer> {
     final CPController = TextEditingController();
 
     const apiUrl = 'http://34.131.127.115:8080/lung';
+    const apiUrlAge = 'http://34.131.127.115:8080/age_lung';
     PatientUser patient = authNotifier.patientDetails!;
     final array = [
       patient.gender,
@@ -63,11 +64,32 @@ class _State extends State<LungCancer> {
       0,
       0,
     ];
+    final arrayAge = [
+      patient.gender,
+      patient.isSmoker,
+      // (PatientUser().gender) ?? 0,
+      // (PatientUser().age) ?? 0,
+      // (PatientUser().isSmoker) ?? 0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      patient.isAlcoholic == true ? 1 : 0,
+      // (PatientUser().isAlcoholic) ?? 0,
+      0,
+      0,
+      0,
+      0,
+    ];
 
     Map<String, dynamic> data = {"data": array};
+    Map<String, dynamic> dataAge = {"data": arrayAge};
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Lung Cancer Predictor',
       ),
       body: Container(
@@ -296,7 +318,6 @@ class _State extends State<LungCancer> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 80),
-
                   child: RoundButton(
                       title: 'Submit',
                       onTap: () async {
@@ -312,6 +333,17 @@ class _State extends State<LungCancer> {
                           array[12] = int.parse(SBController.text);
                           array[13] = int.parse(SDController.text);
                           array[14] = int.parse(CPController.text);
+                          arrayAge[2] = int.parse(YellowController.text);
+                          arrayAge[3] = int.parse(AnxietyController.text);
+                          arrayAge[4] = int.parse(PPController.text);
+                          arrayAge[5] = int.parse(CDController.text);
+                          arrayAge[6] = int.parse(FatigueController.text);
+                          arrayAge[7] = int.parse(AllergyController.text);
+                          arrayAge[8] = int.parse(WheezingController.text);
+                          arrayAge[10] = int.parse(CoughingController.text);
+                          arrayAge[11] = int.parse(SBController.text);
+                          arrayAge[12] = int.parse(SDController.text);
+                          arrayAge[13] = int.parse(CPController.text);
 
                           // array[0] = 0;
                           // array[1] = 59;
@@ -340,15 +372,29 @@ class _State extends State<LungCancer> {
                               acc = double.parse(response.body.substring(7, 9));
                               result = int.parse(response.body[19]);
                             }
-
+                            final response2 = await http
+                                .post(Uri.parse(apiUrlAge),
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: json.encode(dataAge))
+                                .then((value) {
+                              debugPrint('response ${value.body} ');
+                              return value;
+                            });
+                            if (response2.statusCode == 200) {
+                              debugPrint(response2.body);
+                              age = int.parse(response2.body.substring(10, 12));
+                            }
                             if (result == 1) {
-                              // print("$acc% chance you have lung cancer");
                               gotoNegative(acc, age);
+                              // print("$acc% chance you have cervical cancer");
                               // Navigator.pushNamed(context, '/Insurance');
                             } else {
-                              // print("$acc% chance you don't diabetes");
-                              gotoNegative(acc, age);
+                              gotoPositive(acc, age);
+                              // print("$acc% chance you don't cancer");
                             }
+                            return json.decode(response.body);
 
                             // return json.decode(response.body);
                           } else {
@@ -361,21 +407,6 @@ class _State extends State<LungCancer> {
                               .toastMessage('Please complete all the fields');
                         }
                       }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-
-                  //   },
-                  // ),
                 ),
               )
             ],

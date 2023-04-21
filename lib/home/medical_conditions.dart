@@ -38,7 +38,7 @@ class _MedicalConditionsScreenState extends State<MedicalConditionsScreen> {
         // context.watch<AuthNotifier>();
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-        appBar: const GradientAppBar(title: 'Medical Conditions'),
+        appBar: GradientAppBar(title: 'Medical Conditions'),
         body: Column(
           children: [
             const SizedBox(

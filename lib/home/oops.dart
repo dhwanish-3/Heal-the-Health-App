@@ -10,13 +10,17 @@ class OOPs extends StatefulWidget {
 class _OOPsState extends State<OOPs> {
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Container(
             width: 1000,
-            decoration:
-                const BoxDecoration(color: Color.fromARGB(255, 99, 255, 206)),
+            decoration: BoxDecoration(
+                color: authNotifier.isDoctor == true
+                    ? const Color.fromARGB(255, 255, 181, 70)
+                    : const Color.fromARGB(255, 99, 255, 206)),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,15 +32,17 @@ class _OOPsState extends State<OOPs> {
                           // shape: BoxShape.circle,
                           borderRadius: BorderRadius.all(Radius.circular(100))),
                       child: const Center(
-                          child:
-                              Image(image: AssetImage('images/chatbot.png')))),
+                          child: Image(
+                              image: AssetImage('images/chatbot_nobg.png')))),
                   20.heightBox,
-                  const Text(
+                  Text(
                     'OOPs..',
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 255, 115, 115)),
+                        color: authNotifier.isDoctor == true
+                            ? const Color.fromARGB(255, 70, 255, 255)
+                            : const Color.fromARGB(255, 255, 115, 115)),
                   ),
                   20.heightBox,
                   const Text(
@@ -58,6 +64,7 @@ class _OOPsState extends State<OOPs> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 100.0),
                     child: RoundButton(
+                        authNotifier: authNotifier,
                         title: 'Go Back',
                         onTap: () {
                           Navigator.pop(context);

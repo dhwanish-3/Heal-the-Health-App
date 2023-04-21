@@ -32,7 +32,10 @@ class _DiseaseDetailsState extends State<DiseaseDetails> {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     List<Disease>? medicalConditions = authNotifier.diseases;
     return Scaffold(
-      appBar: const GradientAppBar(title: "Disease Details"),
+      appBar: GradientAppBar(
+        title: "Disease Details",
+        authNotifier: authNotifier,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -42,7 +45,8 @@ class _DiseaseDetailsState extends State<DiseaseDetails> {
               controller: _searchFilter,
               decoration: const InputDecoration(
                   hintText: 'Search',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
                   suffixIcon: Icon(Icons.search)),
               onChanged: (String value) {
                 setState(() {});

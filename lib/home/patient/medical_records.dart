@@ -16,14 +16,17 @@ class _MedicalRecordsState extends State<MedicalRecords> {
     List<String>? details = authNotifier.patientDetails!.detailsofVisit;
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: const GradientAppBar(title: 'Medical History'),
+        appBar: GradientAppBar(
+          title: 'Medical History',
+          leading: const Text(''),
+        ),
         body: Column(
           children: [Expanded(child: _buildList(details))],
         ));
   }
 
   Widget _buildList(List<String>? details) {
-    if (details != null) {
+    if (details != null && details != []) {
       return ListView.builder(
           itemCount: details.length,
           itemBuilder: (context, index) {
@@ -35,8 +38,13 @@ class _MedicalRecordsState extends State<MedicalRecords> {
             );
           });
     } else {
-      return Container(
-        child: const Text("No details"),
+      return Center(
+        child: Container(
+          child: const Text(
+            "No details",
+            style: TextStyle(fontSize: 32),
+          ),
+        ),
       );
     }
   }

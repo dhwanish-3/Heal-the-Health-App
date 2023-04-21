@@ -48,8 +48,10 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                     smsCode: VerificationCodeController.text.toString());
                 try {
                   await auth.signInWithCredential(credential);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const AppHome()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePageDhwanish()));
                 } catch (e) {
                   setState(() {
                     loading = false;

@@ -87,7 +87,7 @@ class _UserFormFillScreenState extends State<UserFormFillScreen> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Fill Form',
         // leading: IconButton(
         //   onPressed: () => Navigator.pop(context),

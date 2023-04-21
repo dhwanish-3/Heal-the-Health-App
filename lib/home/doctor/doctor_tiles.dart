@@ -1,5 +1,6 @@
 import 'package:heal_the_health_app/constants/imports.dart';
 import 'package:heal_the_health_app/home/disease_details.dart';
+import 'package:heal_the_health_app/home/oops.dart';
 
 class DoctorTiles extends StatelessWidget {
   const DoctorTiles({super.key});
@@ -7,7 +8,6 @@ class DoctorTiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     goToAddPatients() {
-      debugPrint('sdsadsadjkas');
       return Navigator.push(context,
           MaterialPageRoute(builder: (context) => const AddPatients()));
     }
@@ -24,7 +24,7 @@ class DoctorTiles extends StatelessWidget {
 
     goToAddModels() {
       return Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const ListModels()));
+          context, MaterialPageRoute(builder: (context) => const OOPs()));
     }
 
     FunctionFire(int index) {
@@ -58,21 +58,26 @@ class DoctorTiles extends StatelessWidget {
           onTap: () => goToAddModels()),
     ];
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: List.generate(Tiles.length, (index) {
         return InkWell(
           onTap: () => FunctionFire(index),
           child: Column(
             children: [
               Container(
-                width: 75,
-                height: 75,
+                width: 70,
+                height: 70,
                 padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity(0.4),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Color.fromARGB(255, 255, 162, 155),
+                    Color.fromARGB(255, 255, 221, 120),
+                    Color.fromARGB(255, 255, 188, 88)
+                  ], stops: <double>[
+                    0,
+                    0,
+                    1
+                  ]),
                   shape: BoxShape.circle,
                 ),
                 child: Image.asset(

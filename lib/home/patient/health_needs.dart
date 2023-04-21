@@ -1,7 +1,7 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/add_doctors.dart';
+import 'package:heal_the_health_app/home/patient/add_doctors.dart';
 import 'package:heal_the_health_app/home/disease_details.dart';
-import 'package:heal_the_health_app/home/insurance.dart';
+import 'package:heal_the_health_app/home/patient/insurance.dart';
 import 'package:heal_the_health_app/ml_models/symptoms.dart';
 
 class HealthNeeds extends StatelessWidget {
@@ -10,7 +10,6 @@ class HealthNeeds extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     goToAddDoctors() {
-      debugPrint('sdsadsadjkas');
       return Navigator.push(
           context, MaterialPageRoute(builder: (context) => const AddDoctors()));
     }
@@ -61,15 +60,15 @@ class HealthNeeds extends StatelessWidget {
           onTap: () => goToSymtoms()),
     ];
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: List.generate(customIcons.length, (index) {
         return InkWell(
           onTap: () => FunctionFire(index),
           child: Column(
             children: [
               Container(
-                width: 75,
-                height: 75,
+                width: 70,
+                height: 70,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: Theme.of(context)

@@ -16,18 +16,18 @@ class _UserPage0State extends State<UserPage0> {
     }
   }
 
-  @override
-  void initState() {
-    AuthNotifier authNotifier;
-    UserShared userShared;
-    Future.delayed(Duration.zero).then((value) {
-      authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-      userShared = Provider.of<UserShared>(context, listen: false);
-      AuthService().initializePatient(authNotifier);
-      setState(() {});
-    });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   AuthNotifier authNotifier;
+  //   UserShared userShared;
+  //   Future.delayed(Duration.zero).then((value) {
+  //     authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+  //     userShared = Provider.of<UserShared>(context, listen: false);
+  //     // AuthService().initializePatient(authNotifier);
+  //     // setState(() {});
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -174,13 +174,11 @@ class _UserPage0State extends State<UserPage0> {
                   enlargeCenterPage: true,
                   aspectRatio: 1,
                   autoPlay: false,
-                  height: 180,
+                  height: 190,
                   itemCount: 3,
                   itemBuilder: _buildListItem,
                 ),
                 20.heightBox,
-
-                // _buildHealthOrg(context)
               ]),
             ),
             _buildHealthOrg(context),
@@ -193,262 +191,268 @@ class _UserPage0State extends State<UserPage0> {
 
   Widget _buildListItem(BuildContext context, int index) {
     if (index == 0) {
-      return Material(
-        color: Colors.transparent,
-        elevation: 10,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.15,
-          constraints: const BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 226, 199, 102),
-            gradient: const LinearGradient(
-                stops: [0, 1],
-                begin: AlignmentDirectional(0, 1),
-                end: AlignmentDirectional(0, -1),
-                colors: [Color.fromARGB(255, 244, 169, 89), Colors.white]),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 4,
-                color: Color(0x33000000),
-                offset: Offset(0, 2),
-              )
-            ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Material(
+          color: Colors.transparent,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: const Color.fromARGB(255, 244, 217, 182),
-              width: 5,
-            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                child: Image.asset(
-                  'images/fingertips.png',
-                  width: 90,
-                  height: 90,
-                  fit: BoxFit.cover,
-                ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.15,
+            constraints: const BoxConstraints(
+              maxWidth: double.infinity,
+            ),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 226, 199, 102),
+              gradient: const LinearGradient(
+                  stops: [0, 1],
+                  begin: AlignmentDirectional(0, 1),
+                  end: AlignmentDirectional(0, -1),
+                  colors: [Color.fromARGB(255, 244, 169, 89), Colors.white]),
+              // boxShadow: const [
+              //   BoxShadow(
+              //     blurRadius: 4,
+              //     color: Color(0x33000000),
+              //     offset: Offset(0, 2),
+              //   )
+              // ],
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: const Color.fromARGB(255, 244, 217, 182),
+                width: 5,
               ),
-              Expanded(
-                child: Align(
-                  alignment: const AlignmentDirectional(-0.05, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: const [
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional(0, 0),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  child: Image.asset(
+                    'images/fingertips.png',
+                    width: 70,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: const AlignmentDirectional(-0.05, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional(0, 0),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 5, 0),
+                              child: Text(
+                                'UNDERTAKE SOPHISTICATED DISEASE CONFIRMATION TEST',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        10.heightBox,
+                        const Expanded(
                           child: Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 20, 5, 0),
+                                EdgeInsetsDirectional.fromSTEB(0, 10, 5, 0),
                             child: Text(
-                              'UNDERTAKE SOPHISTICATED DISEASE CONFIRMATION TEST',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
+                              'Diagnosis at your fingertips',
                               textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 10, 5, 0),
-                          child: Text(
-                            'Diagnosis at your fingertips',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
     } else if (index == 1) {
-      return Material(
-        // color: Colors.transparent,
-        elevation: 10,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.79,
-          height: MediaQuery.of(context).size.height * 0.15,
-          constraints: const BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 4,
-                color: Color.fromARGB(51, 244, 18, 18),
-                offset: Offset(0, 2),
-              )
-            ],
-            gradient: const LinearGradient(
-              colors: [Colors.grey, Colors.white],
-              stops: [0, 1],
-              begin: AlignmentDirectional(0, -1),
-              end: AlignmentDirectional(0, 1),
-            ),
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Material(
+          // color: Colors.transparent,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: Colors.grey[400] ?? Colors.green,
-              width: 5,
-            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Align(
-                alignment: const AlignmentDirectional(0.05, 0),
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                  child: Image.asset(
-                    'images/oldage.png',
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.contain,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.79,
+            height: MediaQuery.of(context).size.height * 0.15,
+            constraints: const BoxConstraints(
+              maxWidth: double.infinity,
+            ),
+            decoration: BoxDecoration(
+              // boxShadow: const [
+              //   BoxShadow(
+              //     blurRadius: 4,
+              //     color: Color.fromARGB(51, 244, 18, 18),
+              //     offset: Offset(0, 2),
+              //   )
+              // ],
+              gradient: const LinearGradient(
+                colors: [Colors.grey, Colors.white],
+                stops: [0, 1],
+                begin: AlignmentDirectional(0, -1),
+                end: AlignmentDirectional(0, 1),
+              ),
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: Colors.grey[400] ?? Colors.green,
+                width: 5,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Align(
+                  alignment: const AlignmentDirectional(0.05, 0),
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                    child: Image.asset(
+                      'images/oldage.png',
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: const AlignmentDirectional(-0.05, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 15, 5, 0),
-                        child: Text(
-                          'PREDICT AT WHAT AGE YOU MIGHT CONTRACT THE DISEASE',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      5.heightBox,
-                      const Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
-                        child: Text(
-                          'Better Safe than sorry',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                      5.heightBox,
-                      const Align(
-                        alignment: AlignmentDirectional(-0.15, 0),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
-                          child: Text(
-                            'check out age of alarm in advance',
-                            textAlign: TextAlign.center,
+                Expanded(
+                  child: Align(
+                    alignment: const AlignmentDirectional(-0.05, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        18.heightBox,
+                        const Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 15, 5, 0),
+                            child: Text(
+                              'BETTER SAFE THAN SORRY',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(5, 5, 0, 0),
+                            child: Text(
+                              'Check out age of alarm in advance',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
     } else {
-      return Material(
-        color: Colors.transparent,
-        elevation: 10,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 1.0,
-          height: MediaQuery.of(context).size.height * 0.20,
-          constraints: const BoxConstraints(
-            maxWidth: double.infinity,
-          ),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-                stops: [0, 1],
-                begin: AlignmentDirectional(0, 1),
-                end: AlignmentDirectional(0, -1),
-                colors: [Colors.yellow, Colors.white]),
-            color: Colors.grey[100],
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 4,
-                color: Color.fromARGB(51, 241, 118, 118),
-                offset: Offset(0, 2),
-              )
-            ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Material(
+          color: Colors.transparent,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
-            border: Border.all(
-              color: const Color.fromARGB(255, 226, 255, 141),
-              width: 5,
-            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                child: Image.asset(
-                  'images/health4.png',
-                  width: 90,
-                  height: 120,
-                  fit: BoxFit.cover,
-                ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 1.0,
+            height: MediaQuery.of(context).size.height * 0.20,
+            constraints: const BoxConstraints(
+              maxWidth: double.infinity,
+            ),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                  stops: [0, 1],
+                  begin: AlignmentDirectional(0, 1),
+                  end: AlignmentDirectional(0, -1),
+                  colors: [Colors.yellow, Colors.white]),
+              color: Colors.grey[100],
+              // boxShadow: const [
+              //   BoxShadow(
+              //     blurRadius: 4,
+              //     color: Color.fromARGB(51, 241, 118, 118),
+              //     offset: Offset(0, 2),
+              //   )
+              // ],
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: const Color.fromARGB(255, 226, 255, 141),
+                width: 5,
               ),
-              Expanded(
-                child: Align(
-                  alignment: const AlignmentDirectional(-0.05, 0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: const [
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 20, 5, 0),
-                            child: Text(
-                              'Your medical history at your fingertips',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  child: Image.asset(
+                    'images/health4.png',
+                    width: 90,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: const AlignmentDirectional(-0.05, 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: const [
+                        Expanded(
+                          child: Align(
+                            alignment: AlignmentDirectional(0, 0),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 20, 5, 0),
+                              child: Text(
+                                'CONSULTATION MADE SIMPLE',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 10, 5, 0),
-                          child: Text(
-                            'Your medical history at your fingertips',
-                            textAlign: TextAlign.center,
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 10, 5, 0),
+                            child: Text(
+                              'Your medical history at your fingertips',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

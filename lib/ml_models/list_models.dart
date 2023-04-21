@@ -18,8 +18,14 @@ class ListModels extends StatefulWidget {
 class _ListModelsState extends State<ListModels> {
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(title: 'Diagnose'),
+      appBar: GradientAppBar(
+        title: 'Diagnose',
+        authNotifier: authNotifier,
+        leading: const Text(''),
+      ),
       body: SingleChildScrollView(
         child: Column(children: [
           Column(
@@ -157,7 +163,7 @@ class _ListModelsState extends State<ListModels> {
                               begin: AlignmentDirectional(0, 1),
                               end: AlignmentDirectional(0, -1),
                               colors: [
-                                Color.fromARGB(255, 85, 213, 98),
+                                Color.fromARGB(255, 166, 255, 175),
                                 Color.fromARGB(255, 196, 232, 255)
                               ]),
                           borderRadius:
@@ -196,7 +202,7 @@ class _ListModelsState extends State<ListModels> {
                               begin: AlignmentDirectional(0, 1),
                               end: AlignmentDirectional(0, -1),
                               colors: [
-                                Color.fromARGB(255, 109, 79, 208),
+                                Color.fromARGB(255, 166, 139, 255),
                                 Color.fromARGB(255, 255, 193, 193)
                               ]),
                           borderRadius:
@@ -234,7 +240,7 @@ class _ListModelsState extends State<ListModels> {
                               begin: AlignmentDirectional(0, 1),
                               end: AlignmentDirectional(0, -1),
                               colors: [
-                                Color.fromARGB(255, 255, 0, 0),
+                                Color.fromARGB(255, 255, 120, 120),
                                 Color.fromARGB(255, 255, 163, 163)
                               ]),
                           color: const Color.fromARGB(255, 149, 201, 247),
@@ -273,7 +279,7 @@ class _ListModelsState extends State<ListModels> {
                               begin: AlignmentDirectional(0, 1),
                               end: AlignmentDirectional(0, -1),
                               colors: [
-                                Color.fromARGB(255, 85, 68, 49),
+                                Color.fromARGB(255, 172, 132, 86),
                                 Color.fromARGB(255, 114, 255, 206)
                               ]),
                           color: const Color.fromARGB(255, 149, 201, 247),
@@ -313,7 +319,7 @@ class _ListModelsState extends State<ListModels> {
                               begin: AlignmentDirectional(0, 1),
                               end: AlignmentDirectional(0, -1),
                               colors: [
-                                Color.fromARGB(255, 247, 0, 255),
+                                Color.fromARGB(255, 251, 139, 255),
                                 Colors.white
                               ]),
                           color: const Color.fromARGB(255, 149, 201, 247),

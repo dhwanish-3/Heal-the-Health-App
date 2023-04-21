@@ -29,8 +29,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
     return Scaffold(
       appBar: GradientAppBar(
         title: "Your Diary",
-        leading:
-            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+        leading: const Text(''),
       ),
       body: Column(children: [
         20.heightBox,

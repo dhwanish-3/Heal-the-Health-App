@@ -13,7 +13,7 @@ class _ListDoctorsState extends State<ListDoctors> {
     int i = 0;
     for (String Doctor in authNotifier.patientDetails!.doctorsVisited ?? []) {
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Doctors')
           .doc(Doctor)
           .get()
           .catchError((e) => debugPrint(e))
@@ -30,7 +30,7 @@ class _ListDoctorsState extends State<ListDoctors> {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
-        isScrollControlled: true,
+        isScrollControlled: false,
         context: context,
         builder: (context) {
           return Container(
@@ -46,10 +46,11 @@ class _ListDoctorsState extends State<ListDoctors> {
   @override
   void initState() {
     AuthNotifier authNotifier;
-    Future.delayed(const Duration(seconds: 1)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) async {
       authNotifier = Provider.of<AuthNotifier>(context, listen: false);
       // AuthService().initializeDoctor(authNotifier);
-      _getDoctorsList(authNotifier, Doctors);
+      await _getDoctorsList(authNotifier, Doctors);
+      setState(() {});
     });
 
     super.initState();
@@ -69,28 +70,11 @@ class _ListDoctorsState extends State<ListDoctors> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(
-        title: 'Your Patients List',
+      appBar: GradientAppBar(
+        title: 'Doctors Visited',
       ),
       body: Column(
         children: [
-          // Expanded(child: Consumer<AuthNotifier>(
-          //   builder: (context, value, child) {
-          //     return loading
-          //         ? Container()
-          //         : ListView.builder(
-          //             itemCount: authNotifier.doctorDetails!.patients!.length,
-          //             itemBuilder: (context, index) {
-          //               return Card(
-          //                 child: ListTile(
-          //                   onTap: () {},
-          //                   title: Text(
-          //                       authNotifier.doctorDetails!.patients![index]),
-          //                 ),
-          //               );
-          //             });
-          //   },
-          // )),
           Expanded(
             child: ListView.builder(
                 itemCount: Doctors.length,

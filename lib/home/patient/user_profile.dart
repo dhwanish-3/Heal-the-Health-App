@@ -1,6 +1,7 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/edit_profile.dart';
-import 'package:heal_the_health_app/home/list_doctors.dart';
+import 'package:heal_the_health_app/home/oops.dart';
+import 'package:heal_the_health_app/home/patient/edit_profile.dart';
+import 'package:heal_the_health_app/home/patient/list_doctors.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -31,12 +32,9 @@ class _UserProfileState extends State<UserProfile> {
     Future.delayed(Duration.zero).then((value) async {
       authNotifier = Provider.of<AuthNotifier>(context, listen: false);
       userShared = Provider.of<UserShared>(context, listen: false);
-      await AuthService().initializePatient(authNotifier);
-      setState(() {});
+      // await AuthService().initializePatient(authNotifier);
+      // setState(() {});
     });
-    // _authService.initializePatient(authNotifier);
-
-    // initialize current user
     super.initState();
   }
 
@@ -49,11 +47,13 @@ class _UserProfileState extends State<UserProfile> {
     String userName = authNotifier.patientDetails!.name ?? '';
     String nickName = authNotifier.patientDetails!.nickName ?? '';
     String userEmailid = authNotifier.patientDetails!.emailid;
+    UserShared userShared = Provider.of<UserShared>(context, listen: false);
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           children: [
+            30.heightBox,
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(children: [
@@ -94,9 +94,6 @@ class _UserProfileState extends State<UserProfile> {
                     ]),
                   ),
                 ),
-                Container(
-                  color: Colors.blue,
-                )
               ]),
             ),
             Text(
@@ -130,7 +127,7 @@ class _UserProfileState extends State<UserProfile> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListTile(
-                      onTap: () => goTosettings,
+                      onTap: () => goTosettings(),
                       leading: Container(
                           height: 40,
                           width: 40,
@@ -161,7 +158,7 @@ class _UserProfileState extends State<UserProfile> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListTile(
-                      onTap: () => goToListofDoctors,
+                      onTap: () => goToListofDoctors(),
                       leading: Container(
                           height: 40,
                           width: 40,
@@ -222,7 +219,16 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                 ],
               ),
-            )
+            ),
+            200.heightBox,
+            TextButton(
+              child: const Text('Made with ❤️ by Dhwanish'),
+              onPressed: () {
+                Utils()
+                    .toastMessage('Contact me for any help reqarding the app');
+              },
+            ),
+            20.heightBox
           ],
         ),
       )),
@@ -324,19 +330,23 @@ class _UserProfileState extends State<UserProfile> {
 
   goTosettings() {
     debugPrint('settings');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const OOPs()));
   }
 
   goToListofDoctors() {
-    return Navigator.push(
+    Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ListDoctors()));
   }
 
   logout() {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+    UserShared userShared = Provider.of<UserShared>(context, listen: false);
     debugPrint('logout');
 
     AuthService().signOutPatient(authNotifier, context);
+    userShared.ClearDiaryList();
     Navigator.pushNamed(context, RouteNames.patientlogin);
   }
 }

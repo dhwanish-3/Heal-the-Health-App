@@ -1,5 +1,4 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-// import 'dart:ui';
 import 'package:url_launcher/url_launcher.dart';
 
 final Uri _url1 =
@@ -23,7 +22,7 @@ class _State extends State<Insurance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Suggested Health Insurances',
       ),
       body: Container(

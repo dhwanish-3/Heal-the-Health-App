@@ -202,7 +202,7 @@ class _EditProfileState extends State<EditProfile> {
       firstTime = false;
     }
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Edit Profile',
       ),
       body: Container(

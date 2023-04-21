@@ -37,6 +37,7 @@ class _State extends State<Stroke> {
     final WSTController = TextEditingController();
 
     const apiUrl = 'http://34.131.127.115:8080/stroke';
+    const apiUrlage = 'http://34.131.127.115:8080/age_stroke';
     PatientUser patient = authNotifier.patientDetails!;
     final array = [
       patient.age, // PatientUser().age
@@ -50,11 +51,23 @@ class _State extends State<Stroke> {
       patient.isSmoker, // (PatientUser().isSmoker) ?? 0,
       0,
     ];
+    final arrayAge = [
+      0,
+      0,
+      0.0,
+      0.0,
+      patient.gender, // PatientUser().gender,
+      0,
+      0,
+      patient.isSmoker, // (PatientUser().isSmoker) ?? 0,
+      0,
+    ];
 
     Map<String, dynamic> data = {"data": array};
+    Map<String, dynamic> dataAge = {"data": arrayAge};
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Stroke Predictor',
       ),
       body: Container(
@@ -207,7 +220,6 @@ class _State extends State<Stroke> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 80),
-
                   child: RoundButton(
                       title: 'Submit',
                       onTap: () async {
@@ -221,10 +233,16 @@ class _State extends State<Stroke> {
                           array[7] = int.parse(URBController.text);
                           array[9] = int.parse(WSTController.text);
 
-                          // array[0] = 67.0;
-                          // array[5] = 1;
-                          // array[8] = 0;
-                          debugPrint(array.toString());
+                          arrayAge[0] = int.parse(HypertensionController.text);
+                          arrayAge[1] = int.parse(HDController.text);
+                          arrayAge[2] =
+                              double.parse(AvgGlucoseLevelController.text);
+                          arrayAge[3] = double.parse(BMIController.text);
+                          arrayAge[5] = int.parse(MarriedController.text);
+                          arrayAge[6] = int.parse(URBController.text);
+                          arrayAge[8] = int.parse(WSTController.text);
+
+                          debugPrint(arrayAge.toString());
                           int age = 0;
                           final response = await http
                               .post(Uri.parse(apiUrl),
@@ -246,15 +264,29 @@ class _State extends State<Stroke> {
                               acc = double.parse(response.body.substring(7, 9));
                               result = int.parse(response.body[19]);
                             }
-
-                            if (result == 1) {
-                              // print("$acc% chance you have a stroke");
-                              gotoNegative(acc, age);
-                            } else {
-                              // print("$acc% chance you don't diabetes");
-                              gotoPositive(acc, age);
+                            final response2 = await http
+                                .post(Uri.parse(apiUrlage),
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: json.encode(dataAge))
+                                .then((value) {
+                              debugPrint('response ${value.body} ');
+                              return value;
+                            });
+                            if (response2.statusCode == 200) {
+                              debugPrint(response2.body);
+                              age = int.parse(response2.body.substring(10, 12));
                             }
-
+                            if (result == 1) {
+                              gotoNegative(acc, age);
+                              // print("$acc% chance you have cervical cancer");
+                              // Navigator.pushNamed(context, '/Insurance');
+                            } else {
+                              gotoPositive(acc, age);
+                              // print("$acc% chance you don't cancer");
+                            }
+                            return json.decode(response.body);
                             // return json.decode(response.body);
                           } else {
                             // error handling
@@ -266,70 +298,6 @@ class _State extends State<Stroke> {
                               .toastMessage('Please complete all the fields');
                         }
                       }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-                  //     if (myFormKey.currentState!.validate()) {
-                  //       array[1] = int.parse(HypertensionController.text);
-                  //       array[2] = int.parse(HDController.text);
-                  //       array[3] = double.parse(AvgGlucoseLevelController.text);
-                  //       array[4] = double.parse(BMIController.text);
-                  //       array[6] = int.parse(MarriedController.text);
-                  //       array[7] = int.parse(URBController.text);
-                  //       array[9] = int.parse(WSTController.text);
-
-                  //       array[0] = 67.0;
-                  //       array[5] = 1;
-                  //       array[8] = 0;
-                  //       debugPrint(array.toString());
-
-                  //       final response = await http
-                  //           .post(Uri.parse(apiUrl),
-                  //               headers: {'Content-Type': 'application/json'},
-                  //               body: json.encode(data))
-                  //           .then((value) {
-                  //         debugPrint('response${value.body}');
-                  //         return value;
-                  //       });
-
-                  //       if (response.statusCode == 200) {
-                  //         // success, parse response data
-                  //         debugPrint(response.body);
-                  //         if (response.body[8] == '.') {
-                  //           acc = double.parse(response.body.substring(7, 11));
-                  //           result = int.parse(response.body[21]);
-                  //         } else {
-                  //           acc = double.parse(response.body.substring(7, 9));
-                  //           result = int.parse(response.body[19]);
-                  //         }
-
-                  //         if (result == 1) {
-                  //           print("$acc% chance you have a stroke");
-                  //           // Navigator.pushNamed(context, '/Insurance');
-                  //         } else {
-                  //           print("$acc% chance you don't diabetes");
-                  //         }
-
-                  //         return json.decode(response.body);
-                  //       } else {
-                  //         // error handling
-                  //         throw Exception(
-                  //             'Failed to post data: ${response.statusCode}');
-                  //       }
-                  //     } else {
-                  //       Utils().toastMessage('Please complete all the fields');
-                  //     }
-                  //   },
-                  // ),
                 ),
               )
             ],

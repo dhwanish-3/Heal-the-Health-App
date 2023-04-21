@@ -65,7 +65,7 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Select Symptons',
       ),
       body: Column(

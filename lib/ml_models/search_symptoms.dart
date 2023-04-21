@@ -13,7 +13,7 @@ class _SearchSymptomsState extends State<SearchSymptoms> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Search symptoms',
       ),
       body: Padding(
@@ -24,7 +24,8 @@ class _SearchSymptomsState extends State<SearchSymptoms> {
               controller: searchFilter,
               decoration: const InputDecoration(
                   hintText: 'Search your symptoms',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
                   suffixIcon: Icon(Icons.search)),
               onChanged: (String value) {
                 setState(() {});

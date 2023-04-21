@@ -54,7 +54,7 @@ class _State extends State<Parkinsons> {
     Map<String, dynamic> data = {"data": array};
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Parkinson\'s Predictor',
       ),
       body: Container(

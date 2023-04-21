@@ -56,7 +56,7 @@ class _State extends State<CervCancer> {
     int result = 0;
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Cervical Cancer Predictor',
       ),
       body: Container(

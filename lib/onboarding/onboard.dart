@@ -18,6 +18,7 @@ class OnBoardingPage extends StatelessWidget {
         Provider.of<AuthNotifier>(context, listen: false);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         child: Column(
           children: [
@@ -102,7 +103,7 @@ class OnBoardingPage extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(20.0),
               child: RoundButton(
                   title: 'Get Started',
                   onTap: () {

@@ -67,17 +67,17 @@ class _AddDoctorsState extends State<AddDoctors> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(title: 'Add Doctors'),
+      appBar: GradientAppBar(title: 'Add Doctors'),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
             TextFormField(
               controller: _searchFilter,
               decoration: const InputDecoration(
-                hintText: 'Search',
-                border: OutlineInputBorder(),
-              ),
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15)))),
               onChanged: (String value) {
                 setState(() {});
               },
@@ -102,18 +102,18 @@ class _AddDoctorsState extends State<AddDoctors> {
                         return Container();
                       }
                     })),
-            RoundButton(
-                title: 'Next',
-                onTap: () async {
-                  await uploadDoctorList(authNotifier.patientDetails!.uid ?? '',
-                      authNotifier.patientDetails!.doctorsVisited ?? []);
-                  await UpdateDoctors(authNotifier.patientDetails!.uid ?? '',
-                      authNotifier.patientDetails!.doctorsVisited ?? []);
-                  // Navigator.push(
-                  //     (context),
-                  //     MaterialPageRoute(
-                  //         builder: (context) => const SymptomsScreen()));
-                })
+            // RoundButton(
+            //     title: 'Next',
+            //     onTap: () async {
+            //       await uploadDoctorList(authNotifier.patientDetails!.uid ?? '',
+            //           authNotifier.patientDetails!.doctorsVisited ?? []);
+            //       await UpdateDoctors(authNotifier.patientDetails!.uid ?? '',
+            //           authNotifier.patientDetails!.doctorsVisited ?? []);
+            //       // Navigator.push(
+            //       //     (context),
+            //       //     MaterialPageRoute(
+            //       //         builder: (context) => const SymptomsScreen()));
+            //     })
           ],
         ),
       ),

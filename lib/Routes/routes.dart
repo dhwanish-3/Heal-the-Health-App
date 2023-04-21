@@ -10,9 +10,7 @@ class Routes {
       case RouteNames.landing:
         return MaterialPageRoute(
             builder: (BuildContext context) => const LandingPage());
-      case RouteNames.patienthome:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const AppHome());
+
       case RouteNames.patientlogin:
         return MaterialPageRoute(
             builder: (BuildContext context) => const LoginScreen());

@@ -13,6 +13,7 @@ class CardioScreen extends StatefulWidget {
 
 class _CardioScreenState extends State<CardioScreen> {
   final apiUrl = 'http://34.131.127.115:8080/cvd';
+  final apiUrlAge = 'http://34.131.127.115:8080/age_cvd';
   final _systolicBloodPressureController = TextEditingController();
   final _diastolicBloodPressureController = TextEditingController();
   final _conditionList = ['Normal', 'Above Normal', 'Well Above Normal'];
@@ -73,19 +74,24 @@ class _CardioScreenState extends State<CardioScreen> {
       // (PatientUser().isAlcoholic) ?? 0,
       // (PatientUser().isPhysicalActive) ?? 0,
     ];
+    final arrayAge = [
+      patient.age,
+      patient.gender,
+      patient.height,
+      patient.weight,
+      0,
+      0,
+      0,
+      0,
+      patient.isSmoker == true ? 1 : 0,
+      patient.isAlcoholic == true ? 1 : 0,
+      patient.isPhysicallyActive == true ? 1 : 0,
+    ];
 
     Map<String, dynamic> data = {"data": array};
+    Map<String, dynamic> dataAge = {"data": arrayAge};
     return Scaffold(
-      appBar: const GradientAppBar(title: 'CVD Predictor'),
-      // body: Column(children: [
-      //   ElevatedButton(
-      //     onPressed: () async {
-      //       final res = await postData();
-      //       debugPrint(res.toString());
-      //     },
-      //     child: const Text("resr"),
-      //   ),
-      // ]),
+      appBar: GradientAppBar(title: 'CVD Predictor'),
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -197,16 +203,6 @@ class _CardioScreenState extends State<CardioScreen> {
                     child: RoundButton(
                         title: 'Submit',
                         onTap: () async {
-                          // if (_myFormKey.currentState!.validate()) {
-                          //   array[4] = int.parse(
-                          //       _systolicBloodPressureController.text);
-                          //   array[5] = int.parse(
-                          //       _diastolicBloodPressureController.text);
-                          //   debugPrint(array.toString());
-                          // } else {
-                          //   Utils()
-                          //       .toastMessage('Please complete all the fields');
-                          // }
                           if (_myFormKey.currentState!.validate()) {
                             array[4] = int.parse(
                                 _systolicBloodPressureController.text);
@@ -214,15 +210,12 @@ class _CardioScreenState extends State<CardioScreen> {
                                 _diastolicBloodPressureController.text);
                             array[6] = mapping[_selectionCholesterol] ?? 0;
                             array[7] = mapping[_selectionGlucose] ?? 0;
-
-                            // array[0] = 20228;
-                            // array[1] = 1;
-                            // array[2] = 156;
-                            // array[3] = 85.0;
-
-                            // array[8] = 0;
-                            // array[9] = 0;
-                            // array[10] = 1;
+                            arrayAge[3] = int.parse(
+                                _systolicBloodPressureController.text);
+                            arrayAge[4] = int.parse(
+                                _diastolicBloodPressureController.text);
+                            arrayAge[5] = mapping[_selectionCholesterol] ?? 0;
+                            arrayAge[6] = mapping[_selectionGlucose] ?? 0;
 
                             debugPrint(array.toString());
                             int age = 0;
@@ -248,6 +241,21 @@ class _CardioScreenState extends State<CardioScreen> {
                                 acc =
                                     double.parse(response.body.substring(7, 9));
                                 result = int.parse(response.body[19]);
+                              }
+                              final response2 = await http
+                                  .post(Uri.parse(apiUrlAge),
+                                      headers: {
+                                        'Content-Type': 'application/json'
+                                      },
+                                      body: json.encode(dataAge))
+                                  .then((value) {
+                                debugPrint('response ${value.body} ');
+                                return value;
+                              });
+                              if (response2.statusCode == 200) {
+                                debugPrint(response2.body);
+                                age =
+                                    int.parse(response2.body.substring(10, 12));
                               }
 
                               if (result == 1) {

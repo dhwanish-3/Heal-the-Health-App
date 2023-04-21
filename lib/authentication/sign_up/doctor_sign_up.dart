@@ -58,9 +58,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
       UserShared userShared = Provider.of<UserShared>(context, listen: false);
       _authService.initializeDoctor(authNotifier);
     });
-    // _authService.initializePatient(authNotifier);
 
-    // initialize current user
     super.initState();
   }
 
@@ -72,8 +70,10 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     UserShared userShared = Provider.of<UserShared>(context, listen: false);
+
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
+        authNotifier: authNotifier,
         title: 'Doctor SignUp',
       ),
       body: Padding(
@@ -186,6 +186,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
                   const SizedBox(height: 30),
                   Consumer<AuthNotifier>(builder: (context, value, child) {
                     return RoundButton(
+                      authNotifier: authNotifier,
                       title: 'Sign up as Doctor',
                       loading: authNotifier.loading ?? false,
                       onTap: () async {

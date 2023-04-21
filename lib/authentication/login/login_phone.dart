@@ -15,7 +15,7 @@ class _LoginwithPhoneState extends State<LoginwithPhone> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Login',
       ),
       body: Padding(

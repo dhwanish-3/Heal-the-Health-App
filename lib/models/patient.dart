@@ -1,23 +1,4 @@
 class PatientUser {
-  // String uid = '';
-  // String imageUrl = '';
-  // String emailid = '';
-  // String password = '';
-  // // bool? isLogin = false;
-  // String phoneNumber = '';
-  // String name = '';
-  // String nickName = '';
-  // String birthDate = '';
-  // int age = 20;
-  // int gender = 2;
-  // int height = 150;
-  // int weight = 50;
-  // bool isSmoker = false;
-  // bool isAlcoholic = false;
-  // bool isPhysicallyActive = false;
-  // bool isPWD = false;
-  // int percentageofDisability = 0;
-  // List<String>? medicalConditions = [];
   String? uid;
   String? imageUrl =
       'https://w7.pngwing.com/pngs/722/101/png-transparent-computer-icons-user-profile-circle-abstract-miscellaneous-rim-account-thumbnail.png';

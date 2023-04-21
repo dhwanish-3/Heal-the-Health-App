@@ -3,16 +3,24 @@ import 'package:heal_the_health_app/home/doctor/doctor_home.dart';
 
 class SplashServices {
   List<Disease>? medicalConditionsList;
-  patientHome(BuildContext context, AuthNotifier authNotifier) {
-    AuthService().initializePatient(authNotifier);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const HomePageDhwanish()));
+  patientHome(BuildContext context, AuthNotifier authNotifier) async {
+    await AuthService().initializePatient(authNotifier);
+    authNotifier.setisDoctor(false);
+    // await UserShared()
+    //     .getDiaryFormFirebase(authNotifier.patientDetails!.uid ?? '');
+    if (context.mounted) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HomePageDhwanish()));
+    }
   }
 
-  doctorHome(BuildContext context, AuthNotifier authNotifier) {
-    AuthService().initializeDoctor(authNotifier);
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const DoctorHome()));
+  doctorHome(BuildContext context, AuthNotifier authNotifier) async {
+    await AuthService().initializeDoctor(authNotifier);
+    authNotifier.setisDoctor(true);
+    if (context.mounted) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const DoctorHome()));
+    }
   }
 
   void isLogin(BuildContext context) async {
@@ -21,32 +29,25 @@ class SplashServices {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     Future<String> getUserData() => UserShared().getUser();
-    print('print before got to home');
-    goToHome(BuildContext context, AuthNotifier) async {
+    goToHome(BuildContext context, authNotifier) async {
       String user = await getUserData();
-      print('before gotohome');
-      debugPrint(user);
-      if (user == 'doctor') {
+      if (user == '"doctor"') {
         doctorHome(context, authNotifier);
       } else {
         patientHome(context, authNotifier);
       }
     }
 
-    print('print before gotoonboard');
     goToOnboard() {
-      print('before goto onboard');
       return Navigator.push(context,
           MaterialPageRoute(builder: (context) => const OnBoardingPage()));
     }
 
-    print('print before getMedicals');
     getMedicalConditions() async {
       medicalConditionsList = await Medicals().MedicalConditionsList;
       authNotifier.setDiseases(medicalConditionsList);
     }
 
-    print('print before get await medical condition');
     await getMedicalConditions();
     if (user != null) {
       goToHome(context, authNotifier);

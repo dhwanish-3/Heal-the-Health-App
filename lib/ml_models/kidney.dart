@@ -41,6 +41,7 @@ class _State extends State<Kidney> {
     final HypertensionController = TextEditingController();
 
     const apiUrl = 'http://34.131.127.115:8080/chr_kid';
+    const apiUrlAge = 'http://34.131.127.115:8080/age_chr_kid';
     final array = [
       0.0,
       0.0,
@@ -58,9 +59,10 @@ class _State extends State<Kidney> {
     ];
 
     Map<String, dynamic> data = {"data": array};
+    Map<String, dynamic> dataAge = {"data": array};
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Kidney Disease Predictor',
       ),
       body: Container(
@@ -327,7 +329,6 @@ class _State extends State<Kidney> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 80),
-
                   child: RoundButton(
                       title: 'Submit',
                       onTap: () async {
@@ -367,14 +368,27 @@ class _State extends State<Kidney> {
                               acc = double.parse(response.body.substring(7, 9));
                               result = int.parse(response.body[19]);
                             }
-
+                            final response2 = await http
+                                .post(Uri.parse(apiUrlAge),
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: json.encode(dataAge))
+                                .then((value) {
+                              debugPrint('response ${value.body} ');
+                              return value;
+                            });
+                            if (response2.statusCode == 200) {
+                              debugPrint(response2.body);
+                              age = int.parse(response2.body.substring(10, 12));
+                            }
                             if (result == 1) {
-                              // print("$acc% chance you have kidney disease");
                               gotoNegative(acc, age);
+                              // print("$acc% chance you have cervical cancer");
                               // Navigator.pushNamed(context, '/Insurance');
                             } else {
                               gotoPositive(acc, age);
-                              // print("$acc% chance you don't diabetes");
+                              // print("$acc% chance you don't cancer");
                             }
 
                             return json.decode(response.body);
@@ -388,21 +402,6 @@ class _State extends State<Kidney> {
                               .toastMessage('Please complete all the fields');
                         }
                       }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-
-                  //   },
-                  // ),
                 ),
               )
             ],

@@ -84,77 +84,60 @@ class _ListofPatientsState extends State<ListofPatients> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    // Timer(const Duration(seconds: 3), () {
-    //   setState(() {
-    //     loading = false;
-    //   });
-    // });
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Your Patients List',
+        authNotifier: authNotifier,
+        leading: const Text(''),
       ),
       body: Column(
         children: [
-          // Expanded(child: Consumer<AuthNotifier>(
-          //   builder: (context, value, child) {
-          //     return loading
-          //         ? Container()
-          //         : ListView.builder(
-          //             itemCount: authNotifier.doctorDetails!.patients!.length,
-          //             itemBuilder: (context, index) {
-          //               return Card(
-          //                 child: ListTile(
-          //                   onTap: () {},
-          //                   title: Text(
-          //                       authNotifier.doctorDetails!.patients![index]),
-          //                 ),
-          //               );
-          //             });
-          //   },
-          // )),
           Expanded(
-            child: ListView.builder(
-                itemCount: Patients.length,
-                itemBuilder: (context, index) {
-                  PatientUser patient = Patients[index];
-                  return Card(
-                    child: ListTile(
-                      onTap: () {
-                        _showPatientDetails(patient, context);
-                      },
-                      leading: CircleAvatar(
-                        backgroundImage: _showProfile(patient),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                  itemCount: Patients.length,
+                  itemBuilder: (context, index) {
+                    PatientUser patient = Patients[index];
+                    return Card(
+                      child: ListTile(
+                        onTap: () {
+                          _showPatientDetails(patient, context);
+                        },
+                        leading: CircleAvatar(
+                          backgroundImage: _showProfile(patient),
+                        ),
+                        title: Text(Patients[index].name.toString()),
+                        subtitle: Text(Patients[index].emailid),
+                        trailing: PopupMenuButton(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                                value: 1,
+                                onTap: () {
+                                  authNotifier.doctorDetails!.patients!
+                                      .remove(Patients[index].uid);
+                                  setState(() {});
+                                },
+                                child: SizedBox(
+                                  height: 40,
+                                  width: 100,
+                                  child: Center(
+                                      child: Row(
+                                    children: [
+                                      const Icon(Icons.delete),
+                                      20.widthBox,
+                                      const Text("Delete")
+                                    ],
+                                  )),
+                                ))
+                          ],
+                        ),
                       ),
-                      title: Text(Patients[index].name.toString()),
-                      subtitle: Text(Patients[index].emailid),
-                      trailing: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                              value: 1,
-                              onTap: () {
-                                authNotifier.doctorDetails!.patients!
-                                    .remove(Patients[index].uid);
-                                setState(() {});
-                              },
-                              child: SizedBox(
-                                height: 40,
-                                width: 100,
-                                child: Center(
-                                    child: Row(
-                                  children: [
-                                    const Icon(Icons.delete),
-                                    20.widthBox,
-                                    const Text("Delete")
-                                  ],
-                                )),
-                              ))
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+            ),
           ),
         ],
       ),

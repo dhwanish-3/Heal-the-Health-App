@@ -27,7 +27,7 @@ class _AddmedicalConditionsState extends State<AddmedicalConditions> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     return Scaffold(
-      appBar: const GradientAppBar(title: 'Add Past Medical Conditions'),
+      appBar: GradientAppBar(title: 'Add Past Medical Conditions'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

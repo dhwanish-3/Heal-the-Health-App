@@ -38,6 +38,7 @@ class _State extends State<Thyroid> {
     final TT4MeasuredController = TextEditingController();
 
     const apiUrl = 'http://34.131.127.115:8080/thyroid';
+    const apiUrlAge = 'http://34.131.127.115:8080/age_thyroid';
     final array = [
       0,
       0,
@@ -54,7 +55,7 @@ class _State extends State<Thyroid> {
     Map<String, dynamic> data = {"data": array};
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Thyroid Predictor',
       ),
       body: Container(
@@ -274,7 +275,6 @@ class _State extends State<Thyroid> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 80),
-
                   child: RoundButton(
                       title: 'Submit',
                       onTap: () async {
@@ -311,6 +311,20 @@ class _State extends State<Thyroid> {
                               acc = double.parse(response.body.substring(7, 9));
                               result = int.parse(response.body[19]);
                             }
+                            final response2 = await http
+                                .post(Uri.parse(apiUrlAge),
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: json.encode(data))
+                                .then((value) {
+                              debugPrint('response ${value.body} ');
+                              return value;
+                            });
+                            if (response2.statusCode == 200) {
+                              debugPrint(response2.body);
+                              age = int.parse(response2.body.substring(10, 12));
+                            }
 
                             if (result == 1) {
                               gotoNegative(acc, age);
@@ -332,21 +346,6 @@ class _State extends State<Thyroid> {
                               .toastMessage('Please complete all the fields');
                         }
                       }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-
-                  //   },
-                  // ),
                 ),
               )
             ],
@@ -357,7 +356,6 @@ class _State extends State<Thyroid> {
   }
 
   gotoNegative(double acc, int age) {
-    debugPrint('neg');
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -368,7 +366,6 @@ class _State extends State<Thyroid> {
   }
 
   gotoPositive(double acc, int age) {
-    debugPrint('pos');
     return Navigator.push(
         context,
         MaterialPageRoute(

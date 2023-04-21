@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:heal_the_health_app/home/insurance.dart';
+import 'package:heal_the_health_app/home/patient/insurance.dart';
 import 'package:heal_the_health_app/ml_models/age.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Positive extends StatefulWidget {
   double accuracy;
   int age;
+
   Positive({super.key, required this.accuracy, required this.age});
 
   @override

@@ -30,9 +30,6 @@ class _DoctorLogInState extends State<DoctorLogIn> {
       UserShared userShared = Provider.of<UserShared>(context, listen: false);
       _authService.initializeDoctor(authNotifier);
     });
-    // _authService.initializePatient(authNotifier);
-
-    // initialize current user
     super.initState();
   }
 
@@ -60,8 +57,10 @@ class _DoctorLogInState extends State<DoctorLogIn> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     UserShared userShared = Provider.of<UserShared>(context, listen: false);
+
     return Scaffold(
       appBar: GradientAppBar(
+          authNotifier: authNotifier,
           title: 'Doctor LogIn',
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
@@ -128,6 +127,7 @@ class _DoctorLogInState extends State<DoctorLogIn> {
                   const SizedBox(height: 30),
                   Consumer<AuthNotifier>(builder: (context, value, child) {
                     return RoundButton(
+                      authNotifier: authNotifier,
                       title: 'Log in',
                       loading: authNotifier.loading ?? false,
                       onTap: () async {

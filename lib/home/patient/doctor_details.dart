@@ -35,15 +35,16 @@ class DoctorDetailsSheet extends StatelessWidget {
           ),
           20.heightBox,
           ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 PatientUser patient =
                     authNotifier.patientDetails ?? PatientUser();
                 // patient.doctorsVisited = [];
                 debugPrint(patient.uid);
                 if (!patient.doctorsVisited!.contains(doctor.uid)) {
-                  authNotifier.addDoctor(
-                      authNotifier.patientDetails ?? PatientUser(), doctor.uid);
+                  await uploadDoctorList(doctor, authNotifier);
+                  await UpdateDoctors(doctor, authNotifier);
                 }
+
                 Navigator.pop(context);
                 // debugPrint(authNotifier.doctorDetails!.doctors.toString());
               },
@@ -59,5 +60,26 @@ class DoctorDetailsSheet extends StatelessWidget {
     } else {
       return const AssetImage('images/default.png');
     }
+  }
+
+  Future<void> uploadDoctorList(
+      DoctorUser doctor, AuthNotifier authNotifier) async {
+    final CollectionReference ref =
+        FirebaseFirestore.instance.collection('Patients');
+    authNotifier.addDoctor(
+        authNotifier.patientDetails ?? PatientUser(), doctor.uid);
+    await ref.doc(authNotifier.patientDetails!.uid).update(
+        {'doctorsVisited': authNotifier.patientDetails!.doctorsVisited});
+  }
+
+  Future<void> UpdateDoctors(
+      DoctorUser doctor, AuthNotifier authNotifier) async {
+    final CollectionReference ref =
+        FirebaseFirestore.instance.collection('Doctors');
+    doctor.patients!.add(authNotifier.patientDetails!.uid ?? '');
+    await ref.doc(doctor.uid).update({'patients': doctor.patients});
+    // for (var doctor in doctors) {
+    //   await ref.doc(doctor).update({'patients': uid});
+    // }
   }
 }

@@ -9,16 +9,16 @@ class HomePageDhwanish extends StatefulWidget {
 }
 
 class _HomePageDhwanishState extends State<HomePageDhwanish> {
-  @override
-  void initState() {
-    AuthNotifier authNotifier;
-    Future.delayed(Duration.zero).then((value) async {
-      authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+  // @override
+  // void initState() {
+  //   AuthNotifier authNotifier;
+  //   Future.delayed(Duration.zero).then((value) async {
+  //     authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
-      await AuthService().initializePatient(authNotifier);
-    });
-    super.initState();
-  }
+  //     // await AuthService().initializePatient(authNotifier);
+  //   });
+  //   super.initState();
+  // }
 
   logout() {
     AuthNotifier authNotifier =
@@ -35,37 +35,69 @@ class _HomePageDhwanishState extends State<HomePageDhwanish> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     double fem = MediaQuery.of(context).size.width / 300;
-    return Scaffold(
-        // backgroundColor: Colors.blue,
-        body: [
-          const UserPage0(),
-          const MedicalRecords(),
-          const ListModels(),
-          const DiaryScreen(),
-          const UserProfile()
-        ][_currentIndex],
-        floatingActionButton: FloatingActionButton.large(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const OOPs()));
-            },
-            child: Container(
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage('images/chatbot.png'))))),
-        bottomNavigationBar: _buildGnav(context));
+    return WillPopScope(
+      onWillPop: () async {
+        final val = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Alert'),
+                content: const Text('Do you want to Exit the App'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text('No')),
+                  ElevatedButton(
+                      onPressed: () {
+                        SystemNavigator.pop();
+                        // Navigator.of(context).pop(true);
+                      },
+                      child: const Text('Yes'))
+                ],
+              );
+            });
+        if (val != null) {
+          return Future.value(val);
+        } else {
+          return Future.value(false);
+        }
+      },
+      child: Scaffold(
+          body: [
+            const UserPage0(),
+            const MedicalRecords(),
+            const ListModels(),
+            const DiaryMain(),
+            const UserProfile()
+          ][_currentIndex],
+          floatingActionButton: _currentIndex == 3
+              ? Container()
+              : FloatingActionButton.large(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const OOPs()));
+                  },
+                  child: Container(
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage('images/chatbot.png'))))),
+          bottomNavigationBar: _buildGnav(context)),
+    );
   }
 
   Widget _buildGnav(BuildContext context) {
     double fem = MediaQuery.of(context).size.width / 500;
     return Container(
+      height: 80,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(40 * fem))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
         child: GNav(
             rippleColor: Colors.blue,
             hoverColor: Colors.blue,

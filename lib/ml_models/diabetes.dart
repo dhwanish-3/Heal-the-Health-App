@@ -33,6 +33,7 @@ class _State extends State<Diabetes> {
     // final _AgeController = TextEditingController();
 
     const apiUrl = 'http://34.131.127.115:8080/diab';
+    const apiUrlAge = 'http://34.131.127.115:8080/age_diab';
     final data1 = [
       0,
       0,
@@ -43,11 +44,21 @@ class _State extends State<Diabetes> {
       0.0,
       authNotifier.patientDetails!.age, //PatientUser().age
     ];
+    final arrayAge = [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0.0,
+      0.0,
+    ];
 
     Map<String, dynamic> data = {"data": data1};
+    Map<String, dynamic> dataAge = {"data": arrayAge};
 
     return Scaffold(
-      appBar: const GradientAppBar(
+      appBar: GradientAppBar(
         title: 'Diabetes Predictor',
       ),
       body: Container(
@@ -192,25 +203,6 @@ class _State extends State<Diabetes> {
                               )),
                         ),
                       ),
-                      // Padding(
-                      //   padding: const EdgeInsets.all(15),
-                      //   child: TextFormField(
-                      //     controller: AgeController,
-                      //     keyboardType: TextInputType.number,
-                      //     validator: (value) {
-                      //       if (value == null || value.isEmpty) {
-                      //         return 'Please enter your age';
-                      //       }
-                      //       return null;
-                      //     },
-                      //     decoration: InputDecoration(
-                      //         labelText: 'Age',
-                      //         hintText: 'Enter your Age',
-                      //         border: OutlineInputBorder(
-                      //           borderRadius: BorderRadius.circular(15),
-                      //         )),
-                      //   ),
-                      // ),
                     ],
                   )),
               const SizedBox(
@@ -219,12 +211,9 @@ class _State extends State<Diabetes> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 80),
-
                   child: RoundButton(
                       title: 'Submit',
                       onTap: () async {
-                        print(data["data"][3]);
-
                         if (myFormKey.currentState!.validate()) {
                           data1[0] = int.parse(PregnanciesController.text);
                           data1[1] = int.parse(GlucoseController.text);
@@ -234,7 +223,7 @@ class _State extends State<Diabetes> {
                           data1[5] = double.parse(BMIController.text);
                           data1[6] = double.parse(
                               DiabetesPedigreeFunctionController.text);
-                          // data1[7] = int.parse(AgeController.text);
+
                           debugPrint(data.toString());
                           int age = 0;
                           final response = await http
@@ -257,6 +246,20 @@ class _State extends State<Diabetes> {
                               acc = double.parse(response.body.substring(7, 9));
                               result = int.parse(response.body[19]);
                             }
+                            final response2 = await http
+                                .post(Uri.parse(apiUrlAge),
+                                    headers: {
+                                      'Content-Type': 'application/json'
+                                    },
+                                    body: json.encode(dataAge))
+                                .then((value) {
+                              debugPrint('response ${value.body} ');
+                              return value;
+                            });
+                            if (response2.statusCode == 200) {
+                              debugPrint(response2.body);
+                              age = int.parse(response2.body.substring(10, 12));
+                            }
 
                             if (result == 1) {
                               print("$acc% chance you have diabetes");
@@ -277,70 +280,6 @@ class _State extends State<Diabetes> {
                               .toastMessage('Please complete all the fields');
                         }
                       }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-                  //     print(data["data"][3]);
-
-                  //     if (myFormKey.currentState!.validate()) {
-                  //       data1[0] = int.parse(PregnanciesController.text);
-                  //       data1[1] = int.parse(GlucoseController.text);
-                  //       data1[2] = int.parse(BloodPressureController.text);
-                  //       data1[3] = int.parse(SkinThicknessController.text);
-                  //       data1[4] = int.parse(InsulinController.text);
-                  //       data1[5] = double.parse(BMIController.text);
-                  //       data1[6] = double.parse(
-                  //           DiabetesPedigreeFunctionController.text);
-                  //       data1[7] = int.parse(AgeController.text);
-                  //       debugPrint(data.toString());
-
-                  //       final response = await http
-                  //           .post(Uri.parse(apiUrl),
-                  //               headers: {'Content-Type': 'application/json'},
-                  //               body: json.encode(data))
-                  //           .then((value) {
-                  //         debugPrint('response${value.body}');
-                  //         return value;
-                  //       });
-
-                  //       if (response.statusCode == 200) {
-                  //         // success, parse response data
-                  //         debugPrint(response.body);
-                  //         if (response.body[8] == '.') {
-                  //           acc = double.parse(response.body.substring(7, 11));
-                  //           result = int.parse(response.body[21]);
-                  //         } else {
-                  //           acc = double.parse(response.body.substring(7, 9));
-                  //           result = int.parse(response.body[19]);
-                  //         }
-
-                  //         if (result == 1) {
-                  //           print("$acc% chance you have diabetes");
-                  //           Navigator.pushNamed(context, '/Insurance');
-                  //         } else {
-                  //           print("$acc% chance you don't diabetes");
-                  //         }
-
-                  //         return json.decode(response.body);
-                  //       } else {
-                  //         // error handling
-                  //         throw Exception(
-                  //             'Failed to post data: ${response.statusCode}');
-                  //       }
-                  //     } else {
-                  //       Utils().toastMessage('Please complete all the fields');
-                  //     }
-                  //   },
-                  // ),
                 ),
               )
             ],

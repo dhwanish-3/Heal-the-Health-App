@@ -65,16 +65,20 @@ class _AddPatientsState extends State<AddPatients> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
-      appBar: const GradientAppBar(title: 'Add Patients'),
+      appBar: GradientAppBar(
+        title: 'Add Patients',
+        authNotifier: authNotifier,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
             TextFormField(
               controller: _searchFilter,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 hintText: 'Search',
-                border: OutlineInputBorder(),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
               ),
               onChanged: (String value) {
                 setState(() {});
@@ -96,6 +100,7 @@ class _AddPatientsState extends State<AddPatients> {
                     PatientUser patient = Patients[index];
                     if (_searchFilter.text.isEmpty) {
                       return Card(
+                          surfaceTintColor: Colors.amber,
                           child: showListTile(patient, context, authNotifier));
                     } else if (patient.name!
                         .toLowerCase()
