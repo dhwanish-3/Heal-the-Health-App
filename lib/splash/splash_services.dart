@@ -1,9 +1,19 @@
 import 'package:heal_the_health_app/constants/imports.dart';
 import 'package:heal_the_health_app/home/doctor/doctor_home.dart';
-import 'package:heal_the_health_app/ml_models/result_positive.dart';
 
 class SplashServices {
   List<Disease>? medicalConditionsList;
+  patientHome(BuildContext context, AuthNotifier authNotifier) {
+    AuthService().initializePatient(authNotifier);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const HomePageDhwanish()));
+  }
+
+  doctorHome(BuildContext context, AuthNotifier authNotifier) {
+    AuthService().initializeDoctor(authNotifier);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const DoctorHome()));
+  }
 
   void isLogin(BuildContext context) async {
     final auth = FirebaseAuth.instance;
@@ -11,41 +21,35 @@ class SplashServices {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     Future<String> getUserData() => UserShared().getUser();
-
-    patientHome() {
-      AuthService().initializePatient(authNotifier);
-      return Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HomePageDhwanish()));
-    }
-
-    doctorHome() {
-      AuthService().initializeDoctor(authNotifier);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const DoctorHome()));
-    }
-
-    goToHome() async {
+    print('print before got to home');
+    goToHome(BuildContext context, AuthNotifier) async {
       String user = await getUserData();
+      print('before gotohome');
+      debugPrint(user);
       if (user == 'doctor') {
-        doctorHome();
+        doctorHome(context, authNotifier);
       } else {
-        patientHome();
+        patientHome(context, authNotifier);
       }
     }
 
+    print('print before gotoonboard');
     goToOnboard() {
+      print('before goto onboard');
       return Navigator.push(context,
           MaterialPageRoute(builder: (context) => const OnBoardingPage()));
     }
 
+    print('print before getMedicals');
     getMedicalConditions() async {
       medicalConditionsList = await Medicals().MedicalConditionsList;
       authNotifier.setDiseases(medicalConditionsList);
     }
 
+    print('print before get await medical condition');
     await getMedicalConditions();
     if (user != null) {
-      goToHome();
+      goToHome(context, authNotifier);
     } else {
       goToOnboard();
     }
@@ -84,10 +88,5 @@ class SplashServices {
   //   debugPrint('checkauth$error');
   // });
   // }
-  // }
-
-  // List<Disease>? get getMedicalConditionsList {
-  //   // medicalConditionsList = await Medicals().MedicalConditionsList;
-  //   return medicalConditionsList;
   // }
 }

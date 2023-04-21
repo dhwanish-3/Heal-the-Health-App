@@ -29,7 +29,7 @@ class OnBoardingPage extends StatelessWidget {
                 pages: [
                   PageViewModel(
                     title: 'Healthy Lifestyle',
-                    body: 'Making your Health Lifestyle\n\nHastle free',
+                    body: 'Making your Health Lifestyle\n\nHassle free',
                     image: buildImage('images/health1.png'),
                     decoration: getPageDecoration(),
                   ),
