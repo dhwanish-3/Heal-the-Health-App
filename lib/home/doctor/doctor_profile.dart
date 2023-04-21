@@ -1,4 +1,5 @@
 import 'package:heal_the_health_app/constants/imports.dart';
+import 'package:heal_the_health_app/home/oops.dart';
 
 class DoctorProfile extends StatefulWidget {
   const DoctorProfile({super.key});
@@ -113,10 +114,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   authNotifier: authNotifier,
                   title: 'Edit Profile',
                   onTap: () {
-                    // Navigator.push(
-                    //     (context),
-                    //     MaterialPageRoute(
-                    //         builder: (context) => const EditProfile()));
+                    Navigator.push((context),
+                        MaterialPageRoute(builder: (context) => const OOPs()));
                   }),
             ),
             Padding(
@@ -126,7 +125,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListTile(
-                      onTap: () => goTosettings,
+                      onTap: () => goTosettings(),
                       leading: Container(
                           height: 40,
                           width: 40,
@@ -321,6 +320,8 @@ class _DoctorProfileState extends State<DoctorProfile> {
 
   goTosettings() {
     debugPrint('settings');
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const OOPs()));
   }
 
   goToAddPatients() {

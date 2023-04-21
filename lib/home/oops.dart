@@ -46,7 +46,7 @@ class _OOPsState extends State<OOPs> {
                   ),
                   20.heightBox,
                   const Text(
-                    'Your too early.',
+                    'You are too early.',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

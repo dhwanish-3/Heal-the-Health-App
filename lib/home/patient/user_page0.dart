@@ -16,19 +16,6 @@ class _UserPage0State extends State<UserPage0> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   AuthNotifier authNotifier;
-  //   UserShared userShared;
-  //   Future.delayed(Duration.zero).then((value) {
-  //     authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-  //     userShared = Provider.of<UserShared>(context, listen: false);
-  //     // AuthService().initializePatient(authNotifier);
-  //     // setState(() {});
-  //   });
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
@@ -38,8 +25,6 @@ class _UserPage0State extends State<UserPage0> {
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
               height: 380,

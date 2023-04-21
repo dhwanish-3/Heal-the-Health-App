@@ -151,31 +151,34 @@ class _DoctorPage0State extends State<DoctorPage0> {
                 ],
               ),
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: DoctorTiles(),
-                    ),
-                    20.heightBox,
-                    VxSwiper.builder(
-                      enlargeCenterPage: true,
-                      aspectRatio: 1,
-                      autoPlay: false,
-                      height: 180,
-                      itemCount: 3,
-                      itemBuilder: _buildListItem,
-                    ),
-                    20.heightBox,
-                    _buildHealthOrg(context),
-                    80.heightBox
-                    // _buildHealthOrg(context)
-                  ]),
-                ),
-              ],
+            Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: DoctorTiles(),
+                      ),
+                      20.heightBox,
+                      VxSwiper.builder(
+                        enlargeCenterPage: true,
+                        aspectRatio: 1,
+                        autoPlay: false,
+                        height: 180,
+                        itemCount: 3,
+                        itemBuilder: _buildListItem,
+                      ),
+                      20.heightBox,
+                      _buildHealthOrg(context),
+                      80.heightBox
+                      // _buildHealthOrg(context)
+                    ]),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

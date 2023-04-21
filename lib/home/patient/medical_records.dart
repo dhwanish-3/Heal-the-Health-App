@@ -32,7 +32,7 @@ class _MedicalRecordsState extends State<MedicalRecords> {
           itemBuilder: (context, index) {
             return Card(
               child: ListTile(
-                title: Text(details[index].substring(11)),
+                title: Text(details[index].substring(12)),
                 subtitle: Text(details[index].substring(0, 11)),
               ),
             );
