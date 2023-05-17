@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:heal_the_health_app/constants/imports.dart';
+
 class PatientUser {
   String? uid;
   String? imageUrl =
@@ -7,7 +11,7 @@ class PatientUser {
   String? phoneNumber;
   String? name = 'User';
   String? nickName = 'Nick';
-  String? birthDate = '2002-10-12';
+  String? birthDate = '2002-10-11';
   int? age = 20;
   int? gender = 2;
   int? height = 150;
@@ -21,6 +25,9 @@ class PatientUser {
   List<String>? doctorsVisited;
   List<String>? detailsofVisit;
   List<String>? diary = [];
+  List<Appointment>? upcoming = [];
+  List<Appointment>? completed = [];
+  List<Appointment>? cancelled = [];
 
   PatientUser();
 
@@ -69,8 +76,28 @@ class PatientUser {
         : null;
     diary = data['diary'] is Iterable ? List.from(data['diary']) : null;
     //debugPrint(doctorsVisited.toString());
+    upcoming = data['upcoming'] is Iterable
+        ? List.from(data['upcoming']
+            .map((data) => Appointment.fromMap(jsonDecode(data))))
+        : [];
+    cancelled = data['cancelled'] is Iterable
+        ? List.from(data['cancelled']
+            .map((data) => Appointment.fromMap(jsonDecode(data))))
+        : [];
+    completed = data['completed'] is Iterable
+        ? List.from(data['completed']
+            .map((data) => Appointment.fromMap(jsonDecode(data))))
+        : [];
   }
   Map<String, dynamic> toMap() {
+    List<String> getJson(List<Appointment> appointment) {
+      List<String> json = [];
+      for (var custom in appointment) {
+        json.add(jsonEncode(custom.toMap()));
+      }
+      return json;
+    }
+
     return {
       'uid': uid,
       'imageUrl': imageUrl,
@@ -92,6 +119,9 @@ class PatientUser {
       'doctorsVisited': doctorsVisited,
       'detailsofVisit': detailsofVisit,
       'diary': diary,
+      'upcoming': getJson(upcoming ?? []),
+      'completed': getJson(completed ?? []),
+      'cancelled': getJson(cancelled ?? []),
     };
   }
 }

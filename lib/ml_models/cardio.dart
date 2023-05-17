@@ -12,8 +12,8 @@ class CardioScreen extends StatefulWidget {
 }
 
 class _CardioScreenState extends State<CardioScreen> {
-  final apiUrl = 'http://34.131.127.115:8080/cvd';
-  final apiUrlAge = 'http://34.131.127.115:8080/age_cvd';
+  final apiUrl = 'http://34.131.185.13:8080/cvd';
+  final apiUrlAge = 'http://34.131.185.13:8080/age_cvd';
   final _systolicBloodPressureController = TextEditingController();
   final _diastolicBloodPressureController = TextEditingController();
   final _conditionList = ['Normal', 'Above Normal', 'Well Above Normal'];

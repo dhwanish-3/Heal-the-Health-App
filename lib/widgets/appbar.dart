@@ -42,10 +42,11 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
       return AppBar(
         actions: actions,
         backgroundColor: Colors.transparent,
-        // elevation: 0,
+        elevation: 3,
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: leading ??
             IconButton(
@@ -56,8 +57,17 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
         centerTitle: true,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.blue, Color.fromARGB(255, 167, 255, 172)])),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 77, 250, 204),
+                Color.fromARGB(255, 171, 255, 216),
+                Color.fromARGB(255, 71, 200, 255),
+              ],
+              stops: [0, 0, 1],
+            ),
+          ),
         ),
       );
     }

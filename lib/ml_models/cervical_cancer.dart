@@ -34,8 +34,8 @@ class _State extends State<CervCancer> {
     final stdNoController = TextEditingController();
     final stdNumController = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/cerv_canc';
-    const apiUrlage = 'http://34.131.127.115:8080/age_cerv_canc';
+    const apiUrl = 'http://34.131.185.13:8080/cerv_canc';
+    const apiUrlage = 'http://34.131.185.13:8080/age_cerv_canc';
     final array = [
       0.0,
       0.0,

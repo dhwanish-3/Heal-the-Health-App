@@ -62,6 +62,8 @@ dependencies:
   card_swiper: ^2.0.4
   url_launcher: ^6.1.10
   percent_indicator: ^4.2.3
+  table_calendar: ^3.0.8
+  lottie: ^2.3.2
   
 
 dev_dependencies:

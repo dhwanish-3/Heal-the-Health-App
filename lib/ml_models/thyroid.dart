@@ -37,8 +37,8 @@ class _State extends State<Thyroid> {
     final HypothyroidController = TextEditingController();
     final TT4MeasuredController = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/thyroid';
-    const apiUrlAge = 'http://34.131.127.115:8080/age_thyroid';
+    const apiUrl = 'http://34.131.185.13:8080/thyroid';
+    const apiUrlAge = 'http://34.131.185.13:8080/age_thyroid';
     final array = [
       0,
       0,

@@ -35,7 +35,7 @@ class _ListDoctorsState extends State<ListDoctors> {
         builder: (context) {
           return Container(
             padding:
-                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
             child: DoctorDetailsSheet(
               doctor: Doctor,
             ),
@@ -57,10 +57,11 @@ class _ListDoctorsState extends State<ListDoctors> {
   }
 
   ImageProvider _showProfile(DoctorUser doctor) {
-    if (doctor.imageUrl != '') {
+    debugPrint(doctor.imageUrl);
+    if (doctor.imageUrl == '') {
       return NetworkImage(doctor.imageUrl.toString());
     } else {
-      return const AssetImage('images/default.png');
+      return const AssetImage('images/doctor_2.jpg');
     }
   }
 
@@ -79,40 +80,76 @@ class _ListDoctorsState extends State<ListDoctors> {
             child: ListView.builder(
                 itemCount: Doctors.length,
                 itemBuilder: (context, index) {
-                  DoctorUser patient = Doctors[index];
-                  return Card(
-                    child: ListTile(
-                      onTap: () {
-                        _showDoctorDetails(patient, context);
-                      },
-                      leading: CircleAvatar(
-                        backgroundImage: _showProfile(patient),
-                      ),
-                      title: Text(Doctors[index].name.toString()),
-                      subtitle: Text(Doctors[index].emailid),
-                      trailing: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                              value: 1,
-                              onTap: () {
-                                authNotifier.patientDetails!.doctorsVisited!
-                                    .remove(Doctors[index].uid);
-                                setState(() {});
-                              },
-                              child: SizedBox(
-                                height: 40,
+                  DoctorUser doctor = Doctors[index];
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                    child: Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        child: Row(children: [
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.asset(
+                                'images/doctor_2.jpg',
                                 width: 100,
-                                child: Center(
-                                    child: Row(
-                                  children: [
-                                    const Icon(Icons.delete),
-                                    20.widthBox,
-                                    const Text("Delete")
-                                  ],
-                                )),
-                              ))
-                        ],
+                                height: 130,
+                                fit: BoxFit.cover,
+                              )),
+                          10.widthBox,
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Name: ${Doctors[index].name}",
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500)),
+                                Text("Email id: ${Doctors[index].emailid}",
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w200)),
+                                Text(Doctors[index].hospitalName,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w200)),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 30,
+                            child: PopupMenuButton(
+                                icon: const Icon(Icons.more_vert),
+                                itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                          value: 1,
+                                          onTap: () {
+                                            authNotifier
+                                                .patientDetails!.doctorsVisited!
+                                                .remove(Doctors[index].uid);
+                                            setState(() {});
+                                          },
+                                          child: SizedBox(
+                                            height: 40,
+                                            width: 100,
+                                            child: Center(
+                                                child: Row(
+                                              children: [
+                                                const Icon(Icons.delete),
+                                                20.widthBox,
+                                                const Text("Delete")
+                                              ],
+                                            )),
+                                          ))
+                                    ]),
+                          )
+                        ]),
                       ),
                     ),
                   );

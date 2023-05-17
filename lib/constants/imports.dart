@@ -62,6 +62,14 @@ export 'package:heal_the_health_app/home/patient/health_needs.dart';
 export 'package:heal_the_health_app/home/patient/diary.dart';
 export 'package:heal_the_health_app/home/patient/medical_records.dart';
 export 'package:heal_the_health_app/ml_models/list_models.dart';
+export 'package:heal_the_health_app/home/patient/add_doctors.dart';
+export 'package:heal_the_health_app/home/disease_details.dart';
+export 'package:heal_the_health_app/home/appointment/appointments.dart';
+export 'package:heal_the_health_app/home/patient/insurance.dart';
+export 'package:heal_the_health_app/ml_models/symptoms.dart';
+export 'package:heal_the_health_app/models/appointment.dart';
+export 'package:heal_the_health_app/home/appointment/backend.dart';
+export 'package:heal_the_health_app/home/appointment/booking_page.dart';
 //for diary
 export 'package:heal_the_health_app/home/diary/main_diary.dart';
 export 'package:heal_the_health_app/home/diary/add_buttun.dart';

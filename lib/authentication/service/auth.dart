@@ -23,7 +23,6 @@ class AuthService {
 
   Future<void> getDoctorDetails(AuthNotifier authNotifier) async {
     if (authNotifier.user != null) {
-      debugPrint('not nulls');
       debugPrint(authNotifier.user!.email);
       await FirebaseFirestore.instance //changes
           .collection('Doctors')

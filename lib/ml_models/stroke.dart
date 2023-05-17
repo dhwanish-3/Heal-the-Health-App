@@ -36,8 +36,8 @@ class _State extends State<Stroke> {
     final URBController = TextEditingController();
     final WSTController = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/stroke';
-    const apiUrlage = 'http://34.131.127.115:8080/age_stroke';
+    const apiUrl = 'http://34.131.185.13:8080/stroke';
+    const apiUrlage = 'http://34.131.185.13:8080/age_stroke';
     PatientUser patient = authNotifier.patientDetails!;
     final array = [
       patient.age, // PatientUser().age

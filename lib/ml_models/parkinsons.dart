@@ -37,7 +37,7 @@ class _State extends State<Parkinsons> {
     final Spread1Controller = TextEditingController();
     final Spread2Controller = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/parkinsons';
+    const apiUrl = 'http://34.131.185.13:8080/parkinsons';
     final array = [
       0.0,
       0.0,

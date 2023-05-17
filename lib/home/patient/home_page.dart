@@ -41,6 +41,11 @@ class _HomePageDhwanishState extends State<HomePageDhwanish> {
             context: context,
             builder: (context) {
               return AlertDialog(
+                contentPadding: const EdgeInsets.all(25),
+                actionsPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
                 title: const Text('Alert'),
                 content: const Text('Do you want to Exit the App'),
                 actions: [
@@ -72,19 +77,59 @@ class _HomePageDhwanishState extends State<HomePageDhwanish> {
             const DiaryMain(),
             const UserProfile()
           ][_currentIndex],
+          // floatingActionButton: _currentIndex == 3
+          //     ? Container()
+          //     : FloatingActionButton.large(
+          //         onPressed: () {
+          //           Navigator.push(context,
+          //               MaterialPageRoute(builder: (context) => const OOPs()));
+          //         },
+          //         child: Container(
+          //             decoration: const BoxDecoration(
+          //                 shape: BoxShape.circle,
+          //                 image: DecorationImage(
+          //                     fit: BoxFit.cover,
+          //                     image: AssetImage('images/chatbot.png'))))),
           floatingActionButton: _currentIndex == 3
               ? Container()
-              : FloatingActionButton.large(
-                  onPressed: () {
+              : GestureDetector(
+                  onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => const OOPs()));
                   },
-                  child: Container(
+                  child: Material(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50)),
+                    color: Colors.transparent,
+                    elevation: 10,
+                    child: Container(
+                      height: 80,
+                      width: 80,
                       decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color.fromARGB(255, 77, 250, 204),
+                            Color.fromARGB(255, 71, 200, 255),
+                            Color.fromARGB(255, 30, 255, 150),
+                          ],
+                          stops: [0, 0, 1],
+                        ),
+                      ),
+                      child: Container(
+                        height: 70,
+                        width: 70,
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('images/chatbot.png'))))),
+                              image: AssetImage('images/chatbot_nobg.png')),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
           bottomNavigationBar: _buildGnav(context)),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:heal_the_health_app/constants/imports.dart';
+import 'package:heal_the_health_app/home/appointment/booking_page.dart';
 
 class DoctorDetailsSheet extends StatelessWidget {
   final DoctorUser doctor;
@@ -8,50 +9,91 @@ class DoctorDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    return StreamBuilder<DoctorUser>(builder: (context, snapshot) {
-      return Form(
-          child: Column(
-        children: [
-          CircleAvatar(
-            radius: 70,
-            backgroundImage: showProfileImage(doctor),
-          ),
-          10.heightBox,
-          Text(
-            doctor.name.toString(),
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          10.heightBox,
-          Text(
-            doctor.emailid,
-            style: const TextStyle(fontSize: 18),
-          ),
-          10.heightBox,
-          Text(doctor.hospitalName),
-          10.heightBox,
-          Text(
-            'Experience of ${doctor.experience} years',
-            style: const TextStyle(fontSize: 20),
-          ),
-          20.heightBox,
-          ElevatedButton(
-              onPressed: () async {
-                PatientUser patient =
-                    authNotifier.patientDetails ?? PatientUser();
-                // patient.doctorsVisited = [];
-                debugPrint(patient.uid);
-                if (!patient.doctorsVisited!.contains(doctor.uid)) {
-                  await uploadDoctorList(doctor, authNotifier);
-                  await UpdateDoctors(doctor, authNotifier);
-                }
+    return SingleChildScrollView(
+      child: StreamBuilder<DoctorUser>(builder: (context, snapshot) {
+        return Form(
+            child: Column(
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: showProfileImage(doctor),
+            ),
+            14.heightBox,
+            Text(
+              "Name:${doctor.name}",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            5.heightBox,
+            Text(
+              doctor.specialization,
+              style: const TextStyle(fontSize: 17),
+            ),
+            5.heightBox,
+            Text(
+              "Email id:${doctor.emailid}",
+              style: const TextStyle(fontSize: 16),
+            ),
+            10.heightBox,
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  doctor.hospitalName,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            10.heightBox,
+            Row(
+              children: [
+                InfoCard(
+                    label: "Patients",
+                    value: doctor.patients!.length.toString()),
+                15.widthBox,
+                InfoCard(
+                    label: 'Experience', value: doctor.experience.toString())
+              ],
+            ),
+            10.heightBox,
+            Row(
+              children: [
+                OutlinedButton(
+                    onPressed: () async {
+                      PatientUser patient =
+                          authNotifier.patientDetails ?? PatientUser();
+                      // patient.doctorsVisited = [];
+                      debugPrint(patient.uid);
+                      if (!patient.doctorsVisited!.contains(doctor.uid)) {
+                        await uploadDoctorList(doctor, authNotifier);
+                        await UpdateDoctors(doctor, authNotifier);
+                      }
 
-                Navigator.pop(context);
-                // debugPrint(authNotifier.doctorDetails!.doctors.toString());
-              },
-              child: const Text('Add doctor'))
-        ],
-      ));
-    });
+                      Navigator.pop(context);
+                      // debugPrint(authNotifier.doctorDetails!.doctors.toString());
+                    },
+                    child: const Text('Add doctor')),
+                14.widthBox,
+                OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BookingPage(
+                                    doctor: doctor,
+                                  )));
+                    },
+                    child: const Text('Book Appointment')),
+              ],
+            )
+          ],
+        ));
+      }),
+    );
   }
 
   ImageProvider showProfileImage(DoctorUser doctor) {
@@ -81,5 +123,52 @@ class DoctorDetailsSheet extends StatelessWidget {
     // for (var doctor in doctors) {
     //   await ref.doc(doctor).update({'patients': uid});
     // }
+  }
+}
+
+class InfoCard extends StatelessWidget {
+  const InfoCard({Key? key, required this.label, required this.value})
+      : super(key: key);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.blue,
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 15,
+          horizontal: 15,
+        ),
+        child: Column(
+          children: <Widget>[
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

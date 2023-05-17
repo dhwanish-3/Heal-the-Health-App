@@ -60,11 +60,12 @@ class _DiaryListState extends State<DiaryList> {
                           children: [
                             Text(
                               diary.title,
+                              textAlign: TextAlign.center,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             2.heightBox,
-                            Text(diary.dateCreated.toString().substring(0, 11)),
+                            Text(diary.dateCreated.toString().substring(0, 10)),
                             const Divider(
                               thickness: 0.5,
                             ),
@@ -129,7 +130,7 @@ class DiaryPopCard extends StatelessWidget {
                   ),
                   Text(userShared.diaryList![index].dateCreated
                       .toString()
-                      .substring(0, 11)),
+                      .substring(0, 10)),
                   Container(
                     constraints: const BoxConstraints(
                         maxHeight: 500,

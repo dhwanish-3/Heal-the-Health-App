@@ -25,7 +25,6 @@ class _AddDiaryButtonState extends State<AddDiaryButton> {
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
             return AddDiaryPopCard();
           }));
-          // setState(() {});
         },
         child: Hero(
           tag: _heroAddTodo,

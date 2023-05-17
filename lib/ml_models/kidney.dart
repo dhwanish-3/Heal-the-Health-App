@@ -40,8 +40,8 @@ class _State extends State<Kidney> {
     final RBCCController = TextEditingController();
     final HypertensionController = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/chr_kid';
-    const apiUrlAge = 'http://34.131.127.115:8080/age_chr_kid';
+    const apiUrl = 'http://34.131.185.13:8080/chr_kid';
+    const apiUrlAge = 'http://34.131.185.13:8080/age_chr_kid';
     final array = [
       0.0,
       0.0,

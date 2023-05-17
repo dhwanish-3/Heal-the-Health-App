@@ -93,6 +93,7 @@ class _LoginScreenState extends State<SignUpScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        20.heightBox,
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           onSaved: (newVal) {
@@ -139,59 +140,96 @@ class _LoginScreenState extends State<SignUpScreen> {
                           },
                         ),
                         const SizedBox(height: 20.0),
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: _passwordController,
-                          onSaved: (newVal) {
-                            _user.password = newVal as String;
-                          },
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                              hintText: 'Password',
-                              labelText: 'Password',
-                              prefixIcon: Icon(Icons.lock_open),
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)))),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter password';
-                            } else if (value.length < 6) {
-                              return 'Please enter a password with atleast 6 characters';
-                            }
-                            return null;
-                          },
-                        ),
+                        Consumer<AuthNotifier>(
+                            builder: (context, value, child) {
+                          return TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: _passwordController,
+                            onSaved: (newVal) {
+                              _user.password = newVal as String;
+                            },
+                            obscureText: authNotifier.passwordShown!,
+                            decoration: InputDecoration(
+                                hintText: 'Password',
+                                labelText: 'Password',
+                                prefixIcon: const Icon(Icons.lock_open),
+                                suffixIcon: authNotifier.passwordShown!
+                                    ? IconButton(
+                                        onPressed: () {
+                                          authNotifier.setPasswordShown(false);
+                                        },
+                                        icon: const Icon(Ionicons.eye_outline),
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          authNotifier.setPasswordShown(true);
+                                        },
+                                        icon: const Icon(
+                                            Ionicons.eye_off_outline),
+                                      ),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              } else if (value.length < 6) {
+                                return 'Please enter a password with atleast 6 characters';
+                              }
+                              return null;
+                            },
+                          );
+                        }),
                         const SizedBox(height: 20.0),
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: _confirmpasswordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                              hintText: 'Confirm Password',
-                              labelText: 'Confirm Password',
-                              prefixIcon: Icon(Icons.lock_open),
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)))),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please confirm your password';
-                            }
-                            if (_confirmpasswordController.text !=
-                                _passwordController.text) {
-                              return 'Your passwords didn`t match';
-                            }
-                            return null;
-                          },
-                        ),
+                        Consumer<AuthNotifier>(
+                            builder: (context, value, child) {
+                          return TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: _confirmpasswordController,
+                            obscureText: authNotifier.confirmPasswordShown!,
+                            decoration: InputDecoration(
+                                hintText: 'Confirm Password',
+                                labelText: 'Confirm Password',
+                                prefixIcon:
+                                    const Icon(Icons.lock_outline_rounded),
+                                suffixIcon: authNotifier.confirmPasswordShown!
+                                    ? IconButton(
+                                        onPressed: () {
+                                          authNotifier
+                                              .setconfirmPasswordShown(false);
+                                        },
+                                        icon: const Icon(Ionicons.eye_outline),
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          authNotifier
+                                              .setconfirmPasswordShown(true);
+                                        },
+                                        icon: const Icon(
+                                            Ionicons.eye_off_outline),
+                                      ),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)))),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please confirm your password';
+                              }
+                              if (_confirmpasswordController.text !=
+                                  _passwordController.text) {
+                                return 'Your passwords didn`t match';
+                              }
+                              return null;
+                            },
+                          );
+                        })
                       ],
                     ),
                   ),
                   const SizedBox(height: 30),
                   Consumer<AuthNotifier>(builder: (context, value, child) {
                     return RoundButton(
-                      title: 'Sign up',
+                      title: 'Sign Up',
                       loading: authNotifier.loading ?? false,
                       onTap: () async {
                         bool success = await _submitForm();
@@ -218,7 +256,7 @@ class _LoginScreenState extends State<SignUpScreen> {
                             Navigator.pushNamed(
                                 context, RouteNames.doctorsignup);
                           },
-                          child: const Text('Sign up as Doctor'))
+                          child: const Text('Sign Up as Doctor'))
                     ],
                   ),
                   Row(
@@ -245,11 +283,11 @@ class _LoginScreenState extends State<SignUpScreen> {
                     child: Container(
                       height: 50.0,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: Colors.lightBlue,
                           )),
-                      child: const Center(child: Text('Sign up with Phone')),
+                      child: const Center(child: Text('Sign Up with Phone')),
                     ),
                   ),
                 ]),

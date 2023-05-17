@@ -11,7 +11,7 @@ class SymptomsScreen extends StatefulWidget {
 }
 
 class _SymptomsScreenState extends State<SymptomsScreen> {
-  final apiUrl = 'http://34.131.127.115:8080/symp';
+  final apiUrl = 'http://34.131.185.13:8080/symp';
   // List list = [19, 121, 41, 126, 26, 45, 14, 60, 64];
 
   // final data = json.encode({

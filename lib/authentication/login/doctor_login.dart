@@ -78,6 +78,7 @@ class _DoctorLogInState extends State<DoctorLogIn> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        20.heightBox,
                         TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
@@ -100,27 +101,46 @@ class _DoctorLogInState extends State<DoctorLogIn> {
                           },
                         ),
                         const SizedBox(height: 20.0),
-                        TextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: _passwordController,
-                          onSaved: (newVal) {
-                            _user.emailid = newVal as String;
-                          },
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                              hintText: 'Password',
-                              labelText: 'Password',
-                              prefixIcon: Icon(Icons.lock_open),
-                              border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)))),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Enter password';
-                            }
-                            return null;
-                          },
-                        ),
+                        Consumer<AuthNotifier>(
+                            builder: (context, value, child) {
+                          return TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: _passwordController,
+                            onSaved: (newVal) {
+                              _user.password = newVal as String;
+                            },
+                            obscureText: authNotifier.passwordShown!,
+                            decoration: InputDecoration(
+                                hintText: 'Password',
+                                labelText: 'Password',
+                                prefixIcon: const Icon(Icons.lock_open),
+                                suffixIcon: authNotifier.passwordShown!
+                                    ? IconButton(
+                                        onPressed: () {
+                                          authNotifier.setPasswordShown(false);
+                                        },
+                                        icon: const Icon(Ionicons.eye_outline),
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          authNotifier.setPasswordShown(true);
+                                        },
+                                        icon: const Icon(
+                                            Ionicons.eye_off_outline),
+                                      ),
+                                border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)))),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter password';
+                              } else if (value.length < 6) {
+                                return 'Please enter a password with atleast 6 characters';
+                              }
+                              return null;
+                            },
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -128,7 +148,7 @@ class _DoctorLogInState extends State<DoctorLogIn> {
                   Consumer<AuthNotifier>(builder: (context, value, child) {
                     return RoundButton(
                       authNotifier: authNotifier,
-                      title: 'Log in',
+                      title: 'Log In',
                       loading: authNotifier.loading ?? false,
                       onTap: () async {
                         bool success = await _submitForm();
@@ -191,7 +211,7 @@ class _DoctorLogInState extends State<DoctorLogIn> {
                     child: Container(
                       height: 50.0,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: Colors.lightBlue,
                           )),

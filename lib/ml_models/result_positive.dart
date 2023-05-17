@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:heal_the_health_app/home/patient/insurance.dart';
+import 'dart:convert';
+
 import 'package:heal_the_health_app/ml_models/age.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:heal_the_health_app/constants/imports.dart';
+import 'package:http/http.dart' as http;
 
 class Positive extends StatefulWidget {
   double accuracy;
@@ -10,10 +12,29 @@ class Positive extends StatefulWidget {
   Positive({super.key, required this.accuracy, required this.age});
 
   @override
-  _State createState() => _State();
+  State<Positive> createState() => _PositiveState();
 }
 
-class _State extends State<Positive> {
+class _PositiveState extends State<Positive> {
+  Future<int> sendImageURL(String imageUrl) async {
+    final url = Uri.parse(
+        'http://34.131.185.13:8080/x_ray'); // Replace 'API_URL' with the actual API endpoint URL
+
+    final response = await http.post(
+      url,
+      body: {'image_url': imageUrl},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final result = jsonResponse['result'] as int;
+      print(result);
+      return result;
+    } else {
+      throw Exception('Failed to send image URL to the API');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double accuracy = widget.accuracy / 100;
@@ -101,20 +122,24 @@ class _State extends State<Positive> {
                   ],
                   shape: BoxShape.circle,
                 ),
-                child: CircularPercentIndicator(
-                  percent: accuracy,
-                  radius: 65,
-                  lineWidth: 24,
-                  animation: true,
-                  animationDuration: 5000,
-                  progressColor: const Color(0xFF4AC435),
-                  backgroundColor: const Color(0xFFF1F4F8),
-                  center: Text(
-                    '${widget.accuracy}%',
-                    style: const TextStyle(
-                        color: Colors.green,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
+                child: GestureDetector(
+                  onTap: () => sendImageURL(
+                      'https://img.medscapestatic.com/pi/meds/ckb/04/17804tn.jpg'),
+                  child: CircularPercentIndicator(
+                    percent: accuracy,
+                    radius: 65,
+                    lineWidth: 24,
+                    animation: true,
+                    animationDuration: 5000,
+                    progressColor: const Color(0xFF4AC435),
+                    backgroundColor: const Color(0xFFF1F4F8),
+                    center: Text(
+                      '${widget.accuracy}%',
+                      style: const TextStyle(
+                          color: Colors.green,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
@@ -147,47 +172,47 @@ class _State extends State<Positive> {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Age(
-                            age: widget.age,
-                          ))),
-              child: Align(
-                alignment: const AlignmentDirectional(0, 0.25),
-                child: Material(
-                  color: Colors.transparent,
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+            Align(
+              alignment: const AlignmentDirectional(0, 0.25),
+              child: Material(
+                color: Colors.transparent,
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.79,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  constraints: const BoxConstraints(
+                    maxWidth: double.infinity,
                   ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.79,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    constraints: const BoxConstraints(
-                      maxWidth: double.infinity,
+                  decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 4,
+                        color: Color(0x33000000),
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF31496C), Color(0xFFE0E3E7)],
+                      stops: [0, 1],
+                      begin: AlignmentDirectional(0, -1),
+                      end: AlignmentDirectional(0, 1),
                     ),
-                    decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 4,
-                          color: Color(0x33000000),
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF31496C), Color(0xFFE0E3E7)],
-                        stops: [0, 1],
-                        begin: AlignmentDirectional(0, -1),
-                        end: AlignmentDirectional(0, 1),
-                      ),
-                      borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        color: const Color(0xFFE0E3E7),
-                        width: 5,
-                      ),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: const Color(0xFFE0E3E7),
+                      width: 5,
                     ),
+                  ),
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Age(
+                                  age: widget.age,
+                                ))),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [

@@ -8,10 +8,27 @@ class AuthNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  // for circular progress indicator
   bool? _loading = false;
   bool? get loading => _loading;
   void setLoading(bool? loading) {
     _loading = loading;
+    notifyListeners();
+  }
+
+  // for hiding/showing password
+  bool? _passwordShown = false;
+  bool? get passwordShown => _passwordShown;
+  void setPasswordShown(bool? passwordShown) {
+    _passwordShown = passwordShown;
+    notifyListeners();
+  }
+
+  // for hiding/showing Confirm password
+  bool? _confirmPasswordShown = false;
+  bool? get confirmPasswordShown => _confirmPasswordShown;
+  void setconfirmPasswordShown(bool? confirmPasswordShown) {
+    _confirmPasswordShown = confirmPasswordShown;
     notifyListeners();
   }
 

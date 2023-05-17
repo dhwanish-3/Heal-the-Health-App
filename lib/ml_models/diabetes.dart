@@ -32,8 +32,8 @@ class _State extends State<Diabetes> {
     final AgeController = TextEditingController();
     // final _AgeController = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/diab';
-    const apiUrlAge = 'http://34.131.127.115:8080/age_diab';
+    const apiUrl = 'http://34.131.185.13:8080/diab';
+    const apiUrlAge = 'http://34.131.185.13:8080/age_diab';
     final data1 = [
       0,
       0,

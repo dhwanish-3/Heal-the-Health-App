@@ -3,6 +3,12 @@ import 'package:heal_the_health_app/constants/imports.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark),
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthNotifier()),

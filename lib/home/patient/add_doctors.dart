@@ -8,7 +8,26 @@ class AddDoctors extends StatefulWidget {
 }
 
 class _AddDoctorsState extends State<AddDoctors> {
-  List<DoctorUser> Doctors = [];
+  List<String> Types = [
+    'General Practitioner',
+    'Gastroenterologist',
+    'Neurologist',
+    'Dermatologist',
+    'Pediatrician',
+    'Cardiologist',
+    'Hepatologist',
+    'Immunologist',
+    'Infectious Disease Specialist',
+    'Urologist',
+    'Pulmonologist',
+    'Otolaryngologist',
+    'Vascular Surgeon',
+    'Endocrinologist',
+    'Colorectal Surgeon',
+    'Orthopedic Surgeon',
+  ];
+  String _selectedSpecialization = 'General Practitioner';
+
   final CollectionReference doctorCollection =
       FirebaseFirestore.instance.collection('Doctors');
   final _searchFilter = TextEditingController();
@@ -31,77 +50,125 @@ class _AddDoctorsState extends State<AddDoctors> {
         });
   }
 
-  _getDoctorsList() async {
-    final uid = _auth.currentUser?.uid;
-    final QuerySnapshot<Map<String, dynamic>> data =
-        await FirebaseFirestore.instance
-            .collection('Doctors')
-            // .doc(_auth.currentUser!.uid)
-            .orderBy('name')
-            .get()
-            .catchError((e) => debugPrint(e))
-            .then((value) {
-      setState(() {
-        // debugPrint(value.docs.toString());
+  @override
+  Widget build(BuildContext context) {
+    List<DoctorUser> Doctors = [];
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    // List<DoctorUser> filterDoctors = [];
+    Future<void> _getDoctorsList(String specialization) async {
+      await FirebaseFirestore.instance
+          .collection('Doctors')
+          .where('specialization', isEqualTo: specialization)
+          .get()
+          .catchError((e) => debugPrint(e))
+          .then((value) {
+        print(value.docs);
         Doctors = value.docs
             .map((doctor) => DoctorUser.fromMap(doctor.data()))
             .toList();
+
+        return value;
       });
-      return value;
-    });
-  }
+    }
 
-  @override
-  void initState() {
-    AuthNotifier authNotifier;
-    Future.delayed(const Duration(seconds: 1)).then((value) {
-      // authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-      // AuthService().initializeDoctor(authNotifier);
-      _getDoctorsList();
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
       appBar: GradientAppBar(title: 'Add Doctors'),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
-            TextFormField(
-              controller: _searchFilter,
-              decoration: const InputDecoration(
-                  hintText: 'Search',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)))),
-              onChanged: (String value) {
-                setState(() {});
-              },
+            SizedBox(
+              height: 50,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: Types.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 3, vertical: 6),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedSpecialization = Types[index];
+                          });
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color:
+                                        _selectedSpecialization == Types[index]
+                                            ? Colors.blueAccent
+                                            : Colors.blue),
+                                borderRadius: BorderRadius.circular(20),
+                                color: _selectedSpecialization == Types[index]
+                                    ? Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.5)
+                                    : Colors.white),
+                            child: Center(
+                                child: Text(
+                              Types[index],
+                              style: TextStyle(
+                                  color: _selectedSpecialization == Types[index]
+                                      ? Colors.white
+                                      : Colors.blue),
+                            ))),
+                      ),
+                    );
+                  }),
             ),
-            Expanded(
-                child: ListView.builder(
-                    itemCount: Doctors.length,
-                    itemBuilder: (context, index) {
-                      DoctorUser doctor = Doctors[index];
-                      if (_searchFilter.text.isEmpty) {
-                        return Card(child: showListTile(doctor, context));
-                      } else if (doctor.name
-                              .toLowerCase()
-                              .contains(_searchFilter.text.toLowerCase()) ||
-                          doctor.hospitalName
-                              .toLowerCase()
-                              .contains(_searchFilter.text.toLowerCase())) {
-                        return Card(
-                          child: showListTile(doctor, context),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    })),
+            // 5.heightBox,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: _searchFilter,
+                decoration: const InputDecoration(
+                    hintText: 'Search',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15)))),
+                onChanged: (String value) {
+                  setState(() {});
+                },
+              ),
+            ),
+            FutureBuilder(
+                future: _getDoctorsList(_selectedSpecialization),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.greenAccent,
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    // Show an error message if there was an error during the delay
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    return Expanded(
+                        child: ListView.builder(
+                            itemCount: Doctors.length,
+                            itemBuilder: (context, index) {
+                              DoctorUser doctor = Doctors[index];
+                              if (_searchFilter.text.isEmpty) {
+                                return Card(
+                                    child: showListTile(doctor, context));
+                              } else if (doctor.name.toLowerCase().contains(
+                                      _searchFilter.text.toLowerCase()) ||
+                                  doctor.hospitalName.toLowerCase().contains(
+                                      _searchFilter.text.toLowerCase())) {
+                                return Card(
+                                  child: showListTile(doctor, context),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }));
+                  }
+                }),
             // RoundButton(
             //     title: 'Next',
             //     onTap: () async {
@@ -109,10 +176,10 @@ class _AddDoctorsState extends State<AddDoctors> {
             //           authNotifier.patientDetails!.doctorsVisited ?? []);
             //       await UpdateDoctors(authNotifier.patientDetails!.uid ?? '',
             //           authNotifier.patientDetails!.doctorsVisited ?? []);
-            //       // Navigator.push(
-            //       //     (context),
-            //       //     MaterialPageRoute(
-            //       //         builder: (context) => const SymptomsScreen()));
+            // Navigator.push(
+            //     (context),
+            //     MaterialPageRoute(
+            //         builder: (context) => const SymptomsScreen()));
             //     })
           ],
         ),

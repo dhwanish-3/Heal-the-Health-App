@@ -1,11 +1,8 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/patient/add_doctors.dart';
-import 'package:heal_the_health_app/home/disease_details.dart';
-import 'package:heal_the_health_app/home/patient/insurance.dart';
-import 'package:heal_the_health_app/ml_models/symptoms.dart';
 
 class HealthNeeds extends StatelessWidget {
-  const HealthNeeds({Key? key}) : super(key: key);
+  HealthNeeds({Key? key}) : super(key: key);
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,47 +26,116 @@ class HealthNeeds extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const SymptomsScreen()));
     }
 
+    goToAppointments() {
+      return Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const Appointments()));
+    }
+
     FunctionFire(int index) {
       if (index == 0) {
         goToAddDoctors();
       } else if (index == 1) {
-        goToInsurance();
+        goToAppointments();
       } else if (index == 2) {
-        goToDiseases();
-      } else if (index == 3) {
         goToSymtoms();
+      } else if (index == 3) {
+        goToInsurance();
+      } else if (index == 4) {
+        goToDiseases();
       }
     }
 
     List<CustomIcon> customIcons = [
       CustomIcon(
-          name: "Doctors\nAvailable",
-          icon: 'images/appointment.png',
+          name: "Visit\nDoctor",
+          icon: 'images/doctors.png',
           onTap: () => goToAddDoctors()),
       CustomIcon(
           name: "Health\nInsurance",
-          icon: 'images/person-diary.png',
+          icon: 'images/insurance.png',
           onTap: () => goToInsurance),
       CustomIcon(
-          name: "Disease\nDetails",
-          icon: 'images/virus.png',
-          onTap: () => goToDiseases()),
-      CustomIcon(
           name: "Disease\nPredictor",
-          icon: 'images/more.png',
+          icon: 'images/predictor.png',
           onTap: () => goToSymtoms()),
+      CustomIcon(
+          name: "Health\nVisits",
+          icon: 'images/appointment.png',
+          onTap: () => goToAppointments()),
+      CustomIcon(
+          name: "Disease\nDetails",
+          icon: 'images/details.png',
+          onTap: () => goToDiseases()),
     ];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: List.generate(customIcons.length, (index) {
+        if (index == 2) {
+          return InkWell(
+            onTap: () => FunctionFire(index),
+            child: Column(
+              children: [
+                Container(
+                  width: 70,
+                  height: 70,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primaryContainer
+                        .withOpacity(0.4),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    customIcons[index].icon,
+                  ),
+                ),
+                4.heightBox,
+                Text(
+                  customIcons[index].name,
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+          );
+        }
+        if (index == 4) {
+          return InkWell(
+            onTap: () => FunctionFire(index),
+            child: Column(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  padding: const EdgeInsets.all(7),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primaryContainer
+                        .withOpacity(0.4),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    customIcons[index].icon,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  customIcons[index].name,
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+          );
+        }
         return InkWell(
           onTap: () => FunctionFire(index),
           child: Column(
             children: [
               Container(
-                width: 70,
-                height: 70,
-                padding: const EdgeInsets.all(15),
+                width: 60,
+                height: 60,
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Theme.of(context)
                       .colorScheme

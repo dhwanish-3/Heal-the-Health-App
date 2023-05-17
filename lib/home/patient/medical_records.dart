@@ -26,7 +26,8 @@ class _MedicalRecordsState extends State<MedicalRecords> {
   }
 
   Widget _buildList(List<String>? details) {
-    if (details != null && details != []) {
+    if (details != null && details.isNotEmpty) {
+      debugPrint(details.toString());
       return ListView.builder(
           itemCount: details.length,
           itemBuilder: (context, index) {
@@ -39,11 +40,24 @@ class _MedicalRecordsState extends State<MedicalRecords> {
           });
     } else {
       return Center(
-        child: Container(
-          child: const Text(
-            "No details",
-            style: TextStyle(fontSize: 32),
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+                height: 180,
+                width: 180,
+                child: Column(
+                  children: const [
+                    Image(image: AssetImage('images/no_medical.png')),
+                  ],
+                )),
+            const Text(
+              "Medical History is Empty",
+              style: TextStyle(
+                  fontSize: 24, color: Color.fromARGB(255, 255, 162, 55)),
+            ),
+          ],
         ),
       );
     }

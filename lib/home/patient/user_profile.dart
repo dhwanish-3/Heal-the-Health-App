@@ -347,6 +347,7 @@ class _UserProfileState extends State<UserProfile> {
 
     AuthService().signOutPatient(authNotifier, context);
     userShared.ClearDiaryList();
-    Navigator.pushNamed(context, RouteNames.patientlogin);
+    Navigator.pushNamedAndRemoveUntil(
+        context, RouteNames.patientlogin, (route) => false);
   }
 }

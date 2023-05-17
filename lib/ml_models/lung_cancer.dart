@@ -40,8 +40,8 @@ class _State extends State<LungCancer> {
     final SDController = TextEditingController();
     final CPController = TextEditingController();
 
-    const apiUrl = 'http://34.131.127.115:8080/lung';
-    const apiUrlAge = 'http://34.131.127.115:8080/age_lung';
+    const apiUrl = 'http://34.131.185.13:8080/lung';
+    const apiUrlAge = 'http://34.131.185.13:8080/age_lung';
     PatientUser patient = authNotifier.patientDetails!;
     final array = [
       patient.gender,

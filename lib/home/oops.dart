@@ -17,10 +17,21 @@ class _OOPsState extends State<OOPs> {
         child: Center(
           child: Container(
             width: 1000,
-            decoration: BoxDecoration(
-                color: authNotifier.isDoctor == true
-                    ? const Color.fromARGB(255, 255, 181, 70)
-                    : const Color.fromARGB(255, 99, 255, 206)),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromARGB(255, 8, 123, 255),
+                  Color.fromARGB(158, 0, 119, 255),
+                  Color.fromARGB(161, 121, 206, 255),
+                ],
+                stops: [0, 0, 1],
+              ),
+              // color: authNotifier.isDoctor == true
+              //     ? const Color.fromARGB(255, 255, 181, 70)
+              //     : const Color.fromARGB(255, 99, 255, 206)
+            ),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,7 +53,7 @@ class _OOPsState extends State<OOPs> {
                         fontWeight: FontWeight.bold,
                         color: authNotifier.isDoctor == true
                             ? const Color.fromARGB(255, 70, 255, 255)
-                            : const Color.fromARGB(255, 255, 115, 115)),
+                            : const Color.fromARGB(255, 255, 0, 0)),
                   ),
                   20.heightBox,
                   const Text(
