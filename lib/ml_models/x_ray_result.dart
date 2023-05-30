@@ -1,14 +1,15 @@
 import 'package:heal_the_health_app/constants/imports.dart';
+import 'package:heal_the_health_app/models/x_ray.dart';
 
-class ResultofSymptoms extends StatefulWidget {
-  final Disease? disease;
-  const ResultofSymptoms({super.key, required this.disease});
+class XRayResults extends StatefulWidget {
+  const XRayResults({super.key, required this.disease});
+  final XRay disease;
 
   @override
-  State<ResultofSymptoms> createState() => _ResultofSymptomsState();
+  State<XRayResults> createState() => _XRayResultsState();
 }
 
-class _ResultofSymptomsState extends State<ResultofSymptoms> {
+class _XRayResultsState extends State<XRayResults> {
   late Color primaryColor = const Color(0xFF4B39EF);
   late Color secondaryColor = const Color(0xFF39D2C0);
   late Color tertiaryColor = const Color(0xFFEE8B60);
@@ -52,25 +53,20 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
     return widgets;
   }
 
-  double findSize(String str) {
-    if (str.length < 10) {
-      return 26;
-    } else {
-      return 40 - (str.length - 0);
-    }
-  }
-
   List<DoctorUser> doctors = [];
-  buildDoctors(Disease disease) async {
-    for (String doctorid in disease.doctors ?? []) {
-      await FirebaseFirestore.instance
-          .collection('Doctors')
-          .doc(doctorid)
-          .get()
-          .then((value) => doctors
-              .add(DoctorUser.fromMap(value.data() as Map<String, dynamic>)));
-    }
-    return doctors;
+  Future<void> buildDoctors() async {
+    await FirebaseFirestore.instance
+        .collection('Doctors')
+        .where('specialization', isEqualTo: 'Pulmonologist')
+        .get()
+        .then((value) {
+      print(value);
+      doctors = value.docs
+          .map((doctor) => DoctorUser.fromMap(doctor.data()))
+          .toList();
+      print(doctors);
+      return value;
+    });
   }
 
   showDoctorDetails(DoctorUser doctor, context) {
@@ -90,55 +86,32 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
         });
   }
 
-  List<Widget> buildDoctorsList() {
-    List<Widget> listdoctors = [];
-    for (DoctorUser doctor in doctors) {
-      listdoctors.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: GestureDetector(
-          onTap: () {
-            showDoctorDetails(doctor, context);
-          },
-          child: Container(
-            height: 65,
-            decoration: BoxDecoration(
-                // color: const Color.fromARGB(255, 255, 243, 207),
-                border: Border.all(color: Colors.grey),
-                borderRadius: const BorderRadius.all(Radius.circular(20))),
-            child: Row(children: [
-              10.widthBox,
-              CircleAvatar(
-                backgroundImage: showProfileImage(doctor),
-              ),
-              10.widthBox,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    doctor.name,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w800),
-                  ),
-                  SizedBox(
-                    height: 20,
-                    width: 300,
-                    child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [Text(doctor.hospitalName)]),
-                  ),
-                ],
-              ),
-            ]),
-          ),
-        ),
-      ));
-    }
-    return listdoctors;
-  }
-
   @override
   Widget build(BuildContext context) {
+    List<Widget> buildDoctorsList() {
+      List<Widget> listdoctors = [];
+
+      for (DoctorUser doctor in doctors) {
+        listdoctors.add(Container(
+          height: 65,
+          decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 255, 243, 207),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: ListTile(
+            onTap: () {
+              showDoctorDetails(doctor, context);
+            },
+            leading: CircleAvatar(
+              backgroundImage: showProfileImage(doctor),
+            ),
+            title: Text(doctor.name),
+            subtitle: Text(doctor.hospitalName),
+          ),
+        ));
+      }
+      return listdoctors;
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: NestedScrollView(
@@ -198,7 +171,7 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   5, 0, 5, 0),
                               child: Text(
-                                widget.disease!.disease ?? '',
+                                widget.disease.name,
                                 // '(vertigo) Paroymsal  Positional Vertigo',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -234,7 +207,7 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                         padding: const EdgeInsets.all(12),
                         child: Container(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 1,
+                          height: MediaQuery.of(context).size.height * 0.8,
                           decoration: BoxDecoration(
                             color: secondaryBackground,
                           ),
@@ -258,21 +231,18 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                               // ),
                               //   ],
                               // ),
-                              15.heightBox,
+                              10.heightBox,
                               const Text(
                                 'Handipicked Specialists for you',
                                 style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.deepOrange,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 20, color: Colors.deepOrange),
                               ),
-                              10.heightBox,
+                              5.heightBox,
                               Expanded(
                                 child: SizedBox(
                                   width: 400,
                                   child: FutureBuilder(
-                                      future: buildDoctors(
-                                          widget.disease ?? Disease()),
+                                      future: buildDoctors(),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
@@ -402,20 +372,6 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 60),
-                                child: RoundButton(
-                                    title: 'Go Back to Home Page',
-                                    onTap: () {
-                                      Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: ((context) =>
-                                                  const HomePageDhwanish())),
-                                          (route) => false);
-                                    }),
-                              ),
                               10.heightBox
                             ],
                           ),
@@ -485,7 +441,7 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
                     child: Text(
-                      widget.disease!.discription ?? '',
+                      widget.disease.description,
                       // 'Intracerebral hemorrhage (ICH) is when blood suddenly bursts into brain tissue, causing damage to your brain. Symptoms usually appear suddenly during ICH. They include headache, weakness, confusion, and paralysis, particularly on one side of your body.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -557,8 +513,7 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                               const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
 
                           child: Column(
-                              children: _buildList(
-                                  widget.disease!.precautions ?? [])),
+                              children: _buildList(widget.disease.prevention)),
                           //   ],
                           // ),
                         ),

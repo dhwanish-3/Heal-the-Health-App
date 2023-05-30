@@ -17,7 +17,7 @@ class AuthNotifier with ChangeNotifier {
   }
 
   // for hiding/showing password
-  bool? _passwordShown = false;
+  bool? _passwordShown = true;
   bool? get passwordShown => _passwordShown;
   void setPasswordShown(bool? passwordShown) {
     _passwordShown = passwordShown;
@@ -25,7 +25,7 @@ class AuthNotifier with ChangeNotifier {
   }
 
   // for hiding/showing Confirm password
-  bool? _confirmPasswordShown = false;
+  bool? _confirmPasswordShown = true;
   bool? get confirmPasswordShown => _confirmPasswordShown;
   void setconfirmPasswordShown(bool? confirmPasswordShown) {
     _confirmPasswordShown = confirmPasswordShown;

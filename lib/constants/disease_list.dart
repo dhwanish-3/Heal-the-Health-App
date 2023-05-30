@@ -499,7 +499,6 @@ List<List<String>> symptomsstringList = [
     'Diarrhoea',
     'Toxic look (typhos)',
     'Belly pain',
-    'Belly pain'
   ],
   [
     'Itching',

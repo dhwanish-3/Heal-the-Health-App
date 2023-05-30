@@ -1,6 +1,6 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/disease_details.dart';
-import 'package:heal_the_health_app/home/oops.dart';
+import 'package:heal_the_health_app/home/doctor/appointments_doctor.dart';
+import 'package:heal_the_health_app/home/doctor/edit_schedule.dart';
 
 class DoctorTiles extends StatelessWidget {
   const DoctorTiles({super.key});
@@ -12,9 +12,9 @@ class DoctorTiles extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const AddPatients()));
     }
 
-    goToListPatients() {
+    goToEditSchedule() {
       return Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const ListofPatients()));
+          MaterialPageRoute(builder: (context) => const EditSchedule()));
     }
 
     goToDiseases() {
@@ -22,20 +22,22 @@ class DoctorTiles extends StatelessWidget {
           MaterialPageRoute(builder: (context) => const DiseaseDetails()));
     }
 
-    goToAddModels() {
+    goToAppointments() {
       return Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const OOPs()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => const AppointmentsPageforDoctor()));
     }
 
     FunctionFire(int index) {
       if (index == 0) {
         goToAddPatients();
       } else if (index == 1) {
-        goToListPatients();
+        goToEditSchedule();
       } else if (index == 2) {
-        goToDiseases();
+        goToAppointments();
       } else if (index == 3) {
-        goToAddModels();
+        goToDiseases();
       }
     }
 
@@ -45,17 +47,17 @@ class DoctorTiles extends StatelessWidget {
           icon: 'images/add_patient.png',
           onTap: () => goToAddPatients()),
       Tile(
-          name: "Your\nPatients",
-          icon: 'images/person-diary.png',
-          onTap: () => goToListPatients),
+          name: "Edit\nSchedule",
+          icon: 'images/edit_schedule.png',
+          onTap: () => goToEditSchedule),
+      Tile(
+          name: "Health\nVisits",
+          icon: 'images/doc_app.png',
+          onTap: () => goToAppointments()),
       Tile(
           name: "Disease\nDetails",
           icon: 'images/virus.png',
           onTap: () => goToDiseases()),
-      Tile(
-          name: "More\n",
-          icon: 'images/more.png',
-          onTap: () => goToAddModels()),
     ];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

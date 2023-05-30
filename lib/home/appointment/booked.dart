@@ -34,10 +34,11 @@ class AppointmentBooked extends StatelessWidget {
               child: RoundButton(
                   title: 'Back to Home Page',
                   onTap: () {
-                    int count = 0;
-                    Navigator.popUntil(context, (route) {
-                      return count++ == 4;
-                    });
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: ((context) => const HomePageDhwanish())),
+                        (route) => false);
                   }),
             )
           ],

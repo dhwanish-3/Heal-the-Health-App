@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: "330d7fcbb72624f5b6d374af8b059b0ef4ba96ba5b8987f874964a1287eb617d"
+      sha256: "8eb354cb8ebed8a9fdf63699d15deff533bc133128898afaf754926b57d611b6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.18"
+    version: "1.3.1"
   animated_text_kit:
     dependency: "direct main"
     description:
@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  bubble:
+    dependency: "direct main"
+    description:
+      name: bubble
+      sha256: "65b992b8f8ba2e7e2871190cbdfaa0818b6de2f340bef37cb5ee1b61debe0226"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   card_swiper:
     dependency: "direct main"
     description:
@@ -161,6 +169,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dialogflow_flutter:
+    dependency: "direct main"
+    description:
+      name: dialogflow_flutter
+      sha256: "00f2911c8359027e812f0406030ca83c3462f31121aa4632fdb9db9f2a6ec0e8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   dots_indicator:
     dependency: transitive
     description:
@@ -229,26 +245,26 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "75f747cafd7cbd6c00b908e3a7aa59fc31593d46ba8165d9ee8a79e69464a394"
+      sha256: "250678b816279b3240c3a33e1f76bf712c00718f1fbeffc85873a5da8c077379"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.0"
+    version: "2.13.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: "5615b30c36f55b2777d0533771deda7e5730e769e5d3cb7fda79e9bed86cfa55"
+      sha256: b63e3be6c96ef5c33bdec1aab23c91eb00696f6452f0519401d640938c94cba2
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.3"
+    version: "4.8.0"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
-      sha256: "0c1cf1f1022d2245ac117443bb95207952ca770281524d2908e323bc063fb8ff"
+      sha256: "8c0f4c87d20e2d001a5915df238c1f9c88704231f591324205f5a5d2a7740a45"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.2"
+    version: "2.5.0"
   firebase_database:
     dependency: "direct main"
     description:
@@ -273,6 +289,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+25"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: "9cfe5c4560fb83393511ca7620f8fb3f22c9a80303052f10290e732fcfb801bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.6.1"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      sha256: "7e25cb71019ccef8b1fd7b37969af79f04c467974cce4dfc291fa36974edd7ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.5.1"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: "5d9840cc8126ea723b1bda901389cb542902f664f2653c16d4f8114e95f13cec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.1"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -440,6 +480,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.6"
+  googleapis_auth:
+    dependency: transitive
+    description:
+      name: googleapis_auth
+      sha256: f59be210ede1e22718962e4ef48a08ae783eb67fe19b0f4c16b204e20df0869c
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   gradient_app_bar:
     dependency: "direct main"
     description:

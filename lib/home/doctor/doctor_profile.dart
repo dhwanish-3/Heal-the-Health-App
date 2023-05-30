@@ -1,4 +1,5 @@
 import 'package:heal_the_health_app/constants/imports.dart';
+import 'package:heal_the_health_app/home/doctor/edit_schedule.dart';
 import 'package:heal_the_health_app/home/oops.dart';
 
 class DoctorProfile extends StatefulWidget {
@@ -105,7 +106,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
               userEmailid,
               style: const TextStyle(fontSize: 20),
             ),
-            10.heightBox,
+            30.heightBox,
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 100,
@@ -156,7 +157,9 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListTile(
-                      onTap: () => goToAddPatients(),
+                      onTap: () {
+                        goToEditSchedule();
+                      },
                       leading: Container(
                           height: 40,
                           width: 40,
@@ -164,11 +167,11 @@ class _DoctorProfileState extends State<DoctorProfile> {
                               borderRadius: BorderRadius.circular(100),
                               color: Colors.grey[200]),
                           child: const Icon(
-                            LineIcons.bookmarkAlt,
+                            Icons.edit_calendar_outlined,
                             color: Colors.orange,
                           )),
                       title: const Text(
-                        'Patients',
+                        'Edit Schedule',
                         style: TextStyle(fontSize: 20),
                       ),
                       trailing: Container(
@@ -187,7 +190,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListTile(
-                      onTap: () => logout(),
+                      onTap: () => ShowPopUp(),
                       leading: Container(
                           height: 40,
                           width: 40,
@@ -199,7 +202,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
                             color: Colors.red,
                           )),
                       title: const Text(
-                        'Logout',
+                        'LogOut',
                         style: TextStyle(fontSize: 20),
                       ),
                       trailing: Container(
@@ -275,7 +278,7 @@ class _DoctorProfileState extends State<DoctorProfile> {
       });
 
       debugPrint(newUrl);
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('Doctors')
           .doc(id)
           .update({'imageUrl': newUrl});
@@ -324,16 +327,48 @@ class _DoctorProfileState extends State<DoctorProfile> {
         context, MaterialPageRoute(builder: (context) => const OOPs()));
   }
 
-  goToAddPatients() {
+  goToEditSchedule() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const AddPatients()));
+        context, MaterialPageRoute(builder: (context) => const EditSchedule()));
   }
 
-  logout() {
+  ShowPopUp() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(25),
+            actionsPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            title: const Text('LogOut'),
+            content: const Text('Do you want to logout from this app'),
+            actions: [
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('No')),
+              ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+                  onPressed: () async {
+                    await logout();
+                  },
+                  child: const Text('Yes'))
+            ],
+          );
+        });
+  }
+
+  logout() async {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     debugPrint('logout');
-    AuthService().signOutDoctor(authNotifier, context);
+    await AuthService().signOutDoctor(authNotifier, context);
     Navigator.pushNamed(context, RouteNames.doctorlogin);
   }
 }

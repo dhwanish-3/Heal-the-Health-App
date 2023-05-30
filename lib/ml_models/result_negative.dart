@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:heal_the_health_app/home/oops.dart';
-import 'package:heal_the_health_app/home/patient/insurance.dart';
+import 'package:heal_the_health_app/constants/imports.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class Negative extends StatefulWidget {
@@ -94,6 +92,7 @@ class _State extends State<Negative> {
                   radius: 65,
                   lineWidth: 24,
                   animation: true,
+                  animationDuration: 2000,
                   progressColor: const Color(0xFFF80005),
                   backgroundColor: const Color(0xFFF1F4F8),
                   center: Text("${widget.accuracy}%",
@@ -243,8 +242,10 @@ class _State extends State<Negative> {
             Align(
               alignment: const AlignmentDirectional(0, 0.2),
               child: InkWell(
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const OOPs())),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddDoctors())),
                 child: Material(
                   color: Colors.transparent,
                   elevation: 10,

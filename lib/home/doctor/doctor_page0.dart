@@ -1,5 +1,6 @@
 import 'package:heal_the_health_app/constants/imports.dart';
 import 'package:heal_the_health_app/home/doctor/doctor_tiles.dart';
+import 'package:heal_the_health_app/home/doctor/upcoming_patient.dart';
 
 class DoctorPage0 extends StatefulWidget {
   const DoctorPage0({super.key});
@@ -11,9 +12,9 @@ class DoctorPage0 extends StatefulWidget {
 class _DoctorPage0State extends State<DoctorPage0> {
   double findSize(String name) {
     if (name.length <= 6) {
-      return 28;
+      return 30;
     } else {
-      return 28 - (name.length - 4);
+      return 30 - (name.length - 4);
     }
   }
 
@@ -24,164 +25,193 @@ class _DoctorPage0State extends State<DoctorPage0> {
     String userName = authNotifier.doctorDetails!.name;
     double fem = MediaQuery.of(context).size.width / 300;
     return SingleChildScrollView(
-      child: SafeArea(
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              height: 380,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                begin: Alignment(-2.189, -2.079),
-                end: Alignment(1.511, 1.278),
-                colors: [
-                  Color.fromARGB(158, 255, 0, 0),
-                  Color.fromARGB(159, 255, 252, 98),
-                  Color.fromARGB(255, 255, 98, 0)
-                ],
-                stops: <double>[0, 0, 1],
-              )),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: [
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                // padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromARGB(255, 255, 217, 65),
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                        Icons.notifications_outlined)),
-                              ),
-                            ]),
-                        Column(
+      child: Column(
+        children: [
+          Container(
+            height: 280,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment(-2.189, -2.079),
+              end: Alignment(1.511, 1.278),
+              colors: [
+                Color.fromARGB(255, 255, 155, 47),
+                Color.fromARGB(159, 255, 252, 98),
+                Color.fromARGB(255, 255, 125, 44)
+              ],
+              stops: [0, 0, 1],
+            )),
+            child: Column(
+              children: [
+                28.heightBox,
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    children: [
+                      Row(
                           mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              height: 250,
-                              width: 350,
+                              height: 170,
+                              width: 315,
                               decoration: const BoxDecoration(),
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Hi,\n$userName !',
-                                            style: TextStyle(
-                                                fontSize: findSize(userName),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const Text(
-                                            'Welcome',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
+                                          Wrap(
+                                            direction: Axis.vertical,
+                                            children: [
+                                              SizedBox(
+                                                height: 50,
+                                                width: 100,
+                                                child: ListView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: [
+                                                    Text(
+                                                      'Hi,\nDr. $userName !',
+                                                      style: TextStyle(
+                                                          fontSize: findSize(
+                                                              userName),
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const Text(
+                                                'Welcome',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      20.heightBox,
+                                      30.heightBox,
                                       AnimatedTextKit(
-                                        repeatForever: false,
+                                        // repeatForever: true,
                                         animatedTexts: [
                                           TyperAnimatedText(
-                                            'Hope you are\ndoing Great ! ',
+                                            'Hope you are\ndoing Great !',
                                             textStyle: const TextStyle(
-                                              fontSize: 24,
+                                              fontSize: 22,
                                             ),
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                  const Image(
-                                      image:
-                                          AssetImage('images/nurse-greet.png')),
+                                  20.widthBox,
+                                  const SizedBox(
+                                    height: 200,
+                                    child: Image(
+                                        image: AssetImage(
+                                            'images/nurse-greet.png')),
+                                  ),
                                 ],
+                              ),
+                            ),
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 255, 217, 65),
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon:
+                                      const Icon(Icons.notifications_outlined)),
+                            ),
+                          ]),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 58,
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: SizedBox(
+                      width: 340 * fem,
+                      height: 28 * fem,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // image: const DecorationImage(
+                          //     image: AssetImage('images/Diagn_ssist_nobg.png')),
+                          borderRadius: BorderRadius.circular(30 * fem),
+                          gradient: const LinearGradient(
+                            begin: Alignment(0, -1),
+                            end: Alignment(0, 1),
+                            colors: [
+                              Color.fromARGB(255, 255, 217, 142),
+                              Color.fromARGB(255, 255, 200, 2)
+                            ],
+                            stops: [0, 1],
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 8,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Transform.scale(
+                                scale: 1.7,
+                                child:
+                                    Image.asset('images/Diagn_ssist_nobg.png'),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    // color: Colors.amber,
-                    height: 58,
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: SizedBox(
-                        width: 340 * fem,
-                        height: 28 * fem,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30 * fem),
-                            gradient: const LinearGradient(
-                              begin: Alignment(0, -1),
-                              end: Alignment(0, 1),
-                              colors: <Color>[
-                                Color.fromARGB(255, 255, 236, 197),
-                                Color.fromARGB(142, 255, 179, 2)
-                              ],
-                              stops: <double>[0, 1],
-                            ),
-                          ),
-                        ),
                       ),
                     ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: DoctorTiles(),
-                      ),
-                      20.heightBox,
-                      VxSwiper.builder(
-                        enlargeCenterPage: true,
-                        aspectRatio: 1,
-                        autoPlay: false,
-                        height: 180,
-                        itemCount: 3,
-                        itemBuilder: _buildListItem,
-                      ),
-                      20.heightBox,
-                      _buildHealthOrg(context),
-                      80.heightBox
-                      // _buildHealthOrg(context)
-                    ]),
                   ),
-                ],
-              ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              children: [
+                UpcomingPatient(),
+                10.heightBox,
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: DoctorTiles(),
+                ),
+                20.heightBox,
+                VxSwiper.builder(
+                  enlargeCenterPage: true,
+                  aspectRatio: 1,
+                  autoPlay: false,
+                  height: 180,
+                  itemCount: 3,
+                  itemBuilder: _buildListItem,
+                ),
+                20.heightBox,
+                _buildHealthOrg(context),
+                80.heightBox
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -203,12 +233,15 @@ class _DoctorPage0State extends State<DoctorPage0> {
               maxWidth: double.infinity,
             ),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 226, 199, 102),
+              color: const Color.fromARGB(255, 167, 255, 231),
               gradient: const LinearGradient(
                   stops: [0, 1],
                   begin: AlignmentDirectional(0, 1),
                   end: AlignmentDirectional(0, -1),
-                  colors: [Color.fromARGB(255, 244, 169, 89), Colors.white]),
+                  colors: [
+                    Color.fromARGB(255, 255, 238, 87),
+                    Color.fromARGB(255, 172, 241, 255)
+                  ]),
               boxShadow: const [
                 BoxShadow(
                   blurRadius: 4,
@@ -218,7 +251,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
               ],
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: const Color.fromARGB(255, 244, 217, 182),
+                color: const Color.fromARGB(255, 190, 255, 235),
                 width: 5,
               ),
             ),
@@ -228,7 +261,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: Image.asset(
-                    'images/fingertips.png',
+                    'images/doc_appointment.png',
                     width: 90,
                     height: 90,
                     fit: BoxFit.cover,
@@ -240,10 +273,11 @@ class _DoctorPage0State extends State<DoctorPage0> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: const [
                       Expanded(
+                        flex: 5,
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 20, 5, 0),
                           child: Text(
-                            'UNDERTAKE SOPHISTICATED DISEASE CONFIRMATION TEST',
+                            'APPOINTMENT MANGAMENT WITH EASE',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
@@ -251,11 +285,13 @@ class _DoctorPage0State extends State<DoctorPage0> {
                         ),
                       ),
                       Expanded(
+                        flex: 6,
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 10, 5, 0),
                           child: Text(
-                            'Diagnosis at your fingertips',
+                            'Customise your schedule according to your working hours',
                             textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
@@ -312,19 +348,18 @@ class _DoctorPage0State extends State<DoctorPage0> {
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                   child: Image.asset(
                     'images/manage.png',
-                    width: 90,
-                    height: 90,
+                    width: 80,
+                    height: 80,
                     fit: BoxFit.contain,
                   ),
                 ),
                 Expanded(
                   child: Column(
-                    // mainAxisSize: MainAxisSize.max,
-                    // crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: const [
                       Expanded(
+                        flex: 5,
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 15, 5, 0),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 25, 5, 0),
                           child: Text(
                             'HASSLE FREE CONSULTATION',
                             textAlign: TextAlign.center,
@@ -334,11 +369,13 @@ class _DoctorPage0State extends State<DoctorPage0> {
                         ),
                       ),
                       Expanded(
+                        flex: 7,
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 2, 0, 0),
                           child: Text(
-                            'Easy access of patients medical history',
+                            'Easy access to patient`s medical history during checkups',
                             textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
@@ -403,6 +440,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: const [
                       Expanded(
+                        flex: 4,
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 20, 5, 0),
                           child: Text(
@@ -414,11 +452,13 @@ class _DoctorPage0State extends State<DoctorPage0> {
                         ),
                       ),
                       Expanded(
+                        flex: 7,
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 10, 5, 0),
                           child: Text(
                             'Patients medical history at your fingertips',
                             textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
@@ -443,6 +483,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            // group50Yzk (47:27)
             margin: EdgeInsets.fromLTRB(2 * fem, 0 * fem, 123 * fem, 18 * fem),
             padding: EdgeInsets.fromLTRB(0 * fem, 1.88 * fem, 0 * fem, 1 * fem),
             width: double.infinity,
@@ -450,6 +491,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
+                  // simpleiconsworldhealthorganiza (47:14)
                   margin: EdgeInsets.fromLTRB(
                       0 * fem, 0 * fem, 12 * fem, 0.88 * fem),
                   width: 32 * fem,
@@ -461,6 +503,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
                   ),
                 ),
                 Container(
+                  // group45mMi (47:17)
                   margin: EdgeInsets.fromLTRB(
                       0 * fem, 1.12 * fem, 0 * fem, 0 * fem),
                   width: 175 * fem,
@@ -487,16 +530,18 @@ class _DoctorPage0State extends State<DoctorPage0> {
             ),
           ),
           SizedBox(
+            // autogroupp32pcdE (2qXNp1Y7aZPLKntaKTp32p)
             width: double.infinity,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   width: 100 * fem,
-                  height: 120 * fem,
+                  height: 110 * fem,
                   child: Image.asset(
                     'images/logo-1.png',
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 SizedBox(
@@ -508,6 +553,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
                   padding: EdgeInsets.fromLTRB(
                       17 * fem, 14 * fem, 13 * fem, 9.88 * fem),
                   child: Center(
+                    // layer12xqW (63:35)
                     child: SizedBox(
                       width: 70 * fem,
                       height: 76.12 * fem,
@@ -523,6 +569,7 @@ class _DoctorPage0State extends State<DoctorPage0> {
                   width: 12 * fem,
                 ),
                 SizedBox(
+                  // hlogowhite159S (63:108)
                   width: 120 * fem,
                   height: 100 * fem,
                   child: Image.asset(

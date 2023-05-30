@@ -1,11 +1,12 @@
 import 'package:heal_the_health_app/constants/imports.dart';
 import 'package:heal_the_health_app/home/appointment/date_time.dart';
 
-class Appointments extends StatefulWidget {
-  const Appointments({super.key});
+class AppointmentsPageforDoctor extends StatefulWidget {
+  const AppointmentsPageforDoctor({super.key});
 
   @override
-  State<Appointments> createState() => _AppointmentsState();
+  State<AppointmentsPageforDoctor> createState() =>
+      _AppointmentsPageforDoctorState();
 }
 
 enum FilterStatus { Upcoming, Complete, Cancel }
@@ -25,102 +26,83 @@ extension FilterExtensions on FilterStatus {
   }
 }
 
-class _AppointmentsState extends State<Appointments> {
+class _AppointmentsPageforDoctorState extends State<AppointmentsPageforDoctor> {
   FilterStatus status = FilterStatus.Upcoming;
   Alignment _alignment = Alignment.centerLeft;
 
-  List<DoctorUser> DoctorsUpcoming = [];
-  List<DoctorUser> DoctorsCompleted = [];
-  List<DoctorUser> DoctorsCancelled = [];
-  getDoctorDetails(String uid, List<DoctorUser> Doctors) async {
+  List<PatientUser> PatientsUpcoming = [];
+  List<PatientUser> PatientsCompleted = [];
+  List<PatientUser> PatientsCancelled = [];
+  getPatientDetails(String uid, List<PatientUser> Patients) async {
     await FirebaseFirestore.instance
-        .collection('Doctors')
+        .collection('Patients')
         .doc(uid)
         .get()
         .then((value) {
-      Doctors.add(DoctorUser.fromMap(value.data() as Map<String, dynamic>));
+      print(value);
+      Patients.add(PatientUser.fromMap(value.data() as Map<String, dynamic>));
     });
   }
 
-  getDoctors(List<Appointment> appointments, List<DoctorUser> Doctors) async {
+  getPatients(
+      List<Appointment> appointments, List<PatientUser> Patients) async {
     for (Appointment schedule in appointments) {
-      await getDoctorDetails(schedule.doctor ?? '', Doctors);
+      await getPatientDetails(schedule.patient ?? '', Patients);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    DoctorsUpcoming = [];
-    DoctorsCompleted = [];
-    DoctorsCancelled = [];
+    PatientsUpcoming = [];
+    PatientsCompleted = [];
+    PatientsCancelled = [];
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-
     List<Appointment> filteredSchedules = [];
     if (status == FilterStatus.Upcoming) {
-      filteredSchedules = authNotifier.patientDetails!.upcoming ?? [];
+      filteredSchedules = authNotifier.doctorDetails!.upcoming ?? [];
     } else if (status == FilterStatus.Complete) {
-      filteredSchedules = authNotifier.patientDetails!.completed ?? [];
+      filteredSchedules = authNotifier.doctorDetails!.completed ?? [];
     } else if (status == FilterStatus.Cancel) {
-      filteredSchedules = authNotifier.patientDetails!.cancelled ?? [];
+      filteredSchedules = authNotifier.doctorDetails!.cancelled ?? [];
     }
-    List<DoctorUser> filteredDoctors = [];
+    List<PatientUser> filteredPatients = [];
     if (status == FilterStatus.Upcoming) {
-      filteredDoctors = DoctorsUpcoming;
+      filteredPatients = PatientsUpcoming;
     } else if (status == FilterStatus.Complete) {
-      filteredDoctors = DoctorsCompleted;
+      filteredPatients = PatientsCompleted;
     } else if (status == FilterStatus.Cancel) {
-      filteredDoctors = DoctorsCancelled;
+      filteredPatients = PatientsCancelled;
     }
     bool isEmpty = false;
     Future<void> getList() async {
       if (status == FilterStatus.Upcoming) {
-        await getDoctors(
-            authNotifier.patientDetails!.upcoming ?? [], DoctorsUpcoming);
-      } else if (status == FilterStatus.Complete) {
-        await getDoctors(
-            authNotifier.patientDetails!.completed ?? [], DoctorsCompleted);
-      } else if (status == FilterStatus.Cancel) {
-        await getDoctors(
-            authNotifier.patientDetails!.cancelled ?? [], DoctorsCancelled);
-      }
+        await getPatients(
+            authNotifier.doctorDetails!.upcoming ?? [], PatientsUpcoming);
+        if (authNotifier.doctorDetails!.upcoming!.isNotEmpty) {
+          await AppointmentBackend().upcomingToCompletedbyDoctor(
+              authNotifier, PatientsUpcoming, PatientsCompleted);
 
-      if (authNotifier.patientDetails!.upcoming!.isNotEmpty) {
-        await AppointmentBackend().upcomingToCompleted(
-            authNotifier, DoctorsUpcoming, DoctorsCompleted);
-        if (status == FilterStatus.Upcoming) {
-          filteredSchedules = authNotifier.patientDetails!.upcoming ?? [];
-          filteredDoctors = DoctorsUpcoming;
-          isEmpty = authNotifier.patientDetails!.upcoming!.isEmpty;
+          filteredSchedules = authNotifier.doctorDetails!.upcoming ?? [];
+          filteredPatients = PatientsUpcoming;
+          isEmpty = authNotifier.doctorDetails!.upcoming!.isEmpty;
         }
+      } else if (status == FilterStatus.Complete) {
+        await getPatients(
+            authNotifier.doctorDetails!.completed ?? [], PatientsCompleted);
+      } else if (status == FilterStatus.Cancel) {
+        await getPatients(
+            authNotifier.doctorDetails!.cancelled ?? [], PatientsCancelled);
       }
     }
 
     if (status == FilterStatus.Upcoming) {
-      isEmpty = authNotifier.patientDetails!.upcoming!.isEmpty;
+      isEmpty = authNotifier.doctorDetails!.upcoming!.isEmpty;
     } else if (status == FilterStatus.Complete) {
-      isEmpty = authNotifier.patientDetails!.completed!.isEmpty;
+      isEmpty = authNotifier.doctorDetails!.completed!.isEmpty;
     } else if (status == FilterStatus.Cancel) {
-      isEmpty = authNotifier.patientDetails!.cancelled!.isEmpty;
+      isEmpty = authNotifier.doctorDetails!.cancelled!.isEmpty;
     }
-    Widget showImage(doctor) {
-      if (doctor.imageUrl != '') {
-        return Image.network(
-          doctor.imageUrl,
-          width: 60,
-          height: 80,
-          fit: BoxFit.cover,
-        );
-      } else {
-        return Image.asset(
-          'images/doctor_profile.png',
-          width: 60,
-          height: 80,
-          fit: BoxFit.cover,
-        );
-      }
-    }
-
     return Scaffold(
       appBar: GradientAppBar(
         authNotifier: authNotifier,
@@ -158,7 +140,6 @@ class _AppointmentsState extends State<Appointments> {
                                     FilterStatus.Cancel) {
                                   status = FilterStatus.Cancel;
                                   _alignment = Alignment.centerRight;
-                                  print(authNotifier.patientDetails!.cancelled);
                                 }
                               });
                             },
@@ -177,7 +158,7 @@ class _AppointmentsState extends State<Appointments> {
                     width: 100,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: const Color.fromARGB(255, 255, 189, 65),
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
@@ -203,10 +184,8 @@ class _AppointmentsState extends State<Appointments> {
                   );
                 } else if (snapshot.hasError) {
                   // Show an error message if there was an error during the delay
-                  return Expanded(
-                    child: Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    ),
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
                   );
                 } else if (isEmpty) {
                   return Center(
@@ -214,7 +193,7 @@ class _AppointmentsState extends State<Appointments> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        50.heightBox,
+                        100.heightBox,
                         SizedBox(
                             height: 150,
                             width: 150,
@@ -225,27 +204,15 @@ class _AppointmentsState extends State<Appointments> {
                                         'images/no_appointment.png')),
                               ],
                             )),
-                        20.heightBox,
+                        40.heightBox,
                         Text(
                           "You have no ${status.name} appointments",
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 24, color: Colors.blueAccent),
+                            fontSize: 24,
+                            color: Color.fromARGB(255, 255, 217, 65),
+                          ),
                         ),
-                        status == FilterStatus.Upcoming
-                            ? Padding(
-                                padding: const EdgeInsets.all(40.0),
-                                child: RoundButton(
-                                    title: 'New Appointment',
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const AddDoctors()));
-                                    }),
-                              )
-                            : Container()
                       ],
                     ),
                   );
@@ -255,7 +222,7 @@ class _AppointmentsState extends State<Appointments> {
                         itemCount: filteredSchedules.length,
                         itemBuilder: ((context, index) {
                           var schedule = filteredSchedules[index];
-                          DoctorUser doctor = filteredDoctors[index];
+                          PatientUser patient = filteredPatients[index];
                           bool isLast = filteredSchedules.length + 1 == index;
                           return Card(
                             shape: RoundedRectangleBorder(
@@ -272,9 +239,14 @@ class _AppointmentsState extends State<Appointments> {
                                   Row(
                                     children: [
                                       ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: showImage(doctor)),
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          patient.imageUrl ?? '',
+                                          width: 70,
+                                          height: 90,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                       10.widthBox,
                                       Column(
                                         crossAxisAlignment:
@@ -291,7 +263,7 @@ class _AppointmentsState extends State<Appointments> {
                                                       CrossAxisAlignment.end,
                                                   children: [
                                                     Text(
-                                                      'Dr. ${doctor.name}',
+                                                      '${patient.name}',
                                                       style: const TextStyle(
                                                           color: Colors.black,
                                                           fontSize: 18,
@@ -299,14 +271,6 @@ class _AppointmentsState extends State<Appointments> {
                                                               FontWeight.w700),
                                                     ),
                                                     10.widthBox,
-                                                    Text(
-                                                      doctor.specialization,
-                                                      style: const TextStyle(
-                                                          color: Colors.grey,
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
                                                   ],
                                                 ),
                                               ],
@@ -320,7 +284,7 @@ class _AppointmentsState extends State<Appointments> {
                                               scrollDirection: Axis.horizontal,
                                               children: [
                                                 Text(
-                                                  doctor.hospitalName,
+                                                  'Age: ${patient.age}',
                                                   style: const TextStyle(
                                                       color: Colors.black45,
                                                       fontSize: 16,
@@ -343,7 +307,7 @@ class _AppointmentsState extends State<Appointments> {
                                   ),
                                   10.heightBox,
                                   getButtons(
-                                      index, authNotifier, status, doctor)
+                                      index, authNotifier, status, patient)
                                 ],
                               ),
                             ),
@@ -360,7 +324,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget getButtons(int index, AuthNotifier authNotifier, FilterStatus status,
-      DoctorUser doctor) {
+      PatientUser patient) {
     if (status == FilterStatus.Upcoming) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -372,24 +336,7 @@ class _AppointmentsState extends State<Appointments> {
               },
               child: const Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              onPressed: () {
-                showPopUpforReschedule(index, authNotifier, doctor);
-              },
-              child: const Text(
-                'Reschedule',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.amber),
               ),
             ),
           ),
@@ -456,14 +403,18 @@ class _AppointmentsState extends State<Appointments> {
             content: const Text('Do you want to Cancel this Appointment'),
             actions: [
               ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.amber),
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: const Text('No')),
               ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.amber),
                   onPressed: () async {
-                    await AppointmentBackend().cancelAppointment(
-                        index, authNotifier, DoctorsUpcoming, DoctorsCancelled);
+                    await AppointmentBackend().cancelAppointmentbyDoctor(index,
+                        authNotifier, PatientsUpcoming, PatientsCancelled);
 
                     setState(() {
                       Navigator.pop(context);
@@ -475,107 +426,5 @@ class _AppointmentsState extends State<Appointments> {
             ],
           );
         });
-  }
-
-  showPopUpforReschedule(
-      int index, AuthNotifier authNotifier, DoctorUser doctor) {
-    return showDialog<bool>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            contentPadding: const EdgeInsets.all(25),
-            actionsPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            title: const Text('Are you Sure?'),
-            content: const Text('Do you want to Reschedule this Appointment'),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('No')),
-              ElevatedButton(
-                  onPressed: () async {
-                    await AppointmentBackend().rescheduleAppointment(
-                        index, authNotifier, DoctorsUpcoming);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BookingPage(
-                                  doctor: doctor,
-                                )));
-                  },
-                  child: const Text('Yes'))
-            ],
-          );
-        });
-  }
-}
-
-class ScheduleCard extends StatelessWidget {
-  const ScheduleCard(
-      {Key? key,
-      required this.date,
-      required this.day,
-      required this.time,
-      required this.authNotifier})
-      : super(key: key);
-  final String date;
-  final String day;
-  final String time;
-  final AuthNotifier authNotifier;
-
-  @override
-  Widget build(BuildContext context) {
-    Color color =
-        authNotifier.patientDetails == null ? Colors.amber : Colors.blue;
-    return Container(
-      height: 40,
-      width: 240,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Center(
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  color: color,
-                  size: 15,
-                ),
-                3.widthBox,
-                Text(
-                  '$day, $date',
-                  style: TextStyle(
-                    color: color,
-                  ),
-                ),
-                10.widthBox,
-                Icon(
-                  Icons.access_alarm,
-                  color: color,
-                  size: 17,
-                ),
-                Text(
-                  time,
-                  style: TextStyle(
-                    color: color,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

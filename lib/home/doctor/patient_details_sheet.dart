@@ -103,12 +103,13 @@ class _PatientDetailsSheetState extends State<PatientDetailsSheet> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const AddmedicalConditions()));
-                            widget.patient.medicalConditions!
-                                .add(condition.index ?? 0);
 
                             await _uploadMedicalConditions(
                                 widget.patient, condition);
-                            setState(() {});
+                            setState(() {
+                              Utils().toastMessage(
+                                  'Medical Condition successfully added');
+                            });
                           },
                           child: const Text('Add medical\nCondition',
                               textAlign: TextAlign.center)),
@@ -119,7 +120,9 @@ class _PatientDetailsSheetState extends State<PatientDetailsSheet> {
                                 authNotifier.doctorDetails ?? DoctorUser();
                             await uploadDetails(widget.patient,
                                 _detailsController.text, authNotifier);
-                            // Navigator.pop(context);
+                            Navigator.pop(context);
+                            Utils().toastMessage(
+                                'Details of visit has been added successfully');
                             // if (!doctor.patients!.contains(patient.uid)) {
                             //   authNotifier.addPatient(
                             //       authNotifier.doctorDetails ?? DoctorUser(),

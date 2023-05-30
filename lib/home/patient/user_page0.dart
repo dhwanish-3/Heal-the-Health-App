@@ -13,7 +13,7 @@ class _UserPage0State extends State<UserPage0> {
     if (name.length <= 6) {
       return 26;
     } else {
-      return 26 - (name.length - 4);
+      return 28 - (name.length - 4);
     }
   }
 
@@ -34,12 +34,13 @@ class _UserPage0State extends State<UserPage0> {
         Provider.of<AuthNotifier>(context, listen: false);
     String userName = authNotifier.patientDetails!.nickName ?? '';
     double fem = MediaQuery.of(context).size.width / 300;
-    return SingleChildScrollView(
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
-              height: 252,
+              height: 280,
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
                 begin: Alignment(-2.189, -2.079),
@@ -53,6 +54,7 @@ class _UserPage0State extends State<UserPage0> {
               )),
               child: Column(
                 children: [
+                  26.heightBox,
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -130,7 +132,7 @@ class _UserPage0State extends State<UserPage0> {
                     ),
                   ),
                   Container(
-                    height: 58,
+                    height: 60,
                     decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -143,9 +145,9 @@ class _UserPage0State extends State<UserPage0> {
                         height: 28 * fem,
                         child: Container(
                           decoration: BoxDecoration(
-                            image: const DecorationImage(
-                                image:
-                                    AssetImage('images/Diagn_ssist_nobg.png')),
+                            // image: const DecorationImage(
+                            //     image:
+                            //         AssetImage('images/Diagn_ssist_nobg.png')),
                             borderRadius: BorderRadius.circular(30 * fem),
                             gradient: const LinearGradient(
                               begin: Alignment(0, -1),
@@ -154,15 +156,21 @@ class _UserPage0State extends State<UserPage0> {
                               stops: [0, 1],
                             ),
                           ),
-                          // child: Center(
-                          //   child: SizedBox(
-                          //       height: 50,
-                          //       width: 100,
-                          //       child: Image.asset(
-                          //         'images/Diagn_ssist_nobg.png',
-                          //         height: 50,
-                          //         width: 100,
-                          //       )),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                top: 8,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                child: Transform.scale(
+                                  scale: 1.7,
+                                  child: Image.asset(
+                                      'images/Diagn_ssist_nobg.png'),
+                                ),
+                              ),
+                            ],
+                          ),
                           // child: Text(
                           //   "Heal the Health App",
                           //   textAlign: TextAlign.center,
@@ -193,7 +201,7 @@ class _UserPage0State extends State<UserPage0> {
                   enlargeCenterPage: true,
                   aspectRatio: 1,
                   autoPlay: false,
-                  height: 150,
+                  height: 170,
                   itemCount: 3,
                   itemBuilder: _buildListItem,
                 ),
@@ -201,7 +209,7 @@ class _UserPage0State extends State<UserPage0> {
               ]),
             ),
             _buildHealthOrg(context),
-            80.heightBox
+            80.heightBox,
           ],
         ),
       ),

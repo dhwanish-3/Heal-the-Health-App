@@ -1,5 +1,4 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/appointment/booking_page.dart';
 
 class DoctorDetailsSheet extends StatelessWidget {
   final DoctorUser doctor;
@@ -120,9 +119,6 @@ class DoctorDetailsSheet extends StatelessWidget {
         FirebaseFirestore.instance.collection('Doctors');
     doctor.patients!.add(authNotifier.patientDetails!.uid ?? '');
     await ref.doc(doctor.uid).update({'patients': doctor.patients});
-    // for (var doctor in doctors) {
-    //   await ref.doc(doctor).update({'patients': uid});
-    // }
   }
 }
 

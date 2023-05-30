@@ -57,6 +57,7 @@ class _AddDiaryButtonState extends State<AddDiaryButton> {
                 child: const Icon(
                   Icons.add_rounded,
                   size: 56,
+                  color: Colors.white,
                 ),
               ),
             ),

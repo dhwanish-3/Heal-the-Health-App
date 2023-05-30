@@ -67,13 +67,13 @@ class _AddDoctorsState extends State<AddDoctors> {
         Doctors = value.docs
             .map((doctor) => DoctorUser.fromMap(doctor.data()))
             .toList();
-
+        print(Doctors);
         return value;
       });
     }
 
     return Scaffold(
-      appBar: GradientAppBar(title: 'Add Doctors'),
+      appBar: GradientAppBar(title: 'Doctors'),
       body: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Column(
@@ -103,9 +103,7 @@ class _AddDoctorsState extends State<AddDoctors> {
                                             : Colors.blue),
                                 borderRadius: BorderRadius.circular(20),
                                 color: _selectedSpecialization == Types[index]
-                                    ? Theme.of(context)
-                                        .primaryColor
-                                        .withOpacity(0.5)
+                                    ? Colors.lightBlueAccent
                                     : Colors.white),
                             child: Center(
                                 child: Text(
@@ -169,36 +167,10 @@ class _AddDoctorsState extends State<AddDoctors> {
                             }));
                   }
                 }),
-            // RoundButton(
-            //     title: 'Next',
-            //     onTap: () async {
-            //       await uploadDoctorList(authNotifier.patientDetails!.uid ?? '',
-            //           authNotifier.patientDetails!.doctorsVisited ?? []);
-            //       await UpdateDoctors(authNotifier.patientDetails!.uid ?? '',
-            //           authNotifier.patientDetails!.doctorsVisited ?? []);
-            // Navigator.push(
-            //     (context),
-            //     MaterialPageRoute(
-            //         builder: (context) => const SymptomsScreen()));
-            //     })
           ],
         ),
       ),
     );
-  }
-
-  Future<void> uploadDoctorList(String uid, List<String> doctors) async {
-    final CollectionReference ref =
-        FirebaseFirestore.instance.collection('Patients');
-    return await ref.doc(uid).update({'doctorsVisited': doctors});
-  }
-
-  Future<void> UpdateDoctors(String uid, List<String> doctors) async {
-    final CollectionReference ref =
-        FirebaseFirestore.instance.collection('Doctors');
-    for (var doctor in doctors) {
-      await ref.doc(doctor).update({'patients': uid});
-    }
   }
 
   ImageProvider showProfileImage(DoctorUser doctor) {
@@ -210,13 +182,83 @@ class _AddDoctorsState extends State<AddDoctors> {
   }
 
   Widget showListTile(DoctorUser doctor, BuildContext context) {
-    return ListTile(
-      title: Text('${doctor.name}\n${doctor.hospitalName}'),
-      subtitle: Text(doctor.qualification),
-      leading: CircleAvatar(backgroundImage: showProfileImage(doctor)),
-      onTap: () {
-        showDoctorDetails(doctor, context);
-      },
+    Widget showImage() {
+      if (doctor.imageUrl != '') {
+        return Image.network(
+          doctor.imageUrl,
+          width: 50,
+          height: 60,
+          fit: BoxFit.cover,
+        );
+      } else {
+        return Image.asset(
+          'images/doctor_profile.png',
+          width: 50,
+          height: 60,
+          fit: BoxFit.cover,
+        );
+      }
+    }
+
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () => showDoctorDetails(doctor, context),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: showImage(),
+              ),
+              10.widthBox,
+              SizedBox(
+                width: 300,
+                height: 50,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              'Dr. ${doctor.name}',
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                                color: Colors.black,
+                              ),
+                            ),
+                            10.widthBox,
+                            Text(doctor.qualification,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 0.3)),
+                          ],
+                        ),
+                        10.heightBox,
+                        Text(
+                          doctor.hospitalName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5,
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

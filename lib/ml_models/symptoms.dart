@@ -24,9 +24,7 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
     for (int i = 0; i < array.length; i++) {
       list[array[i]] = 1;
     }
-    for (int i = 0; i < 131; i++) {
-      debugPrint('list is ${list[i]}');
-    }
+
     final array1 = list;
     Map<String, dynamic> data = {"data": array1};
 
@@ -97,6 +95,8 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
             ],
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.lightBlueAccent),
             onPressed: () async {
               Symptom result = await Navigator.push(
                   context,
@@ -139,6 +139,7 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                     debugPrint(result.toString());
                     Disease disease =
                         findDisease(result['result'], authNotifier);
+                    // Disease disease = findDisease('GERD', authNotifier);
 
                     Navigator.push(
                         (context),
@@ -148,7 +149,7 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
                                 )));
                   }
                 },
-                title: 'Next'),
+                title: 'Submit'),
           ),
         ],
       ),
@@ -157,7 +158,15 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
 
   Widget buildPages() {
     if (Chips.isEmpty) {
-      return Container();
+      return Center(
+        child: Text(
+          'Your Added Symptoms will show here',
+          style: TextStyle(
+              color: Colors.grey[400],
+              fontSize: 18,
+              fontWeight: FontWeight.w800),
+        ),
+      );
     } else {
       return buildChip();
     }

@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:heal_the_health_app/constants/imports.dart';
 
 class PatientUser {
-  String? uid;
+  String? uid = '';
   String? imageUrl =
       'https://w7.pngwing.com/pngs/722/101/png-transparent-computer-icons-user-profile-circle-abstract-miscellaneous-rim-account-thumbnail.png';
   String emailid = '';
   String password = '';
-  String? phoneNumber;
+  String? phoneNumber = '';
   String? name = 'User';
   String? nickName = 'Nick';
   String? birthDate = '2002-10-11';
@@ -21,9 +21,9 @@ class PatientUser {
   bool? isPhysicallyActive = false;
   bool? isPWD = false;
   int? percentageofDisability = 0;
-  List<int>? medicalConditions;
-  List<String>? doctorsVisited;
-  List<String>? detailsofVisit;
+  List<int>? medicalConditions = [];
+  List<String>? doctorsVisited = [];
+  List<String>? detailsofVisit = [];
   List<String>? diary = [];
   List<Appointment>? upcoming = [];
   List<Appointment>? completed = [];
@@ -89,15 +89,15 @@ class PatientUser {
             .map((data) => Appointment.fromMap(jsonDecode(data))))
         : [];
   }
-  Map<String, dynamic> toMap() {
-    List<String> getJson(List<Appointment> appointment) {
-      List<String> json = [];
-      for (var custom in appointment) {
-        json.add(jsonEncode(custom.toMap()));
-      }
-      return json;
+  List<String> getJson(List<Appointment> appointment) {
+    List<String> json = [];
+    for (var custom in appointment) {
+      json.add(jsonEncode(custom.toMap()));
     }
+    return json;
+  }
 
+  Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'imageUrl': imageUrl,
@@ -123,5 +123,17 @@ class PatientUser {
       'completed': getJson(completed ?? []),
       'cancelled': getJson(cancelled ?? []),
     };
+  }
+
+  Future<PatientUser> getPatient(String uid) async {
+    PatientUser patient = PatientUser();
+    await FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(uid)
+        .get()
+        .then((value) {
+      patient = PatientUser.fromMap(value.data() as Map<String, dynamic>);
+    });
+    return patient;
   }
 }

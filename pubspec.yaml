@@ -64,6 +64,9 @@ dependencies:
   percent_indicator: ^4.2.3
   table_calendar: ^3.0.8
   lottie: ^2.3.2
+  dialogflow_flutter: ^1.0.0
+  bubble: ^1.2.1
+  firebase_messaging: ^14.6.1
   
 
 dev_dependencies:

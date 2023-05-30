@@ -7,6 +7,7 @@ import 'package:heal_the_health_app/ml_models/lung_cancer.dart';
 import 'package:heal_the_health_app/ml_models/parkinsons.dart';
 import 'package:heal_the_health_app/ml_models/stroke.dart';
 import 'package:heal_the_health_app/ml_models/thyroid.dart';
+import 'package:heal_the_health_app/ml_models/x_ray.dart';
 
 class ListModels extends StatefulWidget {
   const ListModels({super.key});
@@ -36,6 +37,7 @@ class _ListModelsState extends State<ListModels> {
                   children: [
                     10.heightBox,
                     // _buildListTile('STROKE', 'stroke', gotoStroke()),
+
                     Container(
                       height: 80,
                       decoration: BoxDecoration(
@@ -343,6 +345,42 @@ class _ListModelsState extends State<ListModels> {
                         ),
                       ),
                     ),
+                    Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 149, 201, 247),
+                          gradient: const LinearGradient(
+                              stops: [0, 1],
+                              begin: AlignmentDirectional(0, 1),
+                              end: AlignmentDirectional(0, -1),
+                              colors: [
+                                Color.fromARGB(255, 240, 255, 243),
+                                Color.fromARGB(255, 38, 37, 46)
+                              ]),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 164, 162, 160),
+                            width: 5,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(25))),
+                      child: Center(
+                        child: ListTile(
+                          onTap: () => gotoXRay(),
+                          leading: Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40),
+                                image: const DecorationImage(
+                                    image: AssetImage('images/x_ray.png'))),
+                          ),
+                          title: const Text(
+                            'X-RAY',
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -419,5 +457,10 @@ class _ListModelsState extends State<ListModels> {
   gotoStroke() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Stroke()));
+  }
+
+  gotoXRay() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const XRayScreen()));
   }
 }

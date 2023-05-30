@@ -256,19 +256,23 @@ class _State extends State<CervCancer> {
 
                           if (response.statusCode == 200) {
                             // success, parse response data
-                            debugPrint(response.body);
-                            debugPrint(response.body[7]);
-                            if (response.body[9] == '.') {
-                              // print(response.body[21]);
-                              acc =
-                                  double.parse(response.body.substring(7, 11));
-                              result = int.parse(response.body[21]);
-                              // print('accur$acc');
-                              // print('rsdjd$result');
-                            } else {
-                              acc = double.parse(response.body.substring(7, 9));
-                              result = int.parse(response.body[19]);
-                            }
+                            Map<String, dynamic> body =
+                                jsonDecode(response.body);
+                            acc = body['acc'];
+                            result = body['result'];
+                            // debugPrint(response.body);
+                            // debugPrint(response.body[7]);
+                            // if (response.body[9] == '.') {
+                            //   // print(response.body[21]);
+                            //   acc =
+                            //       double.parse(response.body.substring(7, 11));
+                            //   result = int.parse(response.body[21]);
+                            //   // print('accur$acc');
+                            //   // print('rsdjd$result');
+                            // } else {
+                            //   acc = double.parse(response.body.substring(7, 9));
+                            //   result = int.parse(response.body[19]);
+                            // }
                             final response2 = await http
                                 .post(Uri.parse(apiUrlage),
                                     headers: {

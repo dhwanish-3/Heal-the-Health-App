@@ -29,35 +29,18 @@ class _AddPatientsState extends State<AddPatients> {
   }
 
   _getPatientsList() async {
-    final uid = _auth.currentUser?.uid;
-    final QuerySnapshot<Map<String, dynamic>> data =
-        await FirebaseFirestore.instance
-            .collection('Patients')
-            // .doc(_auth.currentUser!.uid)
-            .orderBy('name')
-            .get()
-            .catchError((e) => debugPrint(e))
-            .then((value) {
-      setState(() {
-        Patients = value.docs
-            .map((patient) => PatientUser.fromMap(patient.data()))
-            .toList();
-      });
+    await FirebaseFirestore.instance
+        .collection('Patients')
+        .orderBy('name')
+        .get()
+        .catchError((e) => debugPrint(e))
+        .then((value) {
+      Patients = value.docs
+          .map((patient) => PatientUser.fromMap(patient.data()))
+          .toList();
+
       return value;
     });
-  }
-
-  @override
-  void initState() {
-    AuthNotifier authNotifier;
-    Future.delayed(const Duration(seconds: 1)).then((value) {
-      // authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-      // authNotifier.setLoading(true);
-      // AuthService().initializeDoctor(authNotifier);
-      _getPatientsList();
-    });
-
-    super.initState();
   }
 
   @override
@@ -84,45 +67,47 @@ class _AddPatientsState extends State<AddPatients> {
                 setState(() {});
               },
             ),
-            // ElevatedButton(
-            //     onPressed: () {
-            //       Navigator.push(
-            //           (context),
-            //           MaterialPageRoute(
-            //               builder: (context) => const CardioScreen()));
-            //     },
-            //     child: const Text("got to Cardio")),
-            // Text(authNotifier.doctorDetails!.emailid.toString()),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: Patients.length,
-                  itemBuilder: (context, index) {
-                    PatientUser patient = Patients[index];
-                    if (_searchFilter.text.isEmpty) {
-                      return Card(
-                          surfaceTintColor: Colors.amber,
-                          child: showListTile(patient, context, authNotifier));
-                    } else if (patient.name!
-                        .toLowerCase()
-                        .contains(_searchFilter.text.toLowerCase())) {
-                      return Card(
-                        child: showListTile(patient, context, authNotifier),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }),
-            ),
-            // RoundButton(
-            //     title: 'Next',
-            //     onTap: () async {
-            //       // authNotifier.doctorDetails!.patients!.add('dhwnashd');
-            //       await uploadPatientList(authNotifier.doctorDetails!.uid,
-            //           authNotifier.doctorDetails!.patients ?? []);
-            //       await UpdatePatients(authNotifier.doctorDetails!.uid,
-            //           authNotifier.doctorDetails!.patients ?? []);
-            //       goToHome();
-            //     })
+            FutureBuilder(
+                future: _getPatientsList(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.greenAccent,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    // Show an error message if there was an error during the delay
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: Patients.length,
+                          itemBuilder: (context, index) {
+                            PatientUser patient = Patients[index];
+                            if (_searchFilter.text.isEmpty) {
+                              return Card(
+                                  surfaceTintColor: Colors.amber,
+                                  child: showListTile(
+                                      patient, context, authNotifier));
+                            } else if (patient.name!
+                                .toLowerCase()
+                                .contains(_searchFilter.text.toLowerCase())) {
+                              return Card(
+                                child: showListTile(
+                                    patient, context, authNotifier),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
+                    );
+                  }
+                }),
           ],
         ),
       ),
@@ -170,7 +155,7 @@ class _AddPatientsState extends State<AddPatients> {
   Future<void> uploadPatientList(String uid, List<String> patients) async {
     final CollectionReference ref =
         FirebaseFirestore.instance.collection('Doctors');
-    return await ref.doc(uid).update({'patients': patients});
+    await ref.doc(uid).update({'patients': patients});
   }
 
   List<String> getDoctorsVisited(Map<String, dynamic> data) {
@@ -189,9 +174,7 @@ class _AddPatientsState extends State<AddPatients> {
           .catchError((e) {
         debugPrint(e);
       }).then((value) {
-        // debugPrint('this is value${value.docs.toString()}$diseaseType');
         doctorVisited = getDoctorsVisited(value.data() as Map<String, dynamic>);
-        // debugPrint(doctorsuidList[i].toString());
       });
       doctorVisited.add(uid);
       await ref.doc(patient).update({'doctorsVisited': doctorVisited});

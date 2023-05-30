@@ -58,10 +58,10 @@ class _ListDoctorsState extends State<ListDoctors> {
 
   ImageProvider _showProfile(DoctorUser doctor) {
     debugPrint(doctor.imageUrl);
-    if (doctor.imageUrl == '') {
-      return NetworkImage(doctor.imageUrl.toString());
+    if (doctor.imageUrl != '') {
+      return NetworkImage(doctor.imageUrl);
     } else {
-      return const AssetImage('images/doctor_2.jpg');
+      return const AssetImage('images/default.png');
     }
   }
 
@@ -95,11 +95,8 @@ class _ListDoctorsState extends State<ListDoctors> {
                         child: Row(children: [
                           ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.asset(
-                                'images/doctor_2.jpg',
-                                width: 100,
-                                height: 130,
-                                fit: BoxFit.cover,
+                              child: Image(
+                                image: _showProfile(doctor),
                               )),
                           10.widthBox,
                           Expanded(

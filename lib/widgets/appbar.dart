@@ -14,14 +14,15 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (authNotifier != null && authNotifier!.isDoctor == true) {
+    if (authNotifier != null && authNotifier!.patientDetails == null) {
       return AppBar(
         actions: actions,
         backgroundColor: Colors.transparent,
         // elevation: 0,
         title: Text(
           title,
-          style: const TextStyle(color: Colors.white),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: leading ??
             IconButton(

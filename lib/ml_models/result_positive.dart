@@ -130,7 +130,7 @@ class _PositiveState extends State<Positive> {
                     radius: 65,
                     lineWidth: 24,
                     animation: true,
-                    animationDuration: 5000,
+                    animationDuration: 2000,
                     progressColor: const Color(0xFF4AC435),
                     backgroundColor: const Color(0xFFF1F4F8),
                     center: Text(

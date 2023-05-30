@@ -226,6 +226,6 @@ class _DoctorLogInState extends State<DoctorLogIn> {
   }
 
   goToDoctorForm() {
-    Navigator.pushNamed(context, RouteNames.doctortuserform);
+    Navigator.pushNamed(context, RouteNames.doctorhome);
   }
 }

@@ -10,44 +10,6 @@ class ListofPatients extends StatefulWidget {
 class _ListofPatientsState extends State<ListofPatients> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  List<PatientUser> Patients = [];
-
-  // _getPatientsList() async {
-  //   final uid = _auth.currentUser?.uid;
-  //   final QuerySnapshot<Map<String, dynamic>> data =
-  //       await FirebaseFirestore.instance
-  //           .collection('Patients')
-  //           // .doc(_auth.currentUser!.uid)
-  //           .orderBy('name')
-  //           .get()
-  //           .catchError((e) => debugPrint(e))
-  //           .then((value) {
-  //     setState(() {
-  //       Patients = value.docs
-  //           .map((patient) => PatientUser.fromMap(patient.data()))
-  //           .toList();
-  //     });
-  //     return value;
-  //   });
-  // }
-  _getPatientsList(
-      AuthNotifier authNotifier, List<PatientUser> Patients) async {
-    int i = 0;
-    for (String patient in authNotifier.doctorDetails!.patients ?? []) {
-      await FirebaseFirestore.instance
-          .collection('Patients')
-          .doc(patient)
-          .get()
-          .catchError((e) => debugPrint(e))
-          .then((value) {
-        Patients.add(PatientUser());
-        Patients[i] = PatientUser.fromMap(value.data() as Map<String, dynamic>);
-      });
-      i++;
-    }
-    return Patients;
-  }
-
   void _showPatientDetails(PatientUser patient, context) {
     showModalBottomSheet(
         shape: const RoundedRectangleBorder(
@@ -66,24 +28,39 @@ class _ListofPatientsState extends State<ListofPatients> {
   }
 
   @override
-  void initState() {
-    AuthNotifier authNotifier;
-    Future.delayed(Duration.zero).then((value) async {
-      authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-      // AuthService().initializeDoctor(authNotifier);
-      await _getPatientsList(authNotifier, Patients);
-      setState(() {});
-    });
-
-    super.initState();
-  }
-
-  bool loading = true;
-
-  @override
   Widget build(BuildContext context) {
+    List<PatientUser> Patients = [];
+    bool isEmpty = false;
+    _getPatientsList(
+        AuthNotifier authNotifier, List<PatientUser> Patients) async {
+      int i = 0;
+      for (String patient in authNotifier.doctorDetails!.patients ?? []) {
+        await FirebaseFirestore.instance
+            .collection('Patients')
+            .doc(patient)
+            .get()
+            .catchError((e) => debugPrint(e))
+            .then((value) {
+          Patients.add(PatientUser());
+          Patients[i] =
+              PatientUser.fromMap(value.data() as Map<String, dynamic>);
+        });
+        i++;
+      }
+      isEmpty = Patients.isEmpty;
+    }
+
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+    Future<void> deletePatient(int index) async {
+      authNotifier.doctorDetails!.patients!
+          .remove(authNotifier.doctorDetails!.patients![index]);
+      Patients.removeAt(index);
+      await FirebaseFirestore.instance
+          .collection('Doctors')
+          .doc(authNotifier.doctorDetails!.uid)
+          .update({'patients': authNotifier.doctorDetails!.patients});
+    }
 
     return Scaffold(
       appBar: GradientAppBar(
@@ -93,52 +70,98 @@ class _ListofPatientsState extends State<ListofPatients> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                  itemCount: Patients.length,
-                  itemBuilder: (context, index) {
-                    PatientUser patient = Patients[index];
-                    return Card(
-                      child: ListTile(
-                        onTap: () {
-                          _showPatientDetails(patient, context);
-                        },
-                        leading: CircleAvatar(
-                          backgroundImage: _showProfile(patient),
-                        ),
-                        title: Text(Patients[index].name.toString()),
-                        subtitle: Text(Patients[index].emailid),
-                        trailing: PopupMenuButton(
-                          icon: const Icon(Icons.more_vert),
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                                value: 1,
-                                onTap: () {
-                                  authNotifier.doctorDetails!.patients!
-                                      .remove(Patients[index].uid);
-                                  setState(() {});
-                                },
-                                child: SizedBox(
-                                  height: 40,
-                                  width: 100,
-                                  child: Center(
-                                      child: Row(
-                                    children: [
-                                      const Icon(Icons.delete),
-                                      20.widthBox,
-                                      const Text("Delete")
-                                    ],
-                                  )),
-                                ))
-                          ],
-                        ),
+          FutureBuilder(
+              future: _getPatientsList(authNotifier, Patients),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.greenAccent,
                       ),
-                    );
-                  }),
-            ),
-          ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  // Show an error message if there was an error during the delay
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else if (isEmpty) {
+                  return Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              height: 180,
+                              width: 180,
+                              child: Column(
+                                children: const [
+                                  Image(
+                                      image:
+                                          AssetImage('images/no_patients.png')),
+                                ],
+                              )),
+                          20.heightBox,
+                          const Text(
+                            "Your Patients list is Empty",
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Color.fromARGB(255, 255, 162, 55)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
+                  return Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                          itemCount: Patients.length,
+                          itemBuilder: (context, index) {
+                            PatientUser patient = Patients[index];
+                            return Card(
+                              child: ListTile(
+                                onTap: () {
+                                  _showPatientDetails(patient, context);
+                                },
+                                leading: CircleAvatar(
+                                  backgroundImage: _showProfile(patient),
+                                ),
+                                title: Text(Patients[index].name.toString()),
+                                subtitle: Text(Patients[index].emailid),
+                                trailing: PopupMenuButton(
+                                  icon: const Icon(Icons.more_vert),
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                        value: 1,
+                                        onTap: () async {
+                                          await deletePatient(index);
+                                          setState(() {});
+                                        },
+                                        child: SizedBox(
+                                          height: 40,
+                                          width: 100,
+                                          child: Center(
+                                              child: Row(
+                                            children: [
+                                              const Icon(Icons.delete),
+                                              20.widthBox,
+                                              const Text("Delete")
+                                            ],
+                                          )),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                  );
+                }
+              }),
         ],
       ),
     );

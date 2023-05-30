@@ -52,10 +52,10 @@ class _MedicalRecordsState extends State<MedicalRecords> {
                     Image(image: AssetImage('images/no_medical.png')),
                   ],
                 )),
+            20.heightBox,
             const Text(
               "Medical History is Empty",
-              style: TextStyle(
-                  fontSize: 24, color: Color.fromARGB(255, 255, 162, 55)),
+              style: TextStyle(fontSize: 24, color: Colors.lightBlueAccent),
             ),
           ],
         ),

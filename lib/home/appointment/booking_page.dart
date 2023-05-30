@@ -281,23 +281,8 @@ class _BookingPageState extends State<BookingPage> {
                         Utils().toastMessage(
                             'Sorry...\nThe Doctor is busy at this time, Please select different time');
                       }
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => const AppointmentBooked()));
-
-                      // final booking = await DioProvider().bookAppointment(
-                      //     getDate, getDay, getTime, doctor['doctor_id'], token!);
-
-                      //if booking return status code 200, then redirect to success booking page
-
-                      // if (booking == 200) {
-                      //   MyApp.navigatorKey.currentState!
-                      //       .pushNamed('success_booking');
-                      // }
                     }
                   },
-                  // disable: _timeSelected && _dateSelected ? false : true,
                 ),
               ),
             ),

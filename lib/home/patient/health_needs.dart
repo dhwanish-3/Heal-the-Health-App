@@ -35,11 +35,11 @@ class HealthNeeds extends StatelessWidget {
       if (index == 0) {
         goToAddDoctors();
       } else if (index == 1) {
-        goToAppointments();
+        goToInsurance();
       } else if (index == 2) {
         goToSymtoms();
       } else if (index == 3) {
-        goToInsurance();
+        goToAppointments();
       } else if (index == 4) {
         goToDiseases();
       }

@@ -1,5 +1,5 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/oops.dart';
+import 'package:heal_the_health_app/home/chatbot/chatbot_main.dart';
 
 class HomePageDhwanish extends StatefulWidget {
   const HomePageDhwanish({super.key});
@@ -94,8 +94,10 @@ class _HomePageDhwanishState extends State<HomePageDhwanish> {
               ? Container()
               : GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const OOPs()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ChatBotScreen()));
                   },
                   child: Material(
                     shape: RoundedRectangleBorder(

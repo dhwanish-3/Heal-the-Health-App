@@ -1,7 +1,7 @@
 import 'package:heal_the_health_app/constants/imports.dart';
+import 'package:heal_the_health_app/home/chatbot/chatbot_main.dart';
 import 'package:heal_the_health_app/home/doctor/doctor_page0.dart';
 import 'package:heal_the_health_app/home/doctor/doctor_profile.dart';
-import 'package:heal_the_health_app/home/oops.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({super.key});
@@ -25,11 +25,15 @@ class _DoctorHomeState extends State<DoctorHome> {
                 content: const Text('Do you want to Exit the App'),
                 actions: [
                   ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber),
                       onPressed: () {
                         Navigator.of(context).pop(false);
                       },
                       child: const Text('No')),
                   ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber),
                       onPressed: () {
                         SystemNavigator.pop();
                         // Navigator.of(context).pop(true);
@@ -52,8 +56,10 @@ class _DoctorHomeState extends State<DoctorHome> {
           ][_currentIndex],
           floatingActionButton: FloatingActionButton.large(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const OOPs()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ChatBotScreen()));
               },
               child: Container(
                   decoration: const BoxDecoration(
@@ -73,6 +79,8 @@ class _DoctorHomeState extends State<DoctorHome> {
           bottomNavigationBar: _buildGnav(context)),
     );
   }
+
+  final String svgIconPath = 'path/to/svg/icon.svg';
 
   Widget _buildGnav(BuildContext context) {
     double fem = MediaQuery.of(context).size.width / 500;

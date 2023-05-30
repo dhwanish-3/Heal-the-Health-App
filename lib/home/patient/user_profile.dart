@@ -105,7 +105,7 @@ class _UserProfileState extends State<UserProfile> {
               userEmailid,
               style: const TextStyle(fontSize: 20),
             ),
-            10.heightBox,
+            20.heightBox,
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 100,
@@ -119,7 +119,7 @@ class _UserProfileState extends State<UserProfile> {
                             builder: (context) => const EditProfile()));
                   }),
             ),
-            10.heightBox,
+            // 10.heightBox,
             Padding(
               padding: const EdgeInsets.all(30),
               child: Column(
@@ -189,7 +189,7 @@ class _UserProfileState extends State<UserProfile> {
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: ListTile(
-                      onTap: () => logout(),
+                      onTap: () => ShowPopUp(),
                       leading: Container(
                           height: 40,
                           width: 40,
@@ -201,7 +201,7 @@ class _UserProfileState extends State<UserProfile> {
                             color: Colors.red,
                           )),
                       title: const Text(
-                        'Logout',
+                        'LogOut',
                         style: TextStyle(fontSize: 20),
                       ),
                       trailing: Container(
@@ -337,6 +337,34 @@ class _UserProfileState extends State<UserProfile> {
   goToListofDoctors() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const ListDoctors()));
+  }
+
+  ShowPopUp() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(25),
+            actionsPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            title: const Text('Log out'),
+            content: const Text('Do you want to logout from this app'),
+            actions: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('No')),
+              ElevatedButton(
+                  onPressed: () async {
+                    await logout();
+                  },
+                  child: const Text('Yes'))
+            ],
+          );
+        });
   }
 
   logout() {

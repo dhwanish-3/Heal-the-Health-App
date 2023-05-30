@@ -12,6 +12,35 @@ class _DiaryListState extends State<DiaryList> {
   @override
   Widget build(BuildContext context) {
     UserShared userShared = Provider.of<UserShared>(context, listen: false);
+    showPopUpDelete(Diary diary) {
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              contentPadding: const EdgeInsets.all(25),
+              actionsPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
+              title: const Text('Delete'),
+              content: const Text('Do you want to Delete this note/diary'),
+              actions: [
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('No')),
+                ElevatedButton(
+                    onPressed: () {
+                      userShared.deleteDiary(diary);
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Yes'))
+              ],
+            );
+          });
+    }
+
     return Consumer<UserShared>(builder: (context, value, child) {
       return MasonryGridView.builder(
         gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
@@ -22,9 +51,8 @@ class _DiaryListState extends State<DiaryList> {
         itemBuilder: (context, index) {
           final diary = value.diaryList![index];
           return GestureDetector(
-            onLongPress: () {
-              userShared.deleteDiary(diary);
-
+            onDoubleTap: () {
+              showPopUpDelete(diary);
               debugPrint(userShared.diaryList.toString());
             },
             onTap: () {

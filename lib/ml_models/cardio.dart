@@ -233,15 +233,19 @@ class _CardioScreenState extends State<CardioScreen> {
                             if (response.statusCode == 200) {
                               // success, parse response data
                               debugPrint(response.body);
-                              if (response.body[8] == '.') {
-                                acc = double.parse(
-                                    response.body.substring(7, 11));
-                                result = int.parse(response.body[21]);
-                              } else {
-                                acc =
-                                    double.parse(response.body.substring(7, 9));
-                                result = int.parse(response.body[19]);
-                              }
+                              Map<String, dynamic> body =
+                                  jsonDecode(response.body);
+                              acc = body['acc'];
+                              result = body['result'];
+                              // if (response.body[8] == '.') {
+                              //   acc = double.parse(
+                              //       response.body.substring(7, 11));
+                              //   result = int.parse(response.body[21]);
+                              // } else {
+                              //   acc =
+                              //       double.parse(response.body.substring(7, 9));
+                              //   result = int.parse(response.body[19]);
+                              // }
                               final response2 = await http
                                   .post(Uri.parse(apiUrlAge),
                                       headers: {

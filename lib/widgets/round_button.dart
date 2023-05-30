@@ -15,7 +15,7 @@ class RoundButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (authNotifier != null && authNotifier!.isDoctor == true) {
+    if (authNotifier != null && authNotifier!.patientDetails == null) {
       return InkWell(
         onTap: onTap,
         child: Material(

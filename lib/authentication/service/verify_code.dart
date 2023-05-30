@@ -30,8 +30,9 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
             keyboardType: TextInputType.number,
             controller: VerificationCodeController,
             decoration: const InputDecoration(
-              hintText: '6 digit code',
-            ),
+                hintText: '6 digit code',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)))),
           ),
           const SizedBox(
             height: 80,
@@ -51,11 +52,8 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const HomePageDhwanish()));
+                          builder: (context) => const UserFormFillScreen()));
                 } catch (e) {
-                  setState(() {
-                    loading = false;
-                  });
                   Utils().toastMessage(e.toString());
                 }
               })

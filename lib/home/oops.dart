@@ -28,7 +28,7 @@ class _OOPsState extends State<OOPs> {
                 ],
                 stops: [0, 0, 1],
               ),
-              // color: authNotifier.isDoctor == true
+              // color: authNotifier.isDoctor == false
               //     ? const Color.fromARGB(255, 255, 181, 70)
               //     : const Color.fromARGB(255, 99, 255, 206)
             ),

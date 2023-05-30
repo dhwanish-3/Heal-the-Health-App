@@ -40,6 +40,45 @@ class AppointmentBackend {
     }
   }
 
+  Future<void> upcomingToCompletedbyDoctor(
+      AuthNotifier authNotifier,
+      List<PatientUser> PatientsUpcoming,
+      List<PatientUser> PatientsCompleted) async {
+    if (authNotifier.doctorDetails!.upcoming!.isNotEmpty &&
+        authNotifier.doctorDetails!.upcoming![0].dateTime!
+            .isBefore(DateTime.now())) {
+      authNotifier.doctorDetails!.completed!
+          .insert(0, authNotifier.doctorDetails!.upcoming![0]);
+      authNotifier.doctorDetails!.upcoming!.removeAt(0);
+      PatientsCompleted.insert(0, PatientsUpcoming[0]);
+      PatientsUpcoming.removeAt(0);
+      await FirebaseFirestore.instance
+          .collection('Doctors')
+          .doc(authNotifier.doctorDetails!.uid)
+          .update({
+        'upcoming':
+            PatientUser().getJson(authNotifier.doctorDetails!.upcoming ?? []),
+        'completed':
+            PatientUser().getJson(authNotifier.doctorDetails!.completed ?? [])
+      });
+      PatientsCompleted[0]
+          .completed!
+          .insert(0, authNotifier.doctorDetails!.completed![0]);
+      PatientsCompleted[0].upcoming!.removeWhere((object) =>
+          object.dateTime ==
+          authNotifier.doctorDetails!.completed![0].dateTime);
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(PatientsCompleted[0].uid)
+          .update({
+        'upcoming': PatientUser().getJson(PatientsCompleted[0].upcoming ?? []),
+        'completed': PatientUser().getJson(PatientsCompleted[0].completed ?? [])
+      });
+      await upcomingToCompletedbyDoctor(
+          authNotifier, PatientsUpcoming, PatientsCompleted);
+    }
+  }
+
   Future<void> cancelAppointment(
       int index,
       AuthNotifier authNotifier,
@@ -66,13 +105,6 @@ class AppointmentBackend {
           .cancelled!
           .insert(0, authNotifier.patientDetails!.cancelled![0]);
     }
-
-    // debugPrint('cancel[0]${authNotifier.patientDetails!.cancelled![0].id}');
-    // debugPrint('upc[0]${authNotifier.patientDetails!.upcoming![0]}');
-    // debugPrint('doccancelcancelled[0]${DoctorsCancelled[0].cancelled![0].id}');
-    // if (DoctorsCancelled[0].upcoming!.isNotEmpty) {
-    //   debugPrint('doccancelupcoming[0]${DoctorsCancelled[0].upcoming![0].id}');
-    // }
     DoctorsCancelled[0].upcoming!.removeWhere((object) =>
         object.dateTime == authNotifier.patientDetails!.cancelled![0].dateTime);
     await FirebaseFirestore.instance
@@ -103,6 +135,43 @@ class AppointmentBackend {
         .doc(doctor.uid)
         .update({
       'upcoming': DoctorUser().getJson(doctor.upcoming ?? []),
+    });
+  }
+
+  Future<void> cancelAppointmentbyDoctor(
+      int index,
+      AuthNotifier authNotifier,
+      List<PatientUser> PatientsUpcoming,
+      List<PatientUser> PatientsCancelled) async {
+    authNotifier.doctorDetails!.cancelled!
+        .insert(0, authNotifier.doctorDetails!.upcoming![index]);
+    authNotifier.doctorDetails!.upcoming!.removeAt(index);
+    PatientsCancelled.insert(0, PatientsUpcoming[index]);
+    PatientsUpcoming.removeAt(index);
+    await FirebaseFirestore.instance
+        .collection('Doctors')
+        .doc(authNotifier.doctorDetails!.uid)
+        .update({
+      'upcoming':
+          PatientUser().getJson(authNotifier.doctorDetails!.upcoming ?? []),
+      'cancelled':
+          PatientUser().getJson(authNotifier.doctorDetails!.cancelled ?? [])
+    });
+    if (!PatientsCancelled[0]
+        .cancelled!
+        .contains(authNotifier.doctorDetails!.cancelled![0])) {
+      PatientsCancelled[0]
+          .cancelled!
+          .insert(0, authNotifier.doctorDetails!.cancelled![0]);
+    }
+    PatientsCancelled[0].upcoming!.removeWhere((object) =>
+        object.dateTime == authNotifier.doctorDetails!.cancelled![0].dateTime);
+    await FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(PatientsCancelled[0].uid)
+        .update({
+      'upcoming': PatientUser().getJson(PatientsCancelled[0].upcoming ?? []),
+      'cancelled': PatientUser().getJson(PatientsCancelled[0].cancelled ?? [])
     });
   }
 }

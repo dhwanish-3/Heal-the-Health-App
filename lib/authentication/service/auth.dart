@@ -6,8 +6,6 @@ class AuthService {
   //to get user details
   Future<void> getPatientDetails(AuthNotifier authNotifier) async {
     if (authNotifier.user != null) {
-      // debugPrint('not nulls');
-      debugPrint(authNotifier.user!.email);
       await FirebaseFirestore.instance //changes
           .collection('Patients')
           .doc(authNotifier.user!.uid)
@@ -17,13 +15,11 @@ class AuthService {
               ? authNotifier.setUserDetails(
                   PatientUser.fromMap(value.data() as Map<String, dynamic>))
               : debugPrint(value.toString()));
-      // debugPrint(authNotifier.patientDetails.toString());
     }
   }
 
   Future<void> getDoctorDetails(AuthNotifier authNotifier) async {
     if (authNotifier.user != null) {
-      debugPrint(authNotifier.user!.email);
       await FirebaseFirestore.instance //changes
           .collection('Doctors')
           .doc(authNotifier.user!.uid)
@@ -33,7 +29,6 @@ class AuthService {
               ? authNotifier.setDoctorDetails(
                   DoctorUser.fromMap(value.data() as Map<String, dynamic>))
               : debugPrint(value.toString()));
-      // debugPrint(authNotifier.doctorDetails.toString());
     }
   }
 
@@ -41,20 +36,18 @@ class AuthService {
   Future<AuthNotifier> logInPatient(
       PatientUser user, AuthNotifier authNotifier, BuildContext context) async {
     UserCredential result;
-    debugPrint(user.emailid.toString());
-    debugPrint(user.password.toString());
+
     try {
       result = await _auth.signInWithEmailAndPassword(
           email: user.emailid.toString(), password: user.password.toString());
-      debugPrint(result.toString());
+
       try {
         User user = _auth.currentUser as User;
-        debugPrint(user.toString());
+
         authNotifier.setUser(user);
-        debugPrint(user.toString());
 
         await getPatientDetails(authNotifier);
-        debugPrint(authNotifier.patientDetails!.emailid);
+
         return authNotifier;
       } catch (e) {
         Utils().toastMessage(e.toString());
@@ -70,20 +63,18 @@ class AuthService {
   Future<AuthNotifier> logInDoctor(
       DoctorUser user, AuthNotifier authNotifier, BuildContext context) async {
     UserCredential result;
-    debugPrint(user.emailid.toString());
-    debugPrint(user.password.toString());
     try {
       result = await _auth.signInWithEmailAndPassword(
           email: user.emailid.toString(), password: user.password.toString());
-      debugPrint(result.toString());
+
       try {
         User user = _auth.currentUser as User;
-        debugPrint(user.toString());
+
         authNotifier.setUser(user);
-        debugPrint(user.toString());
+        authNotifier.setisDoctor(true);
 
         await getDoctorDetails(authNotifier);
-        debugPrint(authNotifier.doctorDetails!.emailid);
+
         return authNotifier;
       } catch (e) {
         Utils().toastMessage(e.toString());
@@ -103,7 +94,6 @@ class AuthService {
       result = await _auth.createUserWithEmailAndPassword(
           email: user.emailid, password: user.password);
       try {
-        debugPrint('hello${_auth.currentUser}');
         _auth.currentUser!.updateDisplayName(user.name);
         uploadPatientData(user);
         authNotifier.setUser(_auth.currentUser);
@@ -127,10 +117,10 @@ class AuthService {
       result = await _auth.createUserWithEmailAndPassword(
           email: user.emailid, password: user.password);
       try {
-        debugPrint('hello${_auth.currentUser}');
         _auth.currentUser!.updateDisplayName(user.name);
         uploadDoctorData(user);
         authNotifier.setUser(_auth.currentUser);
+        authNotifier.setisDoctor(true);
         authNotifier.setDoctorDetails(user);
         return authNotifier;
       } catch (e) {
@@ -182,6 +172,8 @@ class AuthService {
     try {
       await _auth.signOut();
       authNotifier.setUser(null);
+      authNotifier.setDoctorDetails(null);
+      authNotifier.setUserDetails(null);
       Navigator.push((context),
           MaterialPageRoute(builder: (context) => const LoginScreen()));
     } catch (e) {
@@ -193,6 +185,8 @@ class AuthService {
     try {
       await _auth.signOut();
       authNotifier.setUser(null);
+      authNotifier.setDoctorDetails(null);
+      authNotifier.setUserDetails(null);
       Navigator.push((context),
           MaterialPageRoute(builder: (context) => const DoctorLogIn()));
     } catch (e) {
