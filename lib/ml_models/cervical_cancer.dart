@@ -3,7 +3,6 @@ import 'package:heal_the_health_app/ml_models/result_negative.dart';
 import 'package:heal_the_health_app/ml_models/result_positive.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-// import 'dart:ui';
 
 class CervCancer extends StatefulWidget {
   const CervCancer({super.key});
@@ -34,8 +33,9 @@ class _State extends State<CervCancer> {
     final stdNoController = TextEditingController();
     final stdNumController = TextEditingController();
 
-    const apiUrl = 'http://34.131.185.13:8080/cerv_canc';
-    const apiUrlage = 'http://34.131.185.13:8080/age_cerv_canc';
+    const apiUrl = 'http://HealTheHealthApp.pythonanywhere.com/cerv_canc';
+    const apiUrlage =
+        'http://HealTheHealthApp.pythonanywhere.com/age_cerv_canc';
     final array = [
       0.0,
       0.0,
@@ -54,6 +54,59 @@ class _State extends State<CervCancer> {
     double acc = 100;
     int age = 100;
     int result = 0;
+
+    Future<void> postData() async {
+      array[0] = double.parse(stdHPVController.text);
+      array[1] = double.parse(stdCController.text);
+      array[2] = double.parse(stdVPCController.text);
+      array[4] = double.parse(IUDController.text);
+      array[5] = double.parse(stdHIVController.text);
+      array[6] = double.parse(stdSController.text);
+      array[7] = int.parse(stdNoController.text);
+      array[8] = double.parse(stdNumController.text);
+
+      // array[3] = 0.0;
+      debugPrint(array.toString());
+
+      final response = await http
+          .post(Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(data))
+          .then((value) {
+        debugPrint('response ${value.body} ');
+        return value;
+      });
+
+      if (response.statusCode == 200) {
+        // success, parse response data
+        Map<String, dynamic> body = jsonDecode(response.body);
+        acc = body['acc'];
+        result = body['result'];
+        final ageResponse = await http
+            .post(Uri.parse(apiUrlage),
+                headers: {'Content-Type': 'application/json'},
+                body: json.encode(data))
+            .then((value) {
+          debugPrint('response ${value.body} ');
+          return value;
+        });
+        if (ageResponse.statusCode == 200) {
+          debugPrint(ageResponse.body);
+          age = jsonDecode(ageResponse.body)['result'];
+        }
+        authNotifier.setLoading(false);
+        if (result == 1) {
+          gotoNegative(acc, age);
+        } else {
+          gotoPositive(acc, age);
+        }
+      } else {
+        authNotifier.setLoading(false);
+        Utils().toastMessage("Something went wrong...\nPlease try again later");
+        // error handling
+        throw Exception('Failed to post data: ${response.statusCode}');
+      }
+    }
 
     return Scaffold(
       appBar: GradientAppBar(
@@ -227,102 +280,22 @@ class _State extends State<CervCancer> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
-
-                  child: RoundButton(
-                      title: 'Submit',
-                      onTap: () async {
-                        if (myFormKey.currentState!.validate()) {
-                          array[0] = double.parse(stdHPVController.text);
-                          array[1] = double.parse(stdCController.text);
-                          array[2] = double.parse(stdVPCController.text);
-                          array[4] = double.parse(IUDController.text);
-                          array[5] = double.parse(stdHIVController.text);
-                          array[6] = double.parse(stdSController.text);
-                          array[7] = int.parse(stdNoController.text);
-                          array[8] = double.parse(stdNumController.text);
-
-                          // array[3] = 0.0;
-                          debugPrint(array.toString());
-
-                          final response = await http
-                              .post(Uri.parse(apiUrl),
-                                  headers: {'Content-Type': 'application/json'},
-                                  body: json.encode(data))
-                              .then((value) {
-                            debugPrint('response ${value.body} ');
-                            return value;
-                          });
-
-                          if (response.statusCode == 200) {
-                            // success, parse response data
-                            Map<String, dynamic> body =
-                                jsonDecode(response.body);
-                            acc = body['acc'];
-                            result = body['result'];
-                            // debugPrint(response.body);
-                            // debugPrint(response.body[7]);
-                            // if (response.body[9] == '.') {
-                            //   // print(response.body[21]);
-                            //   acc =
-                            //       double.parse(response.body.substring(7, 11));
-                            //   result = int.parse(response.body[21]);
-                            //   // print('accur$acc');
-                            //   // print('rsdjd$result');
-                            // } else {
-                            //   acc = double.parse(response.body.substring(7, 9));
-                            //   result = int.parse(response.body[19]);
-                            // }
-                            final response2 = await http
-                                .post(Uri.parse(apiUrlage),
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: json.encode(data))
-                                .then((value) {
-                              debugPrint('response ${value.body} ');
-                              return value;
-                            });
-                            if (response2.statusCode == 200) {
-                              debugPrint(response2.body);
-                              age = int.parse(response2.body.substring(10, 12));
-                            }
-                            if (result == 1) {
-                              gotoNegative(acc, age);
-                              // print("$acc% chance you have cervical cancer");
-                              // Navigator.pushNamed(context, '/Insurance');
+                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                    child: Consumer<AuthNotifier>(
+                        builder: (context, value, child) {
+                      return RoundButton(
+                          loading: authNotifier.loading ?? false,
+                          title: 'Submit',
+                          onTap: () async {
+                            if (myFormKey.currentState!.validate()) {
+                              authNotifier.setLoading(true);
+                              await postData();
                             } else {
-                              gotoPositive(acc, age);
-                              // print("$acc% chance you don't cancer");
+                              Utils().toastMessage(
+                                  'Please complete all the fields');
                             }
-
-                            return json.decode(response.body);
-                          } else {
-                            // error handling
-                            throw Exception(
-                                'Failed to post data: ${response.statusCode}');
-                          }
-                        } else {
-                          Utils()
-                              .toastMessage('Please complete all the fields');
-                        }
-                      }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-
-                  //   },
-                  // ),
-                ),
+                          });
+                    })),
               )
             ],
           ),
@@ -332,7 +305,6 @@ class _State extends State<CervCancer> {
   }
 
   gotoNegative(double acc, int age) {
-    debugPrint('neg');
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -343,7 +315,6 @@ class _State extends State<CervCancer> {
   }
 
   gotoPositive(double acc, int age) {
-    debugPrint('pos');
     return Navigator.push(
         context,
         MaterialPageRoute(

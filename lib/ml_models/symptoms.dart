@@ -11,22 +11,18 @@ class SymptomsScreen extends StatefulWidget {
 }
 
 class _SymptomsScreenState extends State<SymptomsScreen> {
-  final apiUrl = 'http://34.131.185.13:8080/symp';
-  // List list = [19, 121, 41, 126, 26, 45, 14, 60, 64];
+  final apiUrl = 'http://HealTheHealthApp.pythonanywhere.com/predict';
 
-  // final data = json.encode({
-  //   "data": [19, 121, 41, 126, 26, 45, 14, 60, 64]
-  // });
-
-  Future<Map<String, dynamic>> postData(List<int> array) async {
+  Future<Map<String, dynamic>> postData(
+      List<int> array, AuthNotifier authNotifier) async {
     List<int> list = List<int>.filled(131, 0);
-    int j = 0;
+
     for (int i = 0; i < array.length; i++) {
       list[array[i]] = 1;
     }
 
-    final array1 = list;
-    Map<String, dynamic> data = {"data": array1};
+    final dataArray = list;
+    Map<String, dynamic> data = {"data": dataArray};
 
     final response = await http
         .post(Uri.parse(apiUrl),
@@ -38,8 +34,8 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
       debugPrint('response${value.body}');
       return value;
     });
+    authNotifier.setLoading(false);
     if (response.statusCode == 200) {
-      // success, parse response data
       debugPrint(response.body);
       return json.decode(response.body);
     } else {
@@ -129,28 +125,32 @@ class _SymptomsScreenState extends State<SymptomsScreen> {
             height: 40,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 30),
-            child: RoundButton(
-                onTap: () async {
-                  if (Chips.length < 3) {
-                    Utils().toastMessage('Please select atleast 3 symptoms');
-                  } else {
-                    final result = await postData(array);
-                    debugPrint(result.toString());
-                    Disease disease =
-                        findDisease(result['result'], authNotifier);
-                    // Disease disease = findDisease('GERD', authNotifier);
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 60.0, vertical: 30),
+              child: Consumer<AuthNotifier>(builder: (context, value, child) {
+                return RoundButton(
+                    loading: authNotifier.loading ?? false,
+                    onTap: () async {
+                      if (Chips.length < 3) {
+                        Utils()
+                            .toastMessage('Please select atleast 3 symptoms');
+                      } else {
+                        authNotifier.setLoading(true);
+                        final result = await postData(array, authNotifier);
+                        debugPrint(result.toString());
+                        Disease disease =
+                            findDisease(result['result'], authNotifier);
 
-                    Navigator.push(
-                        (context),
-                        MaterialPageRoute(
-                            builder: (context) => ResultofSymptoms(
-                                  disease: disease,
-                                )));
-                  }
-                },
-                title: 'Submit'),
-          ),
+                        Navigator.push(
+                            (context),
+                            MaterialPageRoute(
+                                builder: (context) => ResultofSymptoms(
+                                      disease: disease,
+                                    )));
+                      }
+                    },
+                    title: 'Submit');
+              })),
         ],
       ),
     );

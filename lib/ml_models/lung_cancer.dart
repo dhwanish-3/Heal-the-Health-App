@@ -40,8 +40,8 @@ class _State extends State<LungCancer> {
     final SDController = TextEditingController();
     final CPController = TextEditingController();
 
-    const apiUrl = 'http://34.131.185.13:8080/lung';
-    const apiUrlAge = 'http://34.131.185.13:8080/age_lung';
+    const apiUrl = 'http://HealTheHealthApp.pythonanywhere.com/lung';
+    const apiUrlAge = 'http://HealTheHealthApp.pythonanywhere.com/age_lung';
     PatientUser patient = authNotifier.patientDetails!;
     final array = [
       patient.gender,
@@ -87,6 +87,73 @@ class _State extends State<LungCancer> {
 
     Map<String, dynamic> data = {"data": array};
     Map<String, dynamic> dataAge = {"data": arrayAge};
+
+    Future<void> postData() async {
+      array[3] = int.parse(YellowController.text);
+      array[4] = int.parse(AnxietyController.text);
+      array[5] = int.parse(PPController.text);
+      array[6] = int.parse(CDController.text);
+      array[7] = int.parse(FatigueController.text);
+      array[8] = int.parse(AllergyController.text);
+      array[9] = int.parse(WheezingController.text);
+      array[11] = int.parse(CoughingController.text);
+      array[12] = int.parse(SBController.text);
+      array[13] = int.parse(SDController.text);
+      array[14] = int.parse(CPController.text);
+      arrayAge[2] = int.parse(YellowController.text);
+      arrayAge[3] = int.parse(AnxietyController.text);
+      arrayAge[4] = int.parse(PPController.text);
+      arrayAge[5] = int.parse(CDController.text);
+      arrayAge[6] = int.parse(FatigueController.text);
+      arrayAge[7] = int.parse(AllergyController.text);
+      arrayAge[8] = int.parse(WheezingController.text);
+      arrayAge[10] = int.parse(CoughingController.text);
+      arrayAge[11] = int.parse(SBController.text);
+      arrayAge[12] = int.parse(SDController.text);
+      arrayAge[13] = int.parse(CPController.text);
+
+      debugPrint(array.toString());
+      int age = 0;
+      final response = await http
+          .post(Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(data))
+          .then((value) {
+        debugPrint('response${value.body}');
+        return value;
+      });
+
+      if (response.statusCode == 200) {
+        // success, parse response data
+        debugPrint(response.body);
+        Map<String, dynamic> body = jsonDecode(response.body);
+        acc = body['acc'];
+        result = body['result'];
+        final ageResponse = await http
+            .post(Uri.parse(apiUrlAge),
+                headers: {'Content-Type': 'application/json'},
+                body: json.encode(dataAge))
+            .then((value) {
+          debugPrint('response ${value.body} ');
+          return value;
+        });
+        if (ageResponse.statusCode == 200) {
+          debugPrint(ageResponse.body);
+          age = jsonDecode(ageResponse.body)['result'];
+        }
+        authNotifier.setLoading(false);
+        if (result == 1) {
+          gotoNegative(acc, age);
+        } else {
+          gotoPositive(acc, age);
+        }
+      } else {
+        authNotifier.setLoading(false);
+        Utils().toastMessage("Something went wrong...\nPlease try again later");
+        // error handling
+        throw Exception('Failed to post data: ${response.statusCode}');
+      }
+    }
 
     return Scaffold(
       appBar: GradientAppBar(
@@ -317,101 +384,22 @@ class _State extends State<LungCancer> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
-                  child: RoundButton(
-                      title: 'Submit',
-                      onTap: () async {
-                        if (myFormKey.currentState!.validate()) {
-                          array[3] = int.parse(YellowController.text);
-                          array[4] = int.parse(AnxietyController.text);
-                          array[5] = int.parse(PPController.text);
-                          array[6] = int.parse(CDController.text);
-                          array[7] = int.parse(FatigueController.text);
-                          array[8] = int.parse(AllergyController.text);
-                          array[9] = int.parse(WheezingController.text);
-                          array[11] = int.parse(CoughingController.text);
-                          array[12] = int.parse(SBController.text);
-                          array[13] = int.parse(SDController.text);
-                          array[14] = int.parse(CPController.text);
-                          arrayAge[2] = int.parse(YellowController.text);
-                          arrayAge[3] = int.parse(AnxietyController.text);
-                          arrayAge[4] = int.parse(PPController.text);
-                          arrayAge[5] = int.parse(CDController.text);
-                          arrayAge[6] = int.parse(FatigueController.text);
-                          arrayAge[7] = int.parse(AllergyController.text);
-                          arrayAge[8] = int.parse(WheezingController.text);
-                          arrayAge[10] = int.parse(CoughingController.text);
-                          arrayAge[11] = int.parse(SBController.text);
-                          arrayAge[12] = int.parse(SDController.text);
-                          arrayAge[13] = int.parse(CPController.text);
-
-                          // array[0] = 0;
-                          // array[1] = 59;
-                          // array[2] = 1;
-
-                          // array[10] = 1;
-                          debugPrint(array.toString());
-                          int age = 0;
-                          final response = await http
-                              .post(Uri.parse(apiUrl),
-                                  headers: {'Content-Type': 'application/json'},
-                                  body: json.encode(data))
-                              .then((value) {
-                            debugPrint('response${value.body}');
-                            return value;
-                          });
-
-                          if (response.statusCode == 200) {
-                            // success, parse response data
-                            debugPrint(response.body);
-                            Map<String, dynamic> body =
-                                jsonDecode(response.body);
-                            acc = body['acc'];
-                            result = body['result'];
-                            // if (response.body[8] == '.') {
-                            //   acc =
-                            //       double.parse(response.body.substring(7, 11));
-                            //   result = int.parse(response.body[21]);
-                            // } else {
-                            //   acc = double.parse(response.body.substring(7, 9));
-                            //   result = int.parse(response.body[19]);
-                            // }
-                            final response2 = await http
-                                .post(Uri.parse(apiUrlAge),
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: json.encode(dataAge))
-                                .then((value) {
-                              debugPrint('response ${value.body} ');
-                              return value;
-                            });
-                            if (response2.statusCode == 200) {
-                              debugPrint(response2.body);
-                              age = int.parse(response2.body.substring(10, 12));
-                            }
-                            if (result == 1) {
-                              gotoNegative(acc, age);
-                              // print("$acc% chance you have cervical cancer");
-                              // Navigator.pushNamed(context, '/Insurance');
+                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                    child: Consumer<AuthNotifier>(
+                        builder: (context, value, child) {
+                      return RoundButton(
+                          loading: authNotifier.loading ?? false,
+                          title: 'Submit',
+                          onTap: () async {
+                            if (myFormKey.currentState!.validate()) {
+                              authNotifier.setLoading(true);
+                              await postData();
                             } else {
-                              gotoPositive(acc, age);
-                              // print("$acc% chance you don't cancer");
+                              Utils().toastMessage(
+                                  'Please complete all the fields');
                             }
-                            return json.decode(response.body);
-
-                            // return json.decode(response.body);
-                          } else {
-                            // error handling
-                            throw Exception(
-                                'Failed to post data: ${response.statusCode}');
-                          }
-                        } else {
-                          Utils()
-                              .toastMessage('Please complete all the fields');
-                        }
-                      }),
-                ),
+                          });
+                    })),
               )
             ],
           ),
@@ -421,7 +409,6 @@ class _State extends State<LungCancer> {
   }
 
   gotoNegative(double acc, int age) {
-    debugPrint('neg');
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -432,7 +419,6 @@ class _State extends State<LungCancer> {
   }
 
   gotoPositive(double acc, int age) {
-    debugPrint('pos');
     return Navigator.push(
         context,
         MaterialPageRoute(

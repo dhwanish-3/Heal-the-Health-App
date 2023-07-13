@@ -12,8 +12,8 @@ class CardioScreen extends StatefulWidget {
 }
 
 class _CardioScreenState extends State<CardioScreen> {
-  final apiUrl = 'http://34.131.185.13:8080/cvd';
-  final apiUrlAge = 'http://34.131.185.13:8080/age_cvd';
+  final apiUrl = 'http://HealTheHealthApp.pythonanywhere.com/cvd';
+  final apiUrlAge = 'http://HealTheHealthApp.pythonanywhere.com/age_cvd';
   final _systolicBloodPressureController = TextEditingController();
   final _diastolicBloodPressureController = TextEditingController();
   final _conditionList = ['Normal', 'Above Normal', 'Well Above Normal'];
@@ -27,26 +27,6 @@ class _CardioScreenState extends State<CardioScreen> {
   final _myFormKey = GlobalKey<FormState>();
   double acc = 100;
   int result = 0;
-
-  // Future<Map<String, dynamic>> postData() async {
-  //   final response = await http
-  //       .post(Uri.parse(apiUrl),
-  //           headers: {'Content-Type': 'application/json'},
-  //           body: json.encode(data))
-  //       .then((value) {
-  //     debugPrint('response${value.body}');
-  //     return value;
-  //   });
-
-  //   if (response.statusCode == 200) {
-  //     // success, parse response data
-  //     debugPrint(response.body);
-  //     return json.decode(response.body);
-  //   } else {
-  //     // error handling
-  //     throw Exception('Failed to post data: ${response.statusCode}');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +70,60 @@ class _CardioScreenState extends State<CardioScreen> {
 
     Map<String, dynamic> data = {"data": array};
     Map<String, dynamic> dataAge = {"data": arrayAge};
+
+    Future<void> postData() async {
+      array[4] = int.parse(_systolicBloodPressureController.text);
+      array[5] = int.parse(_diastolicBloodPressureController.text);
+      array[6] = mapping[_selectionCholesterol] ?? 0;
+      array[7] = mapping[_selectionGlucose] ?? 0;
+      arrayAge[3] = int.parse(_systolicBloodPressureController.text);
+      arrayAge[4] = int.parse(_diastolicBloodPressureController.text);
+      arrayAge[5] = mapping[_selectionCholesterol] ?? 0;
+      arrayAge[6] = mapping[_selectionGlucose] ?? 0;
+
+      debugPrint(array.toString());
+      int age = 0;
+      final response = await http
+          .post(Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(data))
+          .then((value) {
+        debugPrint('response${value.body}');
+        return value;
+      });
+
+      if (response.statusCode == 200) {
+        // success, parse response data
+        debugPrint(response.body);
+        Map<String, dynamic> body = jsonDecode(response.body);
+        acc = body['acc'];
+        result = body['result'];
+        final ageResponse = await http
+            .post(Uri.parse(apiUrlAge),
+                headers: {'Content-Type': 'application/json'},
+                body: json.encode(dataAge))
+            .then((value) {
+          debugPrint('response ${value.body} ');
+          return value;
+        });
+        if (ageResponse.statusCode == 200) {
+          debugPrint(ageResponse.body);
+          age = jsonDecode(ageResponse.body)['result'];
+        }
+        authNotifier.setLoading(false);
+        if (result == 1) {
+          gotoNegative(acc, age);
+        } else {
+          gotoPositive(acc, age);
+        }
+      } else {
+        authNotifier.setLoading(false);
+        Utils().toastMessage("Something went wrong...\nPlease try again later");
+        // error handling
+        throw Exception('Failed to post data: ${response.statusCode}');
+      }
+    }
+
     return Scaffold(
       appBar: GradientAppBar(title: 'CVD Predictor'),
       body: Center(
@@ -199,90 +233,22 @@ class _CardioScreenState extends State<CardioScreen> {
                 50.heightBox,
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    child: RoundButton(
-                        title: 'Submit',
-                        onTap: () async {
-                          if (_myFormKey.currentState!.validate()) {
-                            array[4] = int.parse(
-                                _systolicBloodPressureController.text);
-                            array[5] = int.parse(
-                                _diastolicBloodPressureController.text);
-                            array[6] = mapping[_selectionCholesterol] ?? 0;
-                            array[7] = mapping[_selectionGlucose] ?? 0;
-                            arrayAge[3] = int.parse(
-                                _systolicBloodPressureController.text);
-                            arrayAge[4] = int.parse(
-                                _diastolicBloodPressureController.text);
-                            arrayAge[5] = mapping[_selectionCholesterol] ?? 0;
-                            arrayAge[6] = mapping[_selectionGlucose] ?? 0;
-
-                            debugPrint(array.toString());
-                            int age = 0;
-                            final response = await http
-                                .post(Uri.parse(apiUrl),
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: json.encode(data))
-                                .then((value) {
-                              debugPrint('response${value.body}');
-                              return value;
-                            });
-
-                            if (response.statusCode == 200) {
-                              // success, parse response data
-                              debugPrint(response.body);
-                              Map<String, dynamic> body =
-                                  jsonDecode(response.body);
-                              acc = body['acc'];
-                              result = body['result'];
-                              // if (response.body[8] == '.') {
-                              //   acc = double.parse(
-                              //       response.body.substring(7, 11));
-                              //   result = int.parse(response.body[21]);
-                              // } else {
-                              //   acc =
-                              //       double.parse(response.body.substring(7, 9));
-                              //   result = int.parse(response.body[19]);
-                              // }
-                              final response2 = await http
-                                  .post(Uri.parse(apiUrlAge),
-                                      headers: {
-                                        'Content-Type': 'application/json'
-                                      },
-                                      body: json.encode(dataAge))
-                                  .then((value) {
-                                debugPrint('response ${value.body} ');
-                                return value;
-                              });
-                              if (response2.statusCode == 200) {
-                                debugPrint(response2.body);
-                                age =
-                                    int.parse(response2.body.substring(10, 12));
-                              }
-
-                              if (result == 1) {
-                                gotoNegative(acc, age);
-                                // print("$acc% chance you have a CVD");
-                                // Navigator.pushNamed(context, '/Insurance');
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      child: Consumer<AuthNotifier>(
+                          builder: (context, value, child) {
+                        return RoundButton(
+                            loading: authNotifier.loading ?? false,
+                            title: 'Submit',
+                            onTap: () async {
+                              if (_myFormKey.currentState!.validate()) {
+                                authNotifier.setLoading(true);
+                                await postData();
                               } else {
-                                gotoPositive(acc, age);
-                                // print("$acc% chance you don't diabetes");
+                                Utils().toastMessage(
+                                    'Please complete all the fields');
                               }
-
-                              return json.decode(response.body);
-                            } else {
-                              // error handling
-                              throw Exception(
-                                  'Failed to post data: ${response.statusCode}');
-                            }
-                          } else {
-                            Utils()
-                                .toastMessage('Please complete all the fields');
-                          }
-                        }),
-                  ),
+                            });
+                      })),
                 )
               ],
             ),
@@ -293,7 +259,6 @@ class _CardioScreenState extends State<CardioScreen> {
   }
 
   gotoNegative(double acc, int age) {
-    debugPrint('neg');
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -304,7 +269,6 @@ class _CardioScreenState extends State<CardioScreen> {
   }
 
   gotoPositive(double acc, int age) {
-    debugPrint('pos');
     return Navigator.push(
         context,
         MaterialPageRoute(

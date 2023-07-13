@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:heal_the_health_app/constants/imports.dart';
 import 'package:heal_the_health_app/ml_models/x_ray_result.dart';
 import 'package:heal_the_health_app/models/x_ray.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 List<String> list = [
   'Atelectasis',
@@ -95,9 +94,8 @@ List<List<String>> prevention = [
 List<XRay> conditions = List.generate(list.length,
     (index) => XRay(list[index], description[index], prevention[index]));
 
-Future<int> sendImageURL(String imageUrl) async {
-  final url = Uri.parse(
-      'http://34.131.185.13:8080/x_ray'); // Replace 'API_URL' with the actual API endpoint URL
+Future<int> sendImageURL(String imageUrl, AuthNotifier authNotifier) async {
+  final url = Uri.parse('http://HealTheHealthApp/pythonanywhere.com/x_ray');
 
   final response = await http.post(
     url,
@@ -105,10 +103,13 @@ Future<int> sendImageURL(String imageUrl) async {
   );
   if (response.statusCode == 200) {
     final jsonResponse = jsonDecode(response.body);
-    final result = jsonResponse['result'] as int;
-    print(result);
+    int result = jsonResponse['result'];
+    debugPrint(result.toString());
+    authNotifier.setLoading(false);
     return result;
   } else {
+    authNotifier.setLoading(false);
+    Utils().toastMessage("Something went wrong...\nPlease try again later");
     throw Exception('Failed to send image URL to the API');
   }
 }
@@ -138,6 +139,9 @@ class _XRayScreenState extends State<XRayScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     Future<String> getImageUrl(File? image) async {
@@ -202,18 +206,28 @@ class _XRayScreenState extends State<XRayScreen> {
                       onTap: () {
                         getImageGallery();
                       })
-                  : RoundButton(
-                      title: 'Upload',
-                      onTap: () async {
-                        if (_image != null) {
-                          // String url = await getImageUrl(_image);
-                          // debugPrint(url);
-                          // int res = await sendImageURL(url);
-                          int res = await sendImageURL(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTm9GsXXOfUO91Yvu-heS6F-SPPtj22LoqrBg&usqp=CAU');
-                          goToResults(res);
-                        }
-                      }))
+                  : Consumer<AuthNotifier>(builder: (context, value, child) {
+                      return RoundButton(
+                          loading: authNotifier.loading ?? false,
+                          title: 'Upload',
+                          onTap: () async {
+                            if (_image != null) {
+                              authNotifier.setLoading(true);
+                              String url = await getImageUrl(_image);
+                              if (url.isNotEmpty) {
+                                int res = await sendImageURL(url, authNotifier);
+                                goToResults(res);
+                              } else {
+                                authNotifier.setLoading(false);
+                                Utils().toastMessage(
+                                    "Something went wrong...\nPlease try again later");
+                              }
+                            } else {
+                              Utils().toastMessage(
+                                  'Please select an x-ray image to predict');
+                            }
+                          });
+                    }))
         ],
       )),
     );
@@ -223,6 +237,7 @@ class _XRayScreenState extends State<XRayScreen> {
     return Navigator.push(
         context,
         MaterialPageRoute(
-            builder: ((context) => XRayResults(disease: conditions[res]))));
+            builder: ((context) =>
+                XRayResults(disease: conditions[res % conditions.length]))));
   }
 }

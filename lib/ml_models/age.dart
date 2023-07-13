@@ -1,6 +1,4 @@
 import 'package:heal_the_health_app/constants/imports.dart';
-import 'package:heal_the_health_app/home/patient/insurance.dart';
-import 'package:heal_the_health_app/home/oops.dart';
 
 class Age extends StatefulWidget {
   int age;
@@ -11,6 +9,16 @@ class Age extends StatefulWidget {
 }
 
 class _State extends State<Age> {
+  @override
+  void initState() {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    if (widget.age <= authNotifier.patientDetails!.age!) {
+      widget.age = 80;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -264,11 +272,11 @@ class _State extends State<Age> {
                         width: 5,
                       ),
                     ),
-                    child: InkWell(
+                    child: GestureDetector(
                       onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const OOPs())),
+                              builder: (context) => const AddDoctors())),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [

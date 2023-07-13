@@ -16,7 +16,8 @@ class _State extends State<Thyroid> {
   @override
   Widget build(BuildContext context) {
     final myFormKey = GlobalKey<FormState>();
-
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     final conditionList = ['Yes', 'No'];
     final Map<String, int> mapping = {
       'Yes': 1,
@@ -37,8 +38,8 @@ class _State extends State<Thyroid> {
     final HypothyroidController = TextEditingController();
     final TT4MeasuredController = TextEditingController();
 
-    const apiUrl = 'http://34.131.185.13:8080/thyroid';
-    const apiUrlAge = 'http://34.131.185.13:8080/age_thyroid';
+    const apiUrl = 'http://HealTheHealthApp.pythonanywhere.com/thyroid';
+    const apiUrlAge = 'http://HealTheHealthApp.pythonanywhere.com/age_thyroid';
     final array = [
       0,
       0,
@@ -53,6 +54,60 @@ class _State extends State<Thyroid> {
     ];
 
     Map<String, dynamic> data = {"data": array};
+
+    Future<void> postData() async {
+      array[0] = int.parse(ThyroxineController.text);
+      array[1] = int.parse(TSHController.text);
+      array[2] = int.parse(SurgeryController.text);
+      array[3] = double.parse(T4UController.text);
+      array[4] = double.parse(T3Controller.text);
+      array[5] = int.parse(T3MeasuredController.text);
+      array[6] = int.parse(TumorController.text);
+      array[7] = int.parse(GoitreController.text);
+      array[8] = int.parse(HypothyroidController.text);
+      array[9] = int.parse(TT4MeasuredController.text);
+      debugPrint(array.toString());
+      int age = 0;
+      final response = await http
+          .post(Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(data))
+          .then((value) {
+        debugPrint('response${value.body}');
+        return value;
+      });
+
+      if (response.statusCode == 200) {
+        // success, parse response data
+        debugPrint(response.body);
+        Map<String, dynamic> body = jsonDecode(response.body);
+        acc = body['acc'];
+        result = body['result'];
+        final ageResponse = await http
+            .post(Uri.parse(apiUrlAge),
+                headers: {'Content-Type': 'application/json'},
+                body: json.encode(data))
+            .then((value) {
+          debugPrint('response ${value.body} ');
+          return value;
+        });
+        if (ageResponse.statusCode == 200) {
+          debugPrint(ageResponse.body);
+          age = jsonDecode(ageResponse.body)['result'];
+        }
+        authNotifier.setLoading(false);
+        if (result == 1) {
+          gotoNegative(acc, age);
+        } else {
+          gotoPositive(acc, age);
+        }
+      } else {
+        authNotifier.setLoading(false);
+        Utils().toastMessage("Something went wrong...\nPlease try again later");
+        // error handling
+        throw Exception('Failed to post data: ${response.statusCode}');
+      }
+    }
 
     return Scaffold(
       appBar: GradientAppBar(
@@ -274,83 +329,22 @@ class _State extends State<Thyroid> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
-                  child: RoundButton(
-                      title: 'Submit',
-                      onTap: () async {
-                        if (myFormKey.currentState!.validate()) {
-                          array[0] = int.parse(ThyroxineController.text);
-                          array[1] = int.parse(TSHController.text);
-                          array[2] = int.parse(SurgeryController.text);
-                          array[3] = double.parse(T4UController.text);
-                          array[4] = double.parse(T3Controller.text);
-                          array[5] = int.parse(T3MeasuredController.text);
-                          array[6] = int.parse(TumorController.text);
-                          array[7] = int.parse(GoitreController.text);
-                          array[8] = int.parse(HypothyroidController.text);
-                          array[9] = int.parse(TT4MeasuredController.text);
-                          debugPrint(array.toString());
-                          int age = 0;
-                          final response = await http
-                              .post(Uri.parse(apiUrl),
-                                  headers: {'Content-Type': 'application/json'},
-                                  body: json.encode(data))
-                              .then((value) {
-                            debugPrint('response${value.body}');
-                            return value;
-                          });
-
-                          if (response.statusCode == 200) {
-                            // success, parse response data
-                            debugPrint(response.body);
-                            Map<String, dynamic> body =
-                                jsonDecode(response.body);
-                            acc = body['acc'];
-                            result = body['result'];
-                            // if (response.body[8] == '.') {
-                            //   acc =
-                            //       double.parse(response.body.substring(7, 11));
-                            //   result = int.parse(response.body[21]);
-                            // } else {
-                            //   acc = double.parse(response.body.substring(7, 9));
-                            //   result = int.parse(response.body[19]);
-                            // }
-                            final response2 = await http
-                                .post(Uri.parse(apiUrlAge),
-                                    headers: {
-                                      'Content-Type': 'application/json'
-                                    },
-                                    body: json.encode(data))
-                                .then((value) {
-                              debugPrint('response ${value.body} ');
-                              return value;
-                            });
-                            if (response2.statusCode == 200) {
-                              debugPrint(response2.body);
-                              age = int.parse(response2.body.substring(10, 12));
-                            }
-
-                            if (result == 1) {
-                              gotoNegative(acc, age);
-                              // print("$acc% chance you have thyroid disease");
-                              // Navigator.pushNamed(context, '/Insurance');
+                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                    child: Consumer<AuthNotifier>(
+                        builder: (context, value, child) {
+                      return RoundButton(
+                          loading: authNotifier.loading ?? false,
+                          title: 'Submit',
+                          onTap: () async {
+                            authNotifier.setLoading(true);
+                            if (myFormKey.currentState!.validate()) {
+                              await postData();
                             } else {
-                              gotoPositive(acc, age);
-                              // print("$acc% chance you don't diabetes");
+                              Utils().toastMessage(
+                                  'Please complete all the fields');
                             }
-
-                            return json.decode(response.body);
-                          } else {
-                            // error handling
-                            throw Exception(
-                                'Failed to post data: ${response.statusCode}');
-                          }
-                        } else {
-                          Utils()
-                              .toastMessage('Please complete all the fields');
-                        }
-                      }),
-                ),
+                          });
+                    })),
               )
             ],
           ),

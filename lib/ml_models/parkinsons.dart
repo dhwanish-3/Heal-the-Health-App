@@ -16,7 +16,8 @@ class _State extends State<Parkinsons> {
   @override
   Widget build(BuildContext context) {
     final myFormKey = GlobalKey<FormState>();
-
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     final conditionList = ['Yes', 'No'];
     final Map<String, int> mapping = {
       'Yes': 1,
@@ -37,7 +38,7 @@ class _State extends State<Parkinsons> {
     final Spread1Controller = TextEditingController();
     final Spread2Controller = TextEditingController();
 
-    const apiUrl = 'http://34.131.185.13:8080/parkinsons';
+    const apiUrl = 'http://HealTheHealthApp.pythonanywhere.com/parkinsons';
     final array = [
       0.0,
       0.0,
@@ -52,6 +53,48 @@ class _State extends State<Parkinsons> {
     ];
 
     Map<String, dynamic> data = {"data": array};
+
+    Future<void> postData() async {
+      array[0] = double.parse(FoController.text);
+      array[1] = double.parse(FhiController.text);
+      array[2] = double.parse(FloController.text);
+      array[3] = double.parse(JitterController.text);
+      array[4] = double.parse(RAPController.text);
+      array[5] = double.parse(DDPController.text);
+      array[6] = double.parse(PPEController.text);
+      array[7] = double.parse(NHRController.text);
+      array[8] = double.parse(Spread1Controller.text);
+      array[9] = double.parse(Spread2Controller.text);
+      debugPrint(array.toString());
+      int age = 80;
+      final response = await http
+          .post(Uri.parse(apiUrl),
+              headers: {'Content-Type': 'application/json'},
+              body: json.encode(data))
+          .then((value) {
+        debugPrint('response${value.body}');
+        return value;
+      });
+
+      if (response.statusCode == 200) {
+        // success, parse response data
+        debugPrint(response.body);
+        Map<String, dynamic> body = jsonDecode(response.body);
+        acc = body['acc'];
+        result = body['result'];
+        authNotifier.setLoading(false);
+        if (result == 1) {
+          gotoNegative(acc, age);
+        } else {
+          gotoPositive(acc, age);
+        }
+      } else {
+        authNotifier.setLoading(false);
+        Utils().toastMessage("Something went wrong...\nPlease try again later");
+        // error handling
+        throw Exception('Failed to post data: ${response.statusCode}');
+      }
+    }
 
     return Scaffold(
       appBar: GradientAppBar(
@@ -263,86 +306,22 @@ class _State extends State<Parkinsons> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
-
-                  child: RoundButton(
-                      title: 'Submit',
-                      onTap: () async {
-                        if (myFormKey.currentState!.validate()) {
-                          array[0] = double.parse(FoController.text);
-                          array[1] = double.parse(FhiController.text);
-                          array[2] = double.parse(FloController.text);
-                          array[3] = double.parse(JitterController.text);
-                          array[4] = double.parse(RAPController.text);
-                          array[5] = double.parse(DDPController.text);
-                          array[6] = double.parse(PPEController.text);
-                          array[7] = double.parse(NHRController.text);
-                          array[8] = double.parse(Spread1Controller.text);
-                          array[9] = double.parse(Spread2Controller.text);
-                          debugPrint(array.toString());
-                          int age = 80;
-                          final response = await http
-                              .post(Uri.parse(apiUrl),
-                                  headers: {'Content-Type': 'application/json'},
-                                  body: json.encode(data))
-                              .then((value) {
-                            debugPrint('response${value.body}');
-                            return value;
-                          });
-
-                          if (response.statusCode == 200) {
-                            // success, parse response data
-                            debugPrint(response.body);
-                            Map<String, dynamic> body =
-                                jsonDecode(response.body);
-                            acc = body['acc'];
-                            result = body['result'];
-                            // if (response.body[8] == '.') {
-                            //   acc =
-                            //       double.parse(response.body.substring(7, 11));
-                            //   result = int.parse(response.body[21]);
-                            // } else {
-                            //   acc = double.parse(response.body.substring(7, 9));
-                            //   result = int.parse(response.body[19]);
-                            // }
-
-                            if (result == 1) {
-                              gotoNegative(acc, age);
-                              // print(
-                              // "$acc% chance you have Parkinson's disease");
-                              // Navigator.pushNamed(context, '/Insurance');
+                    padding: const EdgeInsets.symmetric(horizontal: 80),
+                    child: Consumer<AuthNotifier>(
+                        builder: (context, value, child) {
+                      return RoundButton(
+                          loading: authNotifier.loading ?? false,
+                          title: 'Submit',
+                          onTap: () async {
+                            if (myFormKey.currentState!.validate()) {
+                              authNotifier.setLoading(true);
+                              await postData();
                             } else {
-                              gotoPositive(acc, age);
-                              // print("$acc% chance you don't diabetes");
+                              Utils().toastMessage(
+                                  'Please complete all the fields');
                             }
-
-                            return json.decode(response.body);
-                          } else {
-                            // error handling
-                            throw Exception(
-                                'Failed to post data: ${response.statusCode}');
-                          }
-                        } else {
-                          Utils()
-                              .toastMessage('Please complete all the fields');
-                        }
-                      }),
-
-                  // child: ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //       padding: const EdgeInsets.symmetric(
-                  //           horizontal: 50, vertical: 10),
-                  //       shape: RoundedRectangleBorder(
-                  //           borderRadius: BorderRadius.circular(20))),
-                  //   child: const Text(
-                  //     'Submit',
-                  //     style: TextStyle(fontSize: 24),
-                  //   ),
-                  //   onPressed: () async {
-
-                  //   },
-                  // ),
-                ),
+                          });
+                    })),
               )
             ],
           ),
@@ -352,7 +331,6 @@ class _State extends State<Parkinsons> {
   }
 
   gotoNegative(double acc, int age) {
-    debugPrint('neg');
     return Navigator.push(
         context,
         MaterialPageRoute(
@@ -363,7 +341,6 @@ class _State extends State<Parkinsons> {
   }
 
   gotoPositive(double acc, int age) {
-    debugPrint('pos');
     return Navigator.push(
         context,
         MaterialPageRoute(

@@ -276,12 +276,17 @@ class _ResultofSymptomsState extends State<ResultofSymptoms> {
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
-                                          return const Expanded(
-                                            child: Center(
-                                              child: CircularProgressIndicator(
-                                                color: Colors.greenAccent,
+                                          return Column(
+                                            children: const [
+                                              Expanded(
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.greenAccent,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           );
                                         } else if (snapshot.hasError) {
                                           // Show an error message if there was an error during the delay
