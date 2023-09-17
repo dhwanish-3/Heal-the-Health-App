@@ -20,6 +20,22 @@ class UpcomingCard extends StatelessWidget {
     }
   }
 
+  void updateAppointmentsList(List<Appointment> appointments) {
+    bool didRemove = false;
+    while (appointments.isNotEmpty) {
+      if (appointments[0].dateTime!.isBefore(DateTime.now())) {
+        didRemove = true;
+        appointments.removeAt(0);
+      } else {
+        break;
+      }
+    }
+    if (didRemove) {
+      // AppointmentBackend()
+      // .updatePatientAppointments(authNotifier, appointments);
+    }
+  }
+
   Future<void> getDoctorHere(String uid) async {
     // AppointmentBackend().upcomingToCompleted(authNotifier, DoctorsUpcoming)
     doctor = await DoctorUser().getDoctor(uid);
@@ -30,7 +46,8 @@ class UpcomingCard extends StatelessWidget {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     Widget showImage() {
-      if (doctor.imageUrl != '') {
+      if (doctor.imageUrl == '') {
+        // remeber to change this
         return Image.network(
           doctor.imageUrl,
           width: 60,

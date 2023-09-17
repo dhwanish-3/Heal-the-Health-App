@@ -27,9 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return const Scaffold(
       body: Center(
           child: SpinKitCubeGrid(
-        color: Colors.red,
+        color: Colors.blue,
         duration: Duration(seconds: 3),
-        size: 80,
+        size: 70,
       )),
     );
   }

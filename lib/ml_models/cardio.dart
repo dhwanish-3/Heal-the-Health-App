@@ -55,7 +55,6 @@ class _CardioScreenState extends State<CardioScreen> {
       // (PatientUser().isPhysicalActive) ?? 0,
     ];
     final arrayAge = [
-      patient.age,
       patient.gender,
       patient.height,
       patient.weight,

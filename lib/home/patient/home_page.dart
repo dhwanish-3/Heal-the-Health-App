@@ -15,7 +15,7 @@ class _HomePageDhwanishState extends State<HomePageDhwanish> {
   //   Future.delayed(Duration.zero).then((value) async {
   //     authNotifier = Provider.of<AuthNotifier>(context, listen: false);
 
-  //     // await AuthService().initializePatient(authNotifier);
+  // await AuthService().initializePatient(authNotifier);
   //   });
   //   super.initState();
   // }
@@ -77,19 +77,6 @@ class _HomePageDhwanishState extends State<HomePageDhwanish> {
             const DiaryMain(),
             const UserProfile()
           ][_currentIndex],
-          // floatingActionButton: _currentIndex == 3
-          //     ? Container()
-          //     : FloatingActionButton.large(
-          //         onPressed: () {
-          //           Navigator.push(context,
-          //               MaterialPageRoute(builder: (context) => const OOPs()));
-          //         },
-          //         child: Container(
-          //             decoration: const BoxDecoration(
-          //                 shape: BoxShape.circle,
-          //                 image: DecorationImage(
-          //                     fit: BoxFit.cover,
-          //                     image: AssetImage('images/chatbot.png'))))),
           floatingActionButton: _currentIndex == 3
               ? Container()
               : GestureDetector(

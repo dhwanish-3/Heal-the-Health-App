@@ -145,9 +145,6 @@ class _UserPage0State extends State<UserPage0> {
                         height: 28 * fem,
                         child: Container(
                           decoration: BoxDecoration(
-                            // image: const DecorationImage(
-                            //     image:
-                            //         AssetImage('images/Diagn_ssist_nobg.png')),
                             borderRadius: BorderRadius.circular(30 * fem),
                             gradient: const LinearGradient(
                               begin: Alignment(0, -1),
@@ -171,15 +168,6 @@ class _UserPage0State extends State<UserPage0> {
                               ),
                             ],
                           ),
-                          // child: Text(
-                          //   "Heal the Health App",
-                          //   textAlign: TextAlign.center,
-                          //   style: TextStyle(
-                          //       fontSize: 20,
-                          //       fontWeight: FontWeight.bold,
-                          //       color: Colors.black45),
-                          // ),
-                          // ),
                         ),
                       ),
                     ),

@@ -21,7 +21,7 @@ class _BookingPageState extends State<BookingPage> {
   DateTime _currentDay = DateTime.now();
   int? _currentIndex;
   bool _isWeekend = false;
-  bool _dateSelected = false;
+  bool _dateSelected = true;
   bool _timeSelected = false;
   int times = -1;
   String getAppointmentString(int index) {

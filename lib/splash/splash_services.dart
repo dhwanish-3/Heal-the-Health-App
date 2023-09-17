@@ -54,40 +54,5 @@ class SplashServices {
     } else {
       goToOnboard();
     }
-
-    // if (user != null) {
-    //   Timer(const Duration(seconds: 5), () async {
-    //     medicalConditionsList = await Medicals().MedicalConditionsList;
-    //     await goToHome();
-    //   });
-    // } else {
-    //   Timer(const Duration(seconds: 5), () async {
-    //     medicalConditionsList = await Medicals().MedicalConditionsList;
-    //     AuthNotifier authNotifier =
-    //         Provider.of<AuthNotifier>(context, listen: false);
-    //     authNotifier.setDiseases(medicalConditionsList);
-    //     await goToOnboard();
-    //   });
   }
-
-  // getPatientData().then((value) async {
-  //   debugPrint(value.toString());
-  //   if (value.uid != '') {
-  //     Timer(
-  //         const Duration(seconds: 1),
-  //         () => Navigator.push(context,
-  //             MaterialPageRoute(builder: (context) => const AppHome())));
-  //   } else {
-  //     Timer(
-  //         const Duration(seconds: 1),
-  //         () => Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //                 builder: (context) => const OnBoardingPage())));
-  //   }
-  // }).onError((error, stackTrace) {
-  //   debugPrint('checkauth$error');
-  // });
-  // }
-  // }
 }
