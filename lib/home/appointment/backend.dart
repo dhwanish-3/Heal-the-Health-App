@@ -5,7 +5,7 @@ class AppointmentBackend {
       AuthNotifier authNotifier,
       List<DoctorUser> DoctorsUpcoming,
       List<DoctorUser> DoctorsCompleted) async {
-    if (authNotifier.patientDetails!.upcoming!.isNotEmpty &&
+    while (authNotifier.patientDetails!.upcoming!.isNotEmpty &&
         authNotifier.patientDetails!.upcoming![0].dateTime!
             .isBefore(DateTime.now())) {
       authNotifier.patientDetails!.completed!
@@ -13,31 +13,33 @@ class AppointmentBackend {
       authNotifier.patientDetails!.upcoming!.removeAt(0);
       DoctorsCompleted.insert(0, DoctorsUpcoming[0]);
       DoctorsUpcoming.removeAt(0);
-      await FirebaseFirestore.instance
-          .collection('Patients')
-          .doc(authNotifier.patientDetails!.uid)
-          .update({
-        'upcoming':
-            DoctorUser().getJson(authNotifier.patientDetails!.upcoming ?? []),
-        'completed':
-            DoctorUser().getJson(authNotifier.patientDetails!.completed ?? [])
-      });
+
       DoctorsCompleted[0]
           .completed!
           .insert(0, authNotifier.patientDetails!.completed![0]);
       DoctorsCompleted[0].upcoming!.removeWhere((object) =>
           object.dateTime ==
           authNotifier.patientDetails!.completed![0].dateTime);
-      await FirebaseFirestore.instance
-          .collection('Doctors')
-          .doc(DoctorsCompleted[0].uid)
-          .update({
-        'upcoming': DoctorUser().getJson(DoctorsCompleted[0].upcoming ?? []),
-        'completed': DoctorUser().getJson(DoctorsCompleted[0].completed ?? [])
-      });
-      await upcomingToCompleted(
-          authNotifier, DoctorsUpcoming, DoctorsCompleted);
     }
+    await FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(authNotifier.patientDetails!.uid)
+        .update({
+      'upcoming':
+          Appointment().getJson(authNotifier.patientDetails!.upcoming ?? []),
+      'completed':
+          Appointment().getJson(authNotifier.patientDetails!.completed ?? [])
+    });
+    await FirebaseFirestore.instance
+        .collection('Doctors')
+        .doc(DoctorsCompleted[0].uid)
+        .update({
+      'upcoming': Appointment().getJson(DoctorsCompleted[0].upcoming ?? []),
+      'completed': Appointment().getJson(DoctorsCompleted[0].completed ?? [])
+    });
+    // await upcomingToCompleted(
+    //     authNotifier, DoctorsUpcoming, DoctorsCompleted);
+    // }
   }
 
   Future<void> upcomingToCompletedbyDoctor(
@@ -94,9 +96,9 @@ class AppointmentBackend {
         .doc(authNotifier.patientDetails!.uid)
         .update({
       'upcoming':
-          DoctorUser().getJson(authNotifier.patientDetails!.upcoming ?? []),
+          Appointment().getJson(authNotifier.patientDetails!.upcoming ?? []),
       'cancelled':
-          DoctorUser().getJson(authNotifier.patientDetails!.cancelled ?? [])
+          Appointment().getJson(authNotifier.patientDetails!.cancelled ?? [])
     });
     if (!DoctorsCancelled[0]
         .cancelled!
@@ -111,8 +113,8 @@ class AppointmentBackend {
         .collection('Doctors')
         .doc(DoctorsCancelled[0].uid)
         .update({
-      'upcoming': DoctorUser().getJson(DoctorsCancelled[0].upcoming ?? []),
-      'cancelled': DoctorUser().getJson(DoctorsCancelled[0].cancelled ?? [])
+      'upcoming': Appointment().getJson(DoctorsCancelled[0].upcoming ?? []),
+      'cancelled': Appointment().getJson(DoctorsCancelled[0].cancelled ?? [])
     });
   }
 
@@ -127,14 +129,14 @@ class AppointmentBackend {
         .doc(authNotifier.patientDetails!.uid)
         .update({
       'upcoming':
-          DoctorUser().getJson(authNotifier.patientDetails!.upcoming ?? []),
+          Appointment().getJson(authNotifier.patientDetails!.upcoming ?? []),
     });
     doctor.upcoming!.remove(appointment);
     await FirebaseFirestore.instance
         .collection('Doctors')
         .doc(doctor.uid)
         .update({
-      'upcoming': DoctorUser().getJson(doctor.upcoming ?? []),
+      'upcoming': Appointment().getJson(doctor.upcoming ?? []),
     });
   }
 

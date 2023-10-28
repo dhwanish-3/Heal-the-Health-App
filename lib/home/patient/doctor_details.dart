@@ -9,90 +9,83 @@ class DoctorDetailsSheet extends StatelessWidget {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     return SingleChildScrollView(
-      child: StreamBuilder<DoctorUser>(builder: (context, snapshot) {
-        return Form(
+        child: Form(
             child: Column(
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: showProfileImage(doctor),
+        ),
+        14.heightBox,
+        Text(
+          "Name:${doctor.name}",
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        5.heightBox,
+        Text(
+          doctor.specialization,
+          style: const TextStyle(fontSize: 17),
+        ),
+        5.heightBox,
+        Text(
+          "Email id:${doctor.emailid}",
+          style: const TextStyle(fontSize: 16),
+        ),
+        10.heightBox,
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.grey[300], borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              doctor.hospitalName,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        10.heightBox,
+        Row(
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: showProfileImage(doctor),
-            ),
-            14.heightBox,
-            Text(
-              "Name:${doctor.name}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            5.heightBox,
-            Text(
-              doctor.specialization,
-              style: const TextStyle(fontSize: 17),
-            ),
-            5.heightBox,
-            Text(
-              "Email id:${doctor.emailid}",
-              style: const TextStyle(fontSize: 16),
-            ),
-            10.heightBox,
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  doctor.hospitalName,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            10.heightBox,
-            Row(
-              children: [
-                InfoCard(
-                    label: "Patients",
-                    value: doctor.patients!.length.toString()),
-                15.widthBox,
-                InfoCard(
-                    label: 'Experience', value: doctor.experience.toString())
-              ],
-            ),
-            10.heightBox,
-            Row(
-              children: [
-                OutlinedButton(
-                    onPressed: () async {
-                      PatientUser patient =
-                          authNotifier.patientDetails ?? PatientUser();
-                      // patient.doctorsVisited = [];
-                      debugPrint(patient.uid);
-                      if (!patient.doctorsVisited!.contains(doctor.uid)) {
-                        await uploadDoctorList(doctor, authNotifier);
-                        await UpdateDoctors(doctor, authNotifier);
-                      }
-
-                      Navigator.pop(context);
-                      // debugPrint(authNotifier.doctorDetails!.doctors.toString());
-                    },
-                    child: const Text('Add doctor')),
-                14.widthBox,
-                OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BookingPage(
-                                    doctor: doctor,
-                                  )));
-                    },
-                    child: const Text('Book Appointment')),
-              ],
-            )
+            InfoCard(
+                label: "Patients", value: doctor.patients!.length.toString()),
+            15.widthBox,
+            InfoCard(label: 'Experience', value: doctor.experience.toString())
           ],
-        ));
-      }),
-    );
+        ),
+        10.heightBox,
+        Row(
+          children: [
+            OutlinedButton(
+                onPressed: () async {
+                  PatientUser patient =
+                      authNotifier.patientDetails ?? PatientUser();
+                  // patient.doctorsVisited = [];
+                  debugPrint(patient.uid);
+                  if (!patient.doctorsVisited!.contains(doctor.uid)) {
+                    await uploadDoctorList(doctor, authNotifier);
+                    await UpdateDoctors(doctor, authNotifier);
+                  }
+
+                  Navigator.pop(context);
+                  // debugPrint(authNotifier.doctorDetails!.doctors.toString());
+                },
+                child: const Text('Add doctor')),
+            14.widthBox,
+            OutlinedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BookingPage(
+                                doctor: doctor,
+                              )));
+                },
+                child: const Text('Book Appointment')),
+          ],
+        )
+      ],
+    )));
   }
 
   ImageProvider showProfileImage(DoctorUser doctor) {

@@ -60,13 +60,6 @@ class DoctorUser {
             .map((data) => Appointment.fromMap(jsonDecode(data))))
         : [];
   }
-  List<String> getJson(List<Appointment> appointment) {
-    List<String> json = [];
-    for (var custom in appointment) {
-      json.add(jsonEncode(custom.toMap()));
-    }
-    return json;
-  }
 
   Map<String, dynamic> toMap() {
     // List<Map> convertPatientsToMap({List<PatientUser>? customPatients}) {
@@ -90,9 +83,9 @@ class DoctorUser {
       'experience': experience,
       'patients': patients,
       'schedule': schedule,
-      'upcoming': getJson(upcoming ?? []),
-      'completed': getJson(completed ?? []),
-      'cancelled': getJson(cancelled ?? []),
+      'upcoming': Appointment().getJson(upcoming ?? []),
+      'completed': Appointment().getJson(completed ?? []),
+      'cancelled': Appointment().getJson(cancelled ?? []),
     };
   }
 

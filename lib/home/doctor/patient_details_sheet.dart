@@ -33,116 +33,114 @@ class _PatientDetailsSheetState extends State<PatientDetailsSheet> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    return StreamBuilder<PatientUser>(builder: (context, snapshot) {
-      return Form(
-          child: OverflowBar(
-        spacing: 20,
-        overflowAlignment: OverflowBarAlignment.center,
-        overflowSpacing: 20,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: showProfileImage(widget.patient),
-                ),
-                Text(
-                  widget.patient.name.toString(),
+    return Form(
+        child: OverflowBar(
+      spacing: 20,
+      overflowAlignment: OverflowBarAlignment.center,
+      overflowSpacing: 20,
+      children: [
+        Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: showProfileImage(widget.patient),
+              ),
+              Text(
+                widget.patient.name.toString(),
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber),
+              ),
+              5.heightBox,
+              Text('Age : ${widget.patient.age}',
                   style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.amber),
+                    fontSize: 16,
+                  )),
+              5.heightBox,
+              Text('Email id : ${widget.patient.emailid}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                  )),
+              5.heightBox,
+              const Text(
+                "Medical Conditions : ",
+                style: TextStyle(fontSize: 20, color: Colors.orange),
+              ),
+              8.heightBox,
+              Column(
+                children: getMedicalConditions(widget.patient),
+              ),
+              20.heightBox,
+              TextFormField(
+                // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: _detailsController,
+                // onChanged: (value) {
+                //   _detailsController.text = value;
+                //   debugPrint(_detailsController.text);
+                // },
+                decoration: const InputDecoration(
+                  labelText: 'Details',
+                  prefixIcon: Icon(Icons.auto_fix_normal_rounded),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                 ),
-                5.heightBox,
-                Text('Age : ${widget.patient.age}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    )),
-                5.heightBox,
-                Text('Email id : ${widget.patient.emailid}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                    )),
-                5.heightBox,
-                const Text(
-                  "Medical Conditions : ",
-                  style: TextStyle(fontSize: 20, color: Colors.orange),
-                ),
-                8.heightBox,
-                Column(
-                  children: getMedicalConditions(widget.patient),
-                ),
-                20.heightBox,
-                TextFormField(
-                  // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  controller: _detailsController,
-                  // onChanged: (value) {
-                  //   _detailsController.text = value;
-                  //   debugPrint(_detailsController.text);
-                  // },
-                  decoration: const InputDecoration(
-                    labelText: 'Details',
-                    prefixIcon: Icon(Icons.auto_fix_normal_rounded),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  ),
-                ),
-                10.heightBox,
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                          onPressed: () async {
-                            Disease condition = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AddmedicalConditions()));
+              ),
+              10.heightBox,
+              Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () async {
+                          Disease condition = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AddmedicalConditions()));
 
-                            await _uploadMedicalConditions(
-                                widget.patient, condition);
-                            setState(() {
-                              Utils().toastMessage(
-                                  'Medical Condition successfully added');
-                            });
-                          },
-                          child: const Text('Add medical\nCondition',
-                              textAlign: TextAlign.center)),
-                      10.widthBox,
-                      ElevatedButton(
-                          onPressed: () async {
-                            DoctorUser doctor =
-                                authNotifier.doctorDetails ?? DoctorUser();
-                            await uploadDetails(widget.patient,
-                                _detailsController.text, authNotifier);
-                            Navigator.pop(context);
+                          await _uploadMedicalConditions(
+                              widget.patient, condition);
+                          setState(() {
                             Utils().toastMessage(
-                                'Details of visit has been added successfully');
-                            // if (!doctor.patients!.contains(patient.uid)) {
-                            //   authNotifier.addPatient(
-                            //       authNotifier.doctorDetails ?? DoctorUser(),
-                            //       patient.uid ?? '');
-                            // }
-                            // debugPrint(authNotifier.doctorDetails!.patients.toString());
-                          },
-                          child: const Text(
-                            'Add Details\nof Visit',
-                            textAlign: TextAlign.center,
-                          ))
-                    ],
-                  ),
+                                'Medical Condition successfully added');
+                          });
+                        },
+                        child: const Text('Add medical\nCondition',
+                            textAlign: TextAlign.center)),
+                    10.widthBox,
+                    ElevatedButton(
+                        onPressed: () async {
+                          DoctorUser doctor =
+                              authNotifier.doctorDetails ?? DoctorUser();
+                          await uploadDetails(widget.patient,
+                              _detailsController.text, authNotifier);
+                          Navigator.pop(context);
+                          Utils().toastMessage(
+                              'Details of visit has been added successfully');
+                          // if (!doctor.patients!.contains(patient.uid)) {
+                          //   authNotifier.addPatient(
+                          //       authNotifier.doctorDetails ?? DoctorUser(),
+                          //       patient.uid ?? '');
+                          // }
+                          // debugPrint(authNotifier.doctorDetails!.patients.toString());
+                        },
+                        child: const Text(
+                          'Add Details\nof Visit',
+                          textAlign: TextAlign.center,
+                        ))
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ));
-    });
+        ),
+      ],
+    ));
   }
 
   ImageProvider showProfileImage(PatientUser patient) {

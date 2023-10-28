@@ -46,8 +46,7 @@ class UpcomingCard extends StatelessWidget {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     Widget showImage() {
-      if (doctor.imageUrl == '') {
-        // remeber to change this
+      if (doctor.imageUrl != '') {
         return Image.network(
           doctor.imageUrl,
           width: 60,

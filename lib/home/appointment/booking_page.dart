@@ -90,8 +90,16 @@ class _BookingPageState extends State<BookingPage> {
     DateTime appointmentTime = getDateTime(date, time);
     String id = DateTime.now().millisecondsSinceEpoch.toString();
     if (widget.doctor != null && patient != null) {
-      Appointment appointment = Appointment(id, appointmentTime, date, time,
-          patient.uid, widget.doctor!.uid, 'upcoming');
+      Map<String, dynamic> appointmentJson = {
+        "id": id,
+        "dateTime": appointmentTime,
+        "date": date,
+        "time": time,
+        "patient": patient.uid,
+        "doctor": widget.doctor!.uid,
+        "status": "upcoming",
+      };
+      Appointment appointment = Appointment.fromMap(appointmentJson);
       // await FirebaseFirestore.instance
       //     .collection('Appointments')
       //     .doc(id)

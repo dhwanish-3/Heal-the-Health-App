@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Appointment {
   String? id;
   DateTime? dateTime;
@@ -6,8 +8,9 @@ class Appointment {
   String? patient;
   String? doctor;
   String? status;
-  Appointment(this.id, this.dateTime, this.date, this.time, this.patient,
-      this.doctor, this.status);
+  // Appointment(this.id, this.dateTime, this.date, this.time, this.patient,
+  //     this.doctor, this.status);
+  Appointment();
   Appointment.fromMap(Map<String, dynamic> data) {
     id = data["id"];
     dateTime = DateTime.parse((data["dateTime"]));
@@ -27,6 +30,14 @@ class Appointment {
       'doctor': doctor,
       'status': status,
     };
+  }
+
+  List<String> getJson(List<Appointment> appointment) {
+    List<String> json = [];
+    for (var custom in appointment) {
+      json.add(jsonEncode(custom.toMap()));
+    }
+    return json;
   }
 
   // 2023-05-13 06:40:05.330916

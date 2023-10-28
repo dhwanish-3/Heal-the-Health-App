@@ -77,9 +77,8 @@ export 'package:heal_the_health_app/home/diary/custom_rect.dart';
 export 'package:heal_the_health_app/home/diary/diary_list.dart';
 export 'package:heal_the_health_app/home/diary/hero_dialog.dart';
 
-export 'dart:async';
 export 'package:intl/intl.dart' hide TextDirection;
-export 'dart:io' hide HeaderValue;
+export 'dart:io' hide HeaderValue, interface;
 
 export 'package:heal_the_health_app/models/disease.dart';
 export 'package:heal_the_health_app/models/symptom.dart';
