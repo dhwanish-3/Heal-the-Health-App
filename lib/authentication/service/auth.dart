@@ -10,11 +10,8 @@ class AuthService {
           .collection('Patients')
           .doc(authNotifier.user!.uid)
           .get()
-          .catchError((e) => debugPrint(e))
-          .then((value) => (value != null)
-              ? authNotifier.setUserDetails(
-                  PatientUser.fromMap(value.data() as Map<String, dynamic>))
-              : debugPrint(value.toString()));
+          .then((value) => authNotifier.setUserDetails(
+              PatientUser.fromMap(value.data() as Map<String, dynamic>)));
     }
   }
 
@@ -24,21 +21,16 @@ class AuthService {
           .collection('Doctors')
           .doc(authNotifier.user!.uid)
           .get()
-          .catchError((e) => debugPrint(e))
-          .then((value) => (value != null)
-              ? authNotifier.setDoctorDetails(
-                  DoctorUser.fromMap(value.data() as Map<String, dynamic>))
-              : debugPrint(value.toString()));
+          .then((value) => authNotifier.setDoctorDetails(
+              DoctorUser.fromMap(value.data() as Map<String, dynamic>)));
     }
   }
 
   //login
   Future<AuthNotifier> logInPatient(
-      PatientUser user, AuthNotifier authNotifier, BuildContext context) async {
-    UserCredential result;
-
+      PatientUser user, AuthNotifier authNotifier) async {
     try {
-      result = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
           email: user.emailid.toString(), password: user.password.toString());
 
       try {
@@ -61,10 +53,9 @@ class AuthService {
 
   //login doctor
   Future<AuthNotifier> logInDoctor(
-      DoctorUser user, AuthNotifier authNotifier, BuildContext context) async {
-    UserCredential result;
+      DoctorUser user, AuthNotifier authNotifier) async {
     try {
-      result = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
           email: user.emailid.toString(), password: user.password.toString());
 
       try {
@@ -88,10 +79,9 @@ class AuthService {
 
   //sign up
   Future<AuthNotifier> signUpPatient(
-      PatientUser user, AuthNotifier authNotifier, BuildContext context) async {
-    UserCredential result;
+      PatientUser user, AuthNotifier authNotifier) async {
     try {
-      result = await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
           email: user.emailid, password: user.password);
       try {
         _auth.currentUser!.updateDisplayName(user.name);
@@ -111,10 +101,9 @@ class AuthService {
 
   // signup Doctor
   Future<AuthNotifier> signUpDoctor(
-      DoctorUser user, AuthNotifier authNotifier, BuildContext context) async {
-    UserCredential result;
+      DoctorUser user, AuthNotifier authNotifier) async {
     try {
-      result = await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
           email: user.emailid, password: user.password);
       try {
         _auth.currentUser!.updateDisplayName(user.name);

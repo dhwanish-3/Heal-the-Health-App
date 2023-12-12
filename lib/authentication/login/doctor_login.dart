@@ -43,7 +43,7 @@ class _DoctorLogInState extends State<DoctorLogIn> {
     authNotifier.setLoading(true);
     _user.emailid = _emailController.text;
     _user.password = _passwordController.text;
-    authNotifier = await _authService.logInDoctor(_user, authNotifier, context);
+    authNotifier = await _authService.logInDoctor(_user, authNotifier);
     if (authNotifier.user != null) {
       authNotifier.setLoading(false);
       return true;

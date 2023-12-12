@@ -31,7 +31,7 @@ class _DoctorSignUpState extends State<DoctorSignUp> {
       return false;
     } else {
       authNotifier.setLoading(true);
-      await _authService.signUpDoctor(_user, authNotifier, context);
+      await _authService.signUpDoctor(_user, authNotifier);
       if (authNotifier.user != null) {
         authNotifier.setLoading(false);
         return true;

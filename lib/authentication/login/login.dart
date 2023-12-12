@@ -13,7 +13,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -27,11 +26,11 @@ class _LoginScreenState extends State<LoginScreen> {
     AuthNotifier authNotifier;
     Future.delayed(const Duration(seconds: 1)).then((value) {
       authNotifier = Provider.of<AuthNotifier>(context, listen: false);
-      UserShared userShared = Provider.of<UserShared>(context, listen: false);
+      // UserShared userShared = Provider.of<UserShared>(context, listen: false);
       _authService.initializePatient(authNotifier);
     });
     // initialize current user
-    // _authService.initializePatient(authNotifier);// gives error here
+    // _authService.initializePatient(authNotifier); // gives error here
     super.initState();
   }
 
@@ -45,8 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     authNotifier.setLoading(true);
     _user.emailid = _emailController.text;
     _user.password = _passwordController.text;
-    authNotifier =
-        await _authService.logInPatient(_user, authNotifier, context);
+    authNotifier = await _authService.logInPatient(_user, authNotifier);
     if (authNotifier.user != null) {
       authNotifier.setLoading(false);
       UserShared userShared = Provider.of<UserShared>(context, listen: false);

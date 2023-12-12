@@ -15,9 +15,7 @@ class _LoginScreenState extends State<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
   final _nameController = TextEditingController();
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
 
-//changed to final from FirebaseAuth
   @override
   void dispose() {
     super.dispose();
@@ -59,7 +57,7 @@ class _LoginScreenState extends State<SignUpScreen> {
     } else {
       authNotifier.setLoading(true);
       // authNotifier =
-      await _authService.signUpPatient(_user, authNotifier, context);
+      await _authService.signUpPatient(_user, authNotifier);
       if (authNotifier.user != null) {
         authNotifier.setLoading(false);
         return true;
